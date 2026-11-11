@@ -2,6 +2,7 @@ node_modules/
 web/dist/
 backend/runs/
 backend/cache/
+backend/recordings/
 backend/*.log
 __pycache__/
 .env

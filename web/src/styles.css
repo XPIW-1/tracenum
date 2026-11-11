@@ -276,6 +276,22 @@ button { cursor: pointer; }
 .lane-foot { margin-top: auto; padding: 10px 18px 14px; border-top: 1px solid var(--rule-soft); font-size: 13px; display: grid; gap: 4px; }
 .lane-foot .row { display: flex; justify-content: space-between; gap: 8px; }
 .lane-foot .row span:first-child { color: var(--ink-3); }
+.lab-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; }
+.speed { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.speed select { border: 1px solid var(--rule); border-radius: var(--r-sm); background: var(--paper); padding: 4px 6px; }
+.tapes { margin-top: 12px; font-size: 13px; max-width: 980px; }
+.tapes summary { cursor: pointer; color: var(--ink-2); }
+.tapes ul { list-style: none; margin: 8px 0 0; padding: 0; }
+.tapes li { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 8px 0; border-top: 1px solid var(--rule-soft); }
+.tapes label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; cursor: pointer; }
+.tape-time { color: var(--ink-3); }
+.tape-default { display: inline-flex; align-items: center; gap: 4px; color: var(--amber); font-size: 12px; }
+.tape-answer { grid-column: 1 / -1; margin: 0; color: var(--ink-3); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.replay-banner {
+  display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; padding: 10px 14px;
+  background: var(--amber-bg); color: var(--ink); border-left: 3px solid var(--amber); border-radius: 0 var(--r-sm) var(--r-sm) 0; font-size: 14px;
+}
+.replay-banner svg { color: var(--amber); flex: none; margin-top: 3px; }
 .lab-note { margin-top: 16px; font-size: 13px; color: var(--ink-3); max-width: 60em; }
 
 /* ---------- method ---------- */

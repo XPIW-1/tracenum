@@ -5,13 +5,27 @@ export async function getJSON(path) {
 }
 
 // POST + server-sent events over fetch (EventSource cannot POST).
-export async function streamAsk(body, onEvent, signal) {
-  const res = await fetch('/api/ask', {
+export function streamAsk(body, onEvent, signal) {
+  return readEvents(fetch('/api/ask', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
     signal,
-  })
+  }), onEvent)
+}
+
+// Replays a recorded live run with its original event order and (scaled) timing.
+export function streamReplay(id, speed, onEvent, signal) {
+  return readEvents(fetch(`/api/replay/${encodeURIComponent(id)}?speed=${speed}`, { signal }), onEvent)
+}
+
+export async function featureRecording(id) {
+  const res = await fetch(`/api/recordings/${encodeURIComponent(id)}/feature`, { method: 'POST' })
+  if (!res.ok) throw new Error(`设置失败（${res.status}）`)
+}
+
+async function readEvents(request, onEvent) {
+  const res = await request
   if (!res.ok || !res.body) throw new Error(`后端返回 ${res.status}`)
   const reader = res.body.getReader()
   const decoder = new TextDecoder()

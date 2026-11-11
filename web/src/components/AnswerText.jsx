@@ -14,6 +14,8 @@ export function TickMark({ className = 'tickmark' }) {
 function cleanLatex(s) {
   return s
     .replace(/\\text\{([^}]*)\}/g, '$1')
+    .replace(/\\(mathbf|mathrm|textbf|boldsymbol|operatorname)\s*/g, '')
+    .replace(/\\[lc]dots/g, '…').replace(/\\cdot/g, '·')
     .replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\approx/g, '≈')
     .replace(/\\left|\\right/g, '').replace(/\\%/g, '%')
     .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '($1) / ($2)')
