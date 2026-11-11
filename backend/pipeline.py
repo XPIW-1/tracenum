@@ -299,7 +299,8 @@ def out_of_corpus_year(code: str, text: str, question: dict) -> int | None:
     return max(later) if later else None
 
 
-NUM_RE = re.compile(r"-?\d{1,3}(?:,\d{3})+(?:\.\d+)?|-?\d+\.\d+|-?\d{2,}")
+# Percentages first, so "22%" is one figure rather than "22" followed by "%".
+NUM_RE = re.compile(r"-?\d+(?:\.\d+)?%|-?\d{1,3}(?:,\d{3})+(?:\.\d+)?|-?\d+\.\d+|-?\d{2,}")
 CITE_RE = re.compile(r"第\s*(\d+)\s*页")
 
 
@@ -341,6 +342,8 @@ def verify_numbers(answer: str, evidence: list[dict]) -> list[dict]:
             entry.update(row_context(key, [e for e in evidence if e["page"] == pages[0]]))
             if scaled:
                 entry.update(scaled=True, unit="")
+            if raw.endswith("%"):
+                entry["unit"] = "%"
         results.append(entry)
     return results
 

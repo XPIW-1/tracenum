@@ -11,6 +11,69 @@ function loadDoc(code) {
   return docs.get(code)
 }
 
+// PDF text layers often split one figure into several runs ("803," "96" "4" ",958").
+// Join the runs into one string, remembering which run each character came from,
+// find the figure in the joined string, then box the runs it covers (one box per line).
+function locate(items, wanted, viewport) {
+  let joined = ''
+  const owner = []
+  // A whitespace run (or a run with surrounding spaces / end of line) separates table
+  // cells; "|" keeps the note number "45" from fusing with the figure next to it.
+  const cut = () => { if (joined && joined[joined.length - 1] !== '|') { joined += '|'; owner.push(-1) } }
+  items.forEach((item, index) => {
+    const raw = item.str || ''
+    if (/^\s/.test(raw) || !raw.trim()) cut()
+    for (const ch of raw.replace(/[,，\s]/g, '')) { joined += ch; owner.push(index) }
+    if (/\s$/.test(raw) || item.hasEOL) cut()
+  })
+  const boxes = []
+  const seen = new Set()
+  for (const w of wanted) {
+    const before = boxes.length
+    for (const strict of [true, false]) {
+      if (!strict && boxes.length > before) break
+      scan(w, strict)
+    }
+  }
+  return boxes
+
+  function scan(w, strict) {
+    let from = 0
+    let at
+    while ((at = joined.indexOf(w, from)) >= 0) {
+      from = at + w.length
+      // Strict pass skips matches inside a longer number (803964958 inside 803964958000);
+      // the fallback allows them, for figures the answer restated in another unit.
+      if (/\d/.test(joined[at - 1] || '')) continue
+      if (strict && /\d/.test(joined[at + w.length] || '')) continue
+      const covered = [...new Set(owner.slice(at, at + w.length))].filter((i) => i >= 0)
+      const rects = covered.map((i) => {
+        const item = items[i]
+        const t = pdfjs.Util.transform(viewport.transform, item.transform)
+        const h = Math.hypot(t[2], t[3])
+        return { x: t[4], y: t[5] - h, w: item.width * viewport.scale, h }
+      })
+      const lines = new Map()
+      for (const r of rects) {
+        const key = Math.round(r.y / 4)
+        const line = lines.get(key)
+        if (!line) lines.set(key, { ...r })
+        else {
+          const right = Math.max(line.x + line.w, r.x + r.w)
+          line.x = Math.min(line.x, r.x); line.w = right - line.x
+          line.y = Math.min(line.y, r.y); line.h = Math.max(line.h, r.h)
+        }
+      }
+      for (const r of lines.values()) {
+        const id = `${Math.round(r.x)}:${Math.round(r.y)}`
+        if (seen.has(id)) continue
+        seen.add(id)
+        boxes.push({ x: r.x - 2, y: r.y - 1, w: r.w + 4, h: r.h + 4 })
+      }
+    }
+  }
+}
+
 // target: { company, page, values: [raw strings], label }
 export default function PdfPane({ target, corpus, onPage }) {
   const scrollRef = useRef(null)
@@ -51,15 +114,7 @@ export default function PdfPane({ target, corpus, onPage }) {
         const found = []
         if (wanted.length) {
           const content = await page.getTextContent()
-          for (const item of content.items) {
-            const s = normNum(item.str || '')
-            if (!s || s.length < 3) continue
-            if (wanted.some((w) => s.includes(w) || (w.length >= 5 && w.includes(s) && s.length >= 5))) {
-              const t = pdfjs.Util.transform(viewport.transform, item.transform)
-              const h = Math.hypot(t[2], t[3])
-              found.push({ x: t[4] - 2, y: t[5] - h - 1, w: item.width * viewport.scale + 4, h: h + 4 })
-            }
-          }
+          found.push(...locate(content.items, wanted, viewport))
         }
         if (cancelled) return
         setMarks(found)

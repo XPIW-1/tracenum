@@ -21,7 +21,7 @@ function cleanLatex(s) {
     .replace(/[{}]/g, '').replace(/\s+/g, ' ').trim()
 }
 
-const INLINE = /(\*\*[^*]+\*\*)|(\[?第\s*\d+\s*页\]?)|(\\\((.+?)\\\))|(-?\(?\d{1,3}(?:,\d{3})+(?:\.\d+)?\)?|-?\d+\.\d+%?|-?\d{3,}(?:\.\d+)?)/g
+const INLINE = /(\*\*[^*]+\*\*)|(\[?第\s*\d+\s*页\]?)|(\\\((.+?)\\\))|(-?\d+(?:\.\d+)?%|-?\(?\d{1,3}(?:,\d{3})+(?:\.\d+)?\)?|-?\d+\.\d+|-?\d{3,}(?:\.\d+)?)/g
 
 function Inline({ text, numbers, onPage, onFigure }) {
   const parts = []
