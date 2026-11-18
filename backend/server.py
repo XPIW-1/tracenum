@@ -43,12 +43,17 @@ RERANK_VALIDATION = DATA_DIR / "rerank_validation.json"
 def rerank_validated() -> bool:
     if os.environ.get("TRACENUM_RERANKER", "local").lower() != "siliconflow":
         return True  # the paper's own local model
+    import rerank
     try:
         summary = json.loads(RERANK_VALIDATION.read_text(encoding="utf-8"))["summary"]
-    except (OSError, ValueError, KeyError):
+        rounds = int(summary["rounds"])
+        chunks = os.environ.get("SILICONFLOW_MAX_CHUNKS_PER_DOC")
+        return (summary["all_equal"] is True and rounds >= 10
+                and summary["logged_texts_verified_by_cache"] == rounds
+                and summary["model"] == rerank.SILICONFLOW_MODEL and summary["url"] == rerank.SILICONFLOW_URL
+                and summary["max_chunks_per_doc"] == (int(chunks) if chunks else None))
+    except (OSError, ValueError, KeyError, TypeError):
         return False
-    import rerank
-    return summary.get("all_equal") is True and summary.get("model") == rerank.SILICONFLOW_MODEL         and summary.get("rounds", 0) >= 10
 
 app = FastAPI(title="TraceNum API", docs_url="/api/docs" if DEV else None, redoc_url=None, openapi_url=None if not DEV else "/openapi.json")
 _origins = [o for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o]

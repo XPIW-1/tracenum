@@ -136,8 +136,11 @@ class Quota:
         """cost=None keeps the reservation as 'unknown'. refund=True: nothing was spent (no model call)
         and the attempt does not count against daily limits."""
         stamp, _, _ = self._now()
-        with self.lock, closing(self._connect()) as db:
+        with self.lock:
+            # Free the concurrency slot first: if the ledger update below fails, the row
+            # stays "inflight" but is no longer live, so the next reserve() marks it unknown.
             self.live.discard(request_id)
+        with self.lock, closing(self._connect()) as db:
             if refund:
                 db.execute("UPDATE ledger SET status='rejected', cost=0, finished=?, note=? WHERE request_id=?",
                            (stamp, note or "no model call", request_id))

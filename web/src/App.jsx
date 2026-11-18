@@ -37,6 +37,11 @@ export default function App() {
     detectMode().then(setMode)
   }, [])
   useEffect(() => {
+    if (mode !== 'loading') return
+    const timer = setTimeout(() => detectMode().then(setMode), 5000)
+    return () => clearTimeout(timer)
+  }, [mode])
+  useEffect(() => {
     if (mode !== 'live') return
     let timer
     const controller = new AbortController()
@@ -71,8 +76,8 @@ export default function App() {
   )
   const draftIds = new Set(draft.map((d) => d.id))
   const addDraft = (item) => { setDraft((d) => (d.some((x) => x.id === item.id) ? d : [...d, item])); setToast(`已加入底稿：${item.value}`) }
-  const statusLabel = mode === 'static' ? '公开演示 · 预计算结果' : !status ? '连接中' : status.error ? '后端不可用' : status.ready ? `${status.model} 已就绪` : '正在加载检索模型'
-  const statusClass = mode === 'static' ? 'static' : status?.error ? 'error' : status?.ready ? 'ready' : ''
+  const statusLabel = mode === 'loading' ? '实时服务启动中…' : mode === 'static' ? '公开演示 · 预计算结果' : !status ? '连接中' : status.error ? '后端不可用' : status.ready ? `${status.model} 已就绪` : '正在加载检索模型'
+  const statusClass = mode === 'static' || mode === 'loading' ? 'static' : status?.error ? 'error' : status?.ready ? 'ready' : ''
 
   return (
     <>
@@ -92,7 +97,7 @@ export default function App() {
       {view === 'lookup' && (
         <div className="lookup">
           <main className="lookup-main">
-            <Lookup mode={mode} featured={featured} corpus={corpus} company={company} setCompany={setCompany} questions={questions} openPdf={setPdfTarget}
+            <Lookup mode={mode === 'loading' ? 'static' : mode} featured={featured} corpus={corpus} company={company} setCompany={setCompany} questions={questions} openPdf={setPdfTarget}
               addDraft={addDraft} draftIds={draftIds} openMethod={() => setView('method')} status={status} />
           </main>
           <aside className="lookup-side" aria-label="年报原页">
@@ -102,7 +107,7 @@ export default function App() {
       )}
       {view === 'lab' && (
         <>
-          <Lab mode={mode} featured={featured} corpus={corpus} questions={questions} openPdf={setLabPdf} budget={status?.budget} />
+          <Lab mode={mode === 'loading' ? 'static' : mode} featured={featured} corpus={corpus} questions={questions} openPdf={setLabPdf} budget={status?.budget} />
           {labPdf && (
             <>
               <div className="drawer-scrim" onClick={() => setLabPdf(null)} />
@@ -114,7 +119,7 @@ export default function App() {
           )}
         </>
       )}
-      {view === 'method' && <Method mode={mode} questions={questions} goLab={() => setView('lab')} />}
+      {view === 'method' && <Method mode={mode === 'loading' ? 'static' : mode} questions={questions} goLab={() => setView('lab')} />}
 
       {drawer && <Draft items={draft} setItems={setDraft} onClose={() => setDrawer(false)} corpus={corpus}
         openPdf={(t) => { setDrawer(false); setView('lookup'); setCompany(t.company); setPdfTarget(t) }} toast={setToast} />}

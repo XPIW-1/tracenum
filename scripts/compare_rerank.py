@@ -106,7 +106,7 @@ def main():
     summary = {"rounds": len(report), "top5_ordered_equal": ok,
                "all_equal": bool(report) and ok == len(report),
                "logged_texts_verified_by_cache": sum(r["cache_hit"] for r in report),
-               "model": reranker.model, "max_chunks_per_doc": args.max_chunks_per_doc}
+               "model": reranker.model, "url": reranker.url, "max_chunks_per_doc": args.max_chunks_per_doc}
     print(json.dumps(summary, ensure_ascii=False))
     if args.out:
         Path(args.out).write_text(json.dumps({"summary": summary, "rounds": report}, ensure_ascii=False, indent=1),

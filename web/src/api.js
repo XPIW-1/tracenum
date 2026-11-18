@@ -18,12 +18,14 @@ async function consumeAccessFragment() {
   } catch { /* backend off: stay in the public showcase */ }
 }
 
-// 'live' only when the backend says this visitor may ask live questions right now.
+// 'live' only when the backend says this visitor may ask live questions right now;
+// 'loading' when they may, as soon as the models finish loading (the page re-checks).
 export async function detectMode() {
   await consumeAccessFragment()
   try {
     const session = await getJSON('/api/session', AbortSignal.timeout(4000))
     if (session?.live === true) return 'live'
+    if (session?.access && session.reason === 'loading') return 'loading'
   } catch { /* A static host returns HTML or 404 for /api/session. */ }
   return 'static'
 }

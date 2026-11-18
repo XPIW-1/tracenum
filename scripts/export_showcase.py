@@ -71,6 +71,14 @@ def public_recording(question_id, recording_id):
 
 
 def main():
+    # Build the whole public folder in a fresh staging directory and swap it in only when
+    # everything was written: a failed export never leaves a half-updated site, and a
+    # recording taken off the featured list stops being served.
+    import shutil
+    out = OUTPUT.with_name(".data-staging")
+    previous = OUTPUT.with_name(".data-previous")
+    if out.exists():
+        shutil.rmtree(out)
     corpora = [
         {"code": code, **{key: value for key, value in info.items() if key != "pdf_path"}}
         for code, info in P.CORPORA.items()
@@ -93,7 +101,8 @@ def main():
     records.sort(key=lambda record: record["id"], reverse=True)
     showcase = {
         # Use the most recent source timestamp so identical inputs yield identical output.
-        "generated_at": max((record["recorded_at"] for record in records), key=datetime.fromisoformat),
+        "generated_at": max((record["recorded_at"] for record in records), key=datetime.fromisoformat,
+                            default=None),
         "featured": [
             {
                 "question_id": record["question_id"],
@@ -116,23 +125,24 @@ def main():
             raise ValueError(f"{code}: corpus PDF SHA-256 does not match the frozen manifest")
         pdfs[code] = data
 
-    # Start from an empty recordings folder so a recording taken off the featured list
-    # stops being served (the folder is published as-is).
-    import shutil
-    if (OUTPUT / "recordings").is_dir():
-        shutil.rmtree(OUTPUT / "recordings")
-    write_json(OUTPUT / "corpora.json", corpora)
-    write_json(OUTPUT / "questions.json", questions)
-    write_json(OUTPUT / "showcase.json", showcase)
-    write_json(OUTPUT / "recordings" / "index.json", [
+    write_json(out / "corpora.json", corpora)
+    write_json(out / "questions.json", questions)
+    write_json(out / "showcase.json", showcase)
+    write_json(out / "recordings" / "index.json", [
         {field: record[field] for field in SUMMARY_FIELDS} | {"featured": True}
         for record in records
     ])
     for record in records:
-        write_json(OUTPUT / "recordings" / f"{record['id']}.json", record)
-    (OUTPUT / "pdf").mkdir(parents=True, exist_ok=True)
+        write_json(out / "recordings" / f"{record['id']}.json", record)
+    (out / "pdf").mkdir(parents=True, exist_ok=True)
     for code, data in pdfs.items():
-        (OUTPUT / "pdf" / f"{code}.pdf").write_bytes(data)
+        (out / "pdf" / f"{code}.pdf").write_bytes(data)
+    if previous.exists():
+        shutil.rmtree(previous)
+    if OUTPUT.exists():
+        OUTPUT.rename(previous)
+    out.rename(OUTPUT)
+    shutil.rmtree(previous, ignore_errors=True)
     print(f"Showcase exported: {len(corpora)} corpora, {len(questions)} questions, "
           f"{len(records)} featured recordings, {len(pdfs)} SHA-256-verified PDFs.")
 
