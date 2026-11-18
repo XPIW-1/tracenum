@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  guard-tests:
+    # Offline tests of the live-question guard (quota, money cap, access sessions).
+    # The API end-to-end test needs the frozen paper assets, which are not in this repo.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy==2.5.4
+      - run: python -m unittest tests.test_live_guard -v
+
+  web-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+        working-directory: web
+      - run: npm run build
+        working-directory: web
+      - name: Public data is complete
+        run: |
+          for f in corpora.json questions.json showcase.json recordings/index.json pdf/BYD.pdf pdf/WSI.pdf; do
+            test -s "web/dist/data/$f" || { echo "missing $f"; exit 1; }
+          done
