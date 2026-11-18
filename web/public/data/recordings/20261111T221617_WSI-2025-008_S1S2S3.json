@@ -1,0 +1,1896 @@
+{
+  "company": "WSI",
+  "duration": 167.485,
+  "events": [
+    {
+      "event": {
+        "budget": 39000,
+        "company": "WSI",
+        "paper": {
+          "question_id": "WSI-2025-008",
+          "question_type": "跨页/分散证据",
+          "results": {
+            "S1": {
+              "correct": false,
+              "errors": [
+                "E07",
+                "E10"
+              ],
+              "latency": 89.695,
+              "reason": "错误拒答：Gold 为 22%，172 页税率表已列“威胜信息印尼公司 22%”；答案称未绑定子公司，与原文不符。",
+              "rounds": 1,
+              "stop": "达到轮次上限",
+              "tokens": 1919
+            },
+            "S2": {
+              "correct": true,
+              "errors": [],
+              "latency": 147.04,
+              "reason": "四项核对通过：印尼子公司所得税税率 22%，与 Gold 22.00 一致；本题不需计算。",
+              "rounds": 2,
+              "stop": "固定轮次完成",
+              "tokens": 7291
+            },
+            "S3": {
+              "correct": true,
+              "errors": [],
+              "latency": 193.332,
+              "reason": "四项核对通过：22%，与 Gold 22.00 一致，引用 172 页税率表。",
+              "rounds": 3,
+              "stop": "核验范围外",
+              "tokens": 10670
+            }
+          }
+        },
+        "question": "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）",
+        "question_id": "WSI-2025-008",
+        "strategies": [
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "type": "meta"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S1",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S2",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S3",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 0.344
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 0.36
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 0.36
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          64,
+          172
+        ],
+        "latency": 0.51,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）",
+        "round": 1,
+        "selected_pages": [
+          64,
+          64,
+          64,
+          172,
+          64
+        ],
+        "strategy": "S1",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.875
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 0.875
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          64,
+          172
+        ],
+        "latency": 0.53,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）",
+        "round": 1,
+        "selected_pages": [
+          64,
+          64,
+          64,
+          172,
+          64
+        ],
+        "strategy": "S2",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.891
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 0.891
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          64,
+          172
+        ],
+        "latency": 0.55,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）",
+        "round": 1,
+        "selected_pages": [
+          64,
+          64,
+          64,
+          172,
+          64
+        ],
+        "strategy": "S3",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.907
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 0.907
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据。[第64页][第172页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 3.94,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S1",
+        "total_tokens": 2031,
+        "type": "node"
+      },
+      "t": 4.813
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 4.813
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[64, 172]。请针对原问题中的关键指标做一次不同的检索",
+          "答案未给出比例结果。请补充分子和分母的数值及其来源页"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S1",
+        "total_tokens": 2031,
+        "type": "node"
+      },
+      "t": 4.813
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 4.813
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "达到轮次上限",
+        "strategy": "S1",
+        "total_tokens": 2031,
+        "type": "node"
+      },
+      "t": 4.813
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "年报中未找到相关数据。[第64页][第172页]",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            64,
+            172
+          ],
+          "company": "WSI",
+          "elapsed": 4.8,
+          "evidence": [
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 举措，形成“分红+回购”协同发力的组合拳。 |\n|  |\n| 2025年，公司推行“年度分红+中期分红”的分红模式，将经营发展成果切实转化为股东的 |\n|  |\n| 现金收益，构建稳定可预期的投资回报路径。2025年4月16日，公司完成2024年度权益分派， |\n|  |\n| 以每10股派发现金红利5.2元（含税）的方案，累计派发现金红利2.55亿元，充分体现稳健的 |\n|  |\n| 盈利能力和对股东负责的态度。2025年，公司首次实施中期分红，每10股派发现金红利2.5元 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n| 互动，提升公司在国际资本市场的能见度与认可度。 |\n|  |\n| 6、投资者回报 |\n|  |\n| 公司积极响应资本市场“提质增效重回报”专项行动要求，以提升股东回报、增强投资者信 |\n|  |\n| 心为核心目标，通过优化分红机制、提高分红频次、制定长期回报规划，并结合股份回购注销等 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| □适用 √不适用 |\n|  |\n| 二、公司就其与控股股东在业务、人员、资产、机构、财务等方面存在的不能保证独立性、不能 |\n|  |\n| 保持自主经营能力的情况说明 |\n|  |\n| □适用 √不适用 |\n|  |\n| 控股股东、实际控制人及其控制的其他单位从事与公司相同或者相近业务的情况，以及同业竞争 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 172,
+              "text": "【续表上下文；继承自第144页】表名：母公司所有者权益变动表；口径：母公司；单位：元；年份：2025；前页表头：| 项目 | 2025年度 |  |  |  |  |  |  |  |  |  |  |\n【候选表格；威胜信息；2025年年报；PDF物理页172】\n报表类型：母公司所有者权益变动表；财务口径：母公司；单位：元；实际表头年份：2025\n表头/表首原行（重复供定位）：\n| 税种 | 计税依据 | 税率 |\n| 增值税 | 以按税法规定计算的销售货物和应税劳务收入为基础计算销项税额，扣除当期允许抵扣的进项税额后，差额部分为应交增值税 | 3%、5%、6%、8%、 ↵ 9%、11%、13%、15%、 ↵ 16% |\n本片原始行序：\n| 税种 | 计税依据 | 税率 |\n| 增值税 | 以按税法规定计算的销售货物和应税劳务收入为基础计算销项税额，扣除当期允许抵扣的进项税额后，差额部分为应交增值税 | 3%、5%、6%、8%、 ↵ 9%、11%、13%、15%、 ↵ 16% |\n| 消费税 |  |  |\n| 营业税 |  |  |\n| 城市维护建设税 | 实际缴纳的流转税税额 | 7%、5% |\n| 企业所得税 | 应纳税所得额 | 8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30% |\n| 房产税 | 从价计征的，按房产原值一次减除20%后余值的 ↵ 1.2%计缴；从租计征的，按租金收入的12%计缴 | 1.2%、12% |\n| 教育费附加 | 实际缴纳的流转税税额 | 3% |\n| 地方教育附加 | 实际缴纳的流转税税额 | 2% |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 或者同业竞争情况发生较大变化对公司的影响、已采取的解决措施、解决进展以及后续解决计划 |\n|  |\n| □适用 √不适用 |\n|  |\n| 控股股东、实际控制人及其控制的其他单位从事对公司构成重大不利影响的同业竞争情况 |\n|  |\n| □适用 √不适用 |",
+              "type": "table"
+            }
+          ],
+          "evidence_status": "evidence_insufficient",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": true,
+            "retrieval_complete": false,
+            "time_match": true
+          },
+          "generated_rounds": 1,
+          "missing": [
+            "答案未找到数据。已检索页：[64, 172]。请针对原问题中的关键指标做一次不同的检索",
+            "答案未给出比例结果。请补充分子和分母的数值及其来源页"
+          ],
+          "model_calls": 1,
+          "numbers": [],
+          "queries": [
+            "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）"
+          ],
+          "refused": true,
+          "rounds": 1,
+          "stop_reason": "达到轮次上限",
+          "suggested_pages": [
+            64,
+            172,
+            223
+          ],
+          "termination_status": "max_round_reached",
+          "total_tokens": 2031,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S1",
+        "type": "final"
+      },
+      "t": 4.813
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据。  \n原文仅提到2025年10月邀请境外投资者调研“印尼子公司”[第64页]；税率表列示的企业所得税税率包括8.25%、15%、20%、22%、25%、27%、27.5%、30%，但未明确绑定“印尼子公司”适用的所得税税率[第172页]。",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 4.2,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S2",
+        "total_tokens": 1980,
+        "type": "node"
+      },
+      "t": 5.094
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 5.094
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[64, 172]。请针对原问题中的关键指标做一次不同的检索"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S2",
+        "total_tokens": 1980,
+        "type": "node"
+      },
+      "t": 5.094
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 5.094
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "继续检索",
+        "strategy": "S2",
+        "total_tokens": 1980,
+        "type": "node"
+      },
+      "t": 5.094
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 5.11
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据。第64页仅提到“10月邀请境外投资者调研印尼子公司”，但第172页企业所得税税率表未明确将该税率与印尼子公司绑定，无法确定该子公司的所得税税率。[第64页][第172页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 4.47,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S3",
+        "total_tokens": 2018,
+        "type": "node"
+      },
+      "t": 5.375
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 5.375
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[64, 172]。请针对原问题中的关键指标做一次不同的检索",
+          "答案未给出比例结果。请补充分子和分母的数值及其来源页"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S3",
+        "total_tokens": 2018,
+        "type": "node"
+      },
+      "t": 5.375
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 5.375
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "继续检索",
+        "strategy": "S3",
+        "total_tokens": 2018,
+        "type": "node"
+      },
+      "t": 5.375
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 5.391
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 3.37,
+        "model_calls": 2,
+        "node": "requery",
+        "query": "2025年10月 公司 境外投资者 印尼子公司 实际调研 企业所得税税率 财务报表附注 分地区 营业收入构成",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 2693,
+        "type": "node"
+      },
+      "t": 8.469
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 8.469
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 3.38,
+        "model_calls": 2,
+        "node": "requery",
+        "query": "2025年年报 印尼子公司 企业所得税税率 财务报表附注 主要税种及税率 分地区营业收入构成 境外投资者调研",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 2697,
+        "type": "node"
+      },
+      "t": 8.766
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 8.766
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 11.157
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 12.266
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 14.5
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 18.672
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 19.719
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 22.141
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 22.766
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 24.657
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 25.266
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 29.313
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 29.797
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 31.938
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 32.297
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 34.469
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 34.485
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 39.328
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 39.407
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 41.75
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 43.938
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 45.063
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 48.625
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 49.875
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 52.532
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 53.75
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 55.938
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 56.407
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 58.719
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 58.75
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 60.766
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 61.328
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 64.266
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 65.235
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 68.032
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 68.985
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 71.563
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 72.891
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 75.125
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 79.11
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 81.125
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          64,
+          172
+        ],
+        "latency": 72.65,
+        "model_calls": 2,
+        "new_evidence": 1,
+        "node": "retrieve",
+        "query": "2025年10月 公司 境外投资者 印尼子公司 实际调研 企业所得税税率 财务报表附注 分地区 营业收入构成",
+        "round": 2,
+        "selected_pages": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ],
+        "strategy": "S2",
+        "total_tokens": 2693,
+        "type": "node"
+      },
+      "t": 81.125
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 81.125
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 82.797
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          64,
+          172
+        ],
+        "latency": 74.04,
+        "model_calls": 2,
+        "new_evidence": 1,
+        "node": "retrieve",
+        "query": "2025年年报 印尼子公司 企业所得税税率 财务报表附注 主要税种及税率 分地区营业收入构成 境外投资者调研",
+        "round": 2,
+        "selected_pages": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ],
+        "strategy": "S3",
+        "total_tokens": 2697,
+        "type": "node"
+      },
+      "t": 82.797
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 82.813
+    },
+    {
+      "event": {
+        "answer": "年报中未找到“印尼子公司所得税税率”的相关数据，无法确定该子公司适用的具体所得税税率。\n\n原文仅提到“10月邀请境外投资者调研印尼子公司”[第64页]；另在第172页企业所得税税率表中列示了8.25%、15%、20%、22%、25%、27%、27.5%、30%等多个税率，但未明确其中哪一税率适用于该印尼子公司。因此不能据原文推断或指定其具体税率。",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 2,
+        "latency": 4.9,
+        "model_calls": 3,
+        "node": "generate",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 5034,
+        "type": "node"
+      },
+      "t": 86.032
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 86.032
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[64, 172]。请针对原问题中的关键指标做一次不同的检索"
+        ],
+        "model_calls": 3,
+        "node": "check",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 5034,
+        "type": "node"
+      },
+      "t": 86.032
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 86.032
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "model_calls": 3,
+        "node": "decide",
+        "round": 2,
+        "stop_reason": "固定轮次完成",
+        "strategy": "S2",
+        "total_tokens": 5034,
+        "type": "node"
+      },
+      "t": 86.047
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "年报中未找到“印尼子公司所得税税率”的相关数据，无法确定该子公司适用的具体所得税税率。\n\n原文仅提到“10月邀请境外投资者调研印尼子公司”[第64页]；另在第172页企业所得税税率表中列示了8.25%、15%、20%、22%、25%、27%、27.5%、30%等多个税率，但未明确其中哪一税率适用于该印尼子公司。因此不能据原文推断或指定其具体税率。",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            64,
+            172
+          ],
+          "company": "WSI",
+          "elapsed": 86.0,
+          "evidence": [
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 举措，形成“分红+回购”协同发力的组合拳。 |\n|  |\n| 2025年，公司推行“年度分红+中期分红”的分红模式，将经营发展成果切实转化为股东的 |\n|  |\n| 现金收益，构建稳定可预期的投资回报路径。2025年4月16日，公司完成2024年度权益分派， |\n|  |\n| 以每10股派发现金红利5.2元（含税）的方案，累计派发现金红利2.55亿元，充分体现稳健的 |\n|  |\n| 盈利能力和对股东负责的态度。2025年，公司首次实施中期分红，每10股派发现金红利2.5元 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n| 互动，提升公司在国际资本市场的能见度与认可度。 |\n|  |\n| 6、投资者回报 |\n|  |\n| 公司积极响应资本市场“提质增效重回报”专项行动要求，以提升股东回报、增强投资者信 |\n|  |\n| 心为核心目标，通过优化分红机制、提高分红频次、制定长期回报规划，并结合股份回购注销等 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| □适用 √不适用 |\n|  |\n| 二、公司就其与控股股东在业务、人员、资产、机构、财务等方面存在的不能保证独立性、不能 |\n|  |\n| 保持自主经营能力的情况说明 |\n|  |\n| □适用 √不适用 |\n|  |\n| 控股股东、实际控制人及其控制的其他单位从事与公司相同或者相近业务的情况，以及同业竞争 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 172,
+              "text": "【续表上下文；继承自第144页】表名：母公司所有者权益变动表；口径：母公司；单位：元；年份：2025；前页表头：| 项目 | 2025年度 |  |  |  |  |  |  |  |  |  |  |\n【候选表格；威胜信息；2025年年报；PDF物理页172】\n报表类型：母公司所有者权益变动表；财务口径：母公司；单位：元；实际表头年份：2025\n表头/表首原行（重复供定位）：\n| 税种 | 计税依据 | 税率 |\n| 增值税 | 以按税法规定计算的销售货物和应税劳务收入为基础计算销项税额，扣除当期允许抵扣的进项税额后，差额部分为应交增值税 | 3%、5%、6%、8%、 ↵ 9%、11%、13%、15%、 ↵ 16% |\n本片原始行序：\n| 税种 | 计税依据 | 税率 |\n| 增值税 | 以按税法规定计算的销售货物和应税劳务收入为基础计算销项税额，扣除当期允许抵扣的进项税额后，差额部分为应交增值税 | 3%、5%、6%、8%、 ↵ 9%、11%、13%、15%、 ↵ 16% |\n| 消费税 |  |  |\n| 营业税 |  |  |\n| 城市维护建设税 | 实际缴纳的流转税税额 | 7%、5% |\n| 企业所得税 | 应纳税所得额 | 8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30% |\n| 房产税 | 从价计征的，按房产原值一次减除20%后余值的 ↵ 1.2%计缴；从租计征的，按租金收入的12%计缴 | 1.2%、12% |\n| 教育费附加 | 实际缴纳的流转税税额 | 3% |\n| 地方教育附加 | 实际缴纳的流转税税额 | 2% |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 或者同业竞争情况发生较大变化对公司的影响、已采取的解决措施、解决进展以及后续解决计划 |\n|  |\n| □适用 √不适用 |\n|  |\n| 控股股东、实际控制人及其控制的其他单位从事对公司构成重大不利影响的同业竞争情况 |\n|  |\n| □适用 √不适用 |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 优化股本结构，以“真金白银”的实质性举措，切实提升股东权益价值。 |\n|  |\n| 7、关于内控规范 |\n|  |\n| 报告期内，公司根据国家相关要求和规定，结合自身实际情况，建立适合公司经营发展需要 |\n|  |\n| 的内部控制体系，并对相关管理制度、管理流程进行梳理优化，以便提高公司的风险防范能力和 |\n|  |\n| 规范运作水平。 |\n|  |",
+              "type": "table"
+            }
+          ],
+          "evidence_status": "evidence_insufficient",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": true,
+            "retrieval_complete": false,
+            "time_match": true
+          },
+          "generated_rounds": 2,
+          "missing": [
+            "答案未找到数据。已检索页：[64, 172]。请针对原问题中的关键指标做一次不同的检索"
+          ],
+          "model_calls": 3,
+          "numbers": [
+            {
+              "label": "企业所得税",
+              "line": "企业所得税  应纳税所得额  8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "8.25%"
+            },
+            {
+              "label": "增值税",
+              "line": "增值税  以按税法规定计算的销售货物和应税劳务收入为基础计算销项税额，扣除当期允许抵扣的进项税额后，差额部分为应交增值税  3%、5%、6%、8%、 ↵ 9%、11%、13%、15%、 ↵ 16%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "15%"
+            },
+            {
+              "label": "企业所得税",
+              "line": "企业所得税  应纳税所得额  8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "20%"
+            },
+            {
+              "label": "企业所得税",
+              "line": "企业所得税  应纳税所得额  8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "22%"
+            },
+            {
+              "label": "企业所得税",
+              "line": "企业所得税  应纳税所得额  8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "25%"
+            },
+            {
+              "label": "企业所得税",
+              "line": "企业所得税  应纳税所得额  8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "27%"
+            },
+            {
+              "label": "企业所得税",
+              "line": "企业所得税  应纳税所得额  8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "27.5%"
+            },
+            {
+              "label": "企业所得税",
+              "line": "企业所得税  应纳税所得额  8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "30%"
+            }
+          ],
+          "queries": [
+            "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）",
+            "2025年10月 公司 境外投资者 印尼子公司 实际调研 企业所得税税率 财务报表附注 分地区 营业收入构成"
+          ],
+          "refused": true,
+          "rounds": 2,
+          "stop_reason": "固定轮次完成",
+          "suggested_pages": [
+            64,
+            172,
+            228
+          ],
+          "termination_status": "fixed_round_complete",
+          "total_tokens": 5034,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S2",
+        "type": "final"
+      },
+      "t": 86.047
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据。\n\n核对说明：本题不涉及数值加总或计算，因此无原始操作数、单位或公式可核验。第64页仅提到“10月邀请境外投资者调研印尼子公司”；第172页企业所得税税率表列示多个税率（8.25%、15%、20%、22%、25%、27%、27.5%、30%），但原文未明确该印尼子公司适用其中哪一税率，无法据此确定具体所得税税率。[第64页][第172页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 2,
+        "latency": 5.09,
+        "model_calls": 3,
+        "node": "generate",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 5076,
+        "type": "node"
+      },
+      "t": 87.891
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 87.891
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[64, 172]。请针对原问题中的关键指标做一次不同的检索"
+        ],
+        "model_calls": 3,
+        "node": "check",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 5076,
+        "type": "node"
+      },
+      "t": 87.907
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 87.907
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "model_calls": 3,
+        "node": "decide",
+        "round": 2,
+        "stop_reason": "继续检索",
+        "strategy": "S3",
+        "total_tokens": 5076,
+        "type": "node"
+      },
+      "t": 87.907
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 87.922
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 6.19,
+        "model_calls": 4,
+        "node": "requery",
+        "query": "2025年年报 公司 印尼子公司 2025年10月 境外投资者 实地调研 适用所得税税率 税项 所得税费用 税收优惠 合并财务报表项目注释 分地区营业收入",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 6345,
+        "type": "node"
+      },
+      "t": 94.11
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 94.11
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 99.907
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 105.078
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 106.407
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 107.844
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 116.188
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 123.625
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 134.688
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 136.688
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 138.5
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 140.36
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 142.032
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 143.375
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 145.688
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 147.547
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 149.516
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 151.36
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 156.922
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 158.735
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 162.125
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 164.032
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          64,
+          172
+        ],
+        "latency": 69.93,
+        "model_calls": 4,
+        "new_evidence": 1,
+        "node": "retrieve",
+        "query": "2025年年报 公司 印尼子公司 2025年10月 境外投资者 实地调研 适用所得税税率 税项 所得税费用 税收优惠 合并财务报表项目注释 分地区营业收入",
+        "round": 3,
+        "selected_pages": [
+          64,
+          64,
+          64,
+          64,
+          172
+        ],
+        "strategy": "S3",
+        "total_tokens": 6345,
+        "type": "node"
+      },
+      "t": 164.047
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 164.047
+    },
+    {
+      "event": {
+        "answer": "该海外子公司为“印尼子公司”[第64页]。根据第172页“存在不同企业所得税税率纳税主体”表，“威胜信息印尼公司”的所得税税率为 **22%**。[第172页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 3,
+        "latency": 3.43,
+        "model_calls": 5,
+        "node": "generate",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 9027,
+        "type": "node"
+      },
+      "t": 167.469
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 167.469
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": true,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [],
+        "model_calls": 5,
+        "node": "check",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 9027,
+        "type": "node"
+      },
+      "t": 167.485
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 167.485
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": true,
+          "time_match": true
+        },
+        "latency": 0.0,
+        "model_calls": 5,
+        "node": "decide",
+        "round": 3,
+        "stop_reason": "核验范围外",
+        "strategy": "S3",
+        "total_tokens": 9027,
+        "type": "node"
+      },
+      "t": 167.485
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "该海外子公司为“印尼子公司”[第64页]。根据第172页“存在不同企业所得税税率纳税主体”表，“威胜信息印尼公司”的所得税税率为 **22%**。[第172页]",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            64,
+            172
+          ],
+          "company": "WSI",
+          "elapsed": 167.5,
+          "evidence": [
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 举措，形成“分红+回购”协同发力的组合拳。 |\n|  |\n| 2025年，公司推行“年度分红+中期分红”的分红模式，将经营发展成果切实转化为股东的 |\n|  |\n| 现金收益，构建稳定可预期的投资回报路径。2025年4月16日，公司完成2024年度权益分派， |\n|  |\n| 以每10股派发现金红利5.2元（含税）的方案，累计派发现金红利2.55亿元，充分体现稳健的 |\n|  |\n| 盈利能力和对股东负责的态度。2025年，公司首次实施中期分红，每10股派发现金红利2.5元 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n| 互动，提升公司在国际资本市场的能见度与认可度。 |\n|  |\n| 6、投资者回报 |\n|  |\n| 公司积极响应资本市场“提质增效重回报”专项行动要求，以提升股东回报、增强投资者信 |\n|  |\n| 心为核心目标，通过优化分红机制、提高分红频次、制定长期回报规划，并结合股份回购注销等 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| □适用 √不适用 |\n|  |\n| 二、公司就其与控股股东在业务、人员、资产、机构、财务等方面存在的不能保证独立性、不能 |\n|  |\n| 保持自主经营能力的情况说明 |\n|  |\n| □适用 √不适用 |\n|  |\n| 控股股东、实际控制人及其控制的其他单位从事与公司相同或者相近业务的情况，以及同业竞争 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 172,
+              "text": "【续表上下文；继承自第144页】表名：母公司所有者权益变动表；口径：母公司；单位：元；年份：2025；前页表头：| 项目 | 2025年度 |  |  |  |  |  |  |  |  |  |  |\n【候选表格；威胜信息；2025年年报；PDF物理页172】\n报表类型：母公司所有者权益变动表；财务口径：母公司；单位：元；实际表头年份：2025\n表头/表首原行（重复供定位）：\n| 税种 | 计税依据 | 税率 |\n| 增值税 | 以按税法规定计算的销售货物和应税劳务收入为基础计算销项税额，扣除当期允许抵扣的进项税额后，差额部分为应交增值税 | 3%、5%、6%、8%、 ↵ 9%、11%、13%、15%、 ↵ 16% |\n本片原始行序：\n| 税种 | 计税依据 | 税率 |\n| 增值税 | 以按税法规定计算的销售货物和应税劳务收入为基础计算销项税额，扣除当期允许抵扣的进项税额后，差额部分为应交增值税 | 3%、5%、6%、8%、 ↵ 9%、11%、13%、15%、 ↵ 16% |\n| 消费税 |  |  |\n| 营业税 |  |  |\n| 城市维护建设税 | 实际缴纳的流转税税额 | 7%、5% |\n| 企业所得税 | 应纳税所得额 | 8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30% |\n| 房产税 | 从价计征的，按房产原值一次减除20%后余值的 ↵ 1.2%计缴；从租计征的，按租金收入的12%计缴 | 1.2%、12% |\n| 教育费附加 | 实际缴纳的流转税税额 | 3% |\n| 地方教育附加 | 实际缴纳的流转税税额 | 2% |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 或者同业竞争情况发生较大变化对公司的影响、已采取的解决措施、解决进展以及后续解决计划 |\n|  |\n| □适用 √不适用 |\n|  |\n| 控股股东、实际控制人及其控制的其他单位从事对公司构成重大不利影响的同业竞争情况 |\n|  |\n| □适用 √不适用 |",
+              "type": "table"
+            },
+            {
+              "page": 64,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页64】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 新加坡参加路演，10月邀请境外投资者调研印尼子公司，实现从“走出去”到“请进来”的双向 |\n|  |\n本片原始行序：\n| 优化股本结构，以“真金白银”的实质性举措，切实提升股东权益价值。 |\n|  |\n| 7、关于内控规范 |\n|  |\n| 报告期内，公司根据国家相关要求和规定，结合自身实际情况，建立适合公司经营发展需要 |\n|  |\n| 的内部控制体系，并对相关管理制度、管理流程进行梳理优化，以便提高公司的风险防范能力和 |\n|  |\n| 规范运作水平。 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 172,
+              "text": "威胜信息技术股份有限公司2025年年度报告\n六、税项\n1、 主要税种及税率\n主要税种及税率情况\n√适用 □不适用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n| 税种 | 计税依据 | 税率 |\n| 增值税 | 以按税法规定计算的销售货物和应税劳务收入为基础计算销项税额，扣除当期允许抵扣的进项税额后，差额部分为应交增值税 | 3%、5%、6%、8%、 ↵ 9%、11%、13%、15%、 ↵ 16% |\n| 消费税 |  |  |\n| 营业税 |  |  |\n| 城市维护建设税 | 实际缴纳的流转税税额 | 7%、5% |\n| 企业所得税 | 应纳税所得额 | 8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30% |\n| 房产税 | 从价计征的，按房产原值一次减除20%后余值的 ↵ 1.2%计缴；从租计征的，按租金收入的12%计缴 | 1.2%、12% |\n| 教育费附加 | 实际缴纳的流转税税额 | 3% |\n| 地方教育附加 | 实际缴纳的流转税税额 | 2% |\n存在不同企业所得税税率纳税主体的，披露情况说明\n√适用 □不适用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n| 纳税主体名称 | 所得税税率（%） |\n| 本公司 | 15 |\n| 威铭能源公司 | 15 |\n| 珠海中慧公司 | 15 |\n| 威胜信息香港公司 | 8.25 |\n| 威胜信息印尼公司 | 22 |\n| 威胜信息墨西哥公司 | 30 |\n| 威胜信息沙特公司 | 20 |\n| 威胜信息孟加拉公司 | 27.5 |\n| 威胜信息越南公司 | 20 |\n| 威胜信息南非公司 | 27 |\n| 除上述以外的其他纳税主体 | 25 |\n2、 税收优惠\n√适用 □不适用\n",
+              "type": "text"
+            }
+          ],
+          "evidence_status": "verification_unsupported",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": true,
+            "retrieval_complete": true,
+            "time_match": true
+          },
+          "generated_rounds": 3,
+          "missing": [],
+          "model_calls": 5,
+          "numbers": [
+            {
+              "label": "企业所得税",
+              "line": "企业所得税  应纳税所得额  8.25%、15%、20%、 ↵ 22%、25%、27%、 ↵ 27.5%、30%",
+              "pages": [
+                172
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "22%"
+            }
+          ],
+          "queries": [
+            "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）",
+            "2025年年报 印尼子公司 企业所得税税率 财务报表附注 主要税种及税率 分地区营业收入构成 境外投资者调研",
+            "2025年年报 公司 印尼子公司 2025年10月 境外投资者 实地调研 适用所得税税率 税项 所得税费用 税收优惠 合并财务报表项目注释 分地区营业收入"
+          ],
+          "refused": false,
+          "rounds": 3,
+          "stop_reason": "核验范围外",
+          "suggested_pages": [
+            64,
+            172,
+            223
+          ],
+          "termination_status": "verification_unsupported",
+          "total_tokens": 9027,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S3",
+        "type": "final"
+      },
+      "t": 167.485
+    },
+    {
+      "event": {
+        "type": "done"
+      },
+      "t": 167.485
+    }
+  ],
+  "id": "20261111T221617_WSI-2025-008_S1S2S3",
+  "question": "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）",
+  "question_id": "WSI-2025-008",
+  "recorded_at": "2026-11-11T22:16:17+08:00",
+  "strategies": [
+    "S1",
+    "S2",
+    "S3"
+  ],
+  "summary": {
+    "S1": {
+      "answer": "年报中未找到相关数据。[第64页][第172页]",
+      "elapsed": 4.8,
+      "refused": true,
+      "rounds": 1,
+      "stop_reason": "达到轮次上限",
+      "tokens": 2031
+    },
+    "S2": {
+      "answer": "年报中未找到“印尼子公司所得税税率”的相关数据，无法确定该子公司适用的具体所得税税率。\n\n原文仅提到“10月邀请境外投资者调研印尼子公司”[第64页]；另在第172页企业所得税税率表中列示了8.25%、15%、20%、22%、25%、27%、27.5%、30%等多个税率，但未明确其中哪一税率适用于该印尼子公司。因此不能据原文推断或指定其具体税率。",
+      "elapsed": 86.0,
+      "refused": true,
+      "rounds": 2,
+      "stop_reason": "固定轮次完成",
+      "tokens": 5034
+    },
+    "S3": {
+      "answer": "该海外子公司为“印尼子公司”[第64页]。根据第172页“存在不同企业所得税税率纳税主体”表，“威胜信息印尼公司”的所得税税率为 **22%**。[第172页]",
+      "elapsed": 167.5,
+      "refused": false,
+      "rounds": 3,
+      "stop_reason": "核验范围外",
+      "tokens": 9027
+    }
+  }
+}

@@ -7,7 +7,10 @@ import { normNum, TickMark } from './AnswerText.jsx'
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
 const docs = new Map()
 function loadDoc(code) {
-  if (!docs.has(code)) docs.set(code, pdfjs.getDocument(`/api/pdf/${code}`).promise)
+  if (!docs.has(code)) docs.set(code, pdfjs.getDocument(`/data/pdf/${encodeURIComponent(code)}.pdf`).promise.catch((err) => {
+    docs.delete(code)
+    throw err
+  }))
   return docs.get(code)
 }
 
@@ -161,7 +164,7 @@ export default function PdfPane({ target, corpus, onPage }) {
       </div>
       <div className="pdf-note" aria-live="polite">
         {state === 'loading' && '正在打开原页…'}
-        {state === 'error' && '这一页没能打开，请检查后端是否在运行。'}
+        {state === 'error' && '这一页没能打开，请切换页码或刷新后重试。'}
         {state === 'done' && target.values?.length > 0 && marks.length > 0 && (
           <span><span className="ok"><TickMark className="tickmark" /> 原文一致</span>：{target.values.join('、')} 在本页逐字出现，已用荧光笔标出。</span>
         )}

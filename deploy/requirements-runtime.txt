@@ -1,0 +1,20 @@
+# Pinned to the versions of the environment that produced the paper's formal runs
+# (conda env "finance-rag", Python 3.12). torch comes from the CPU-only index (see Dockerfile).
+fastapi==0.162.4
+uvicorn==0.54.0
+pydantic==2.14.1
+numpy==2.5.4
+openpyxl==3.1.5
+jsonschema==4.26.0
+tokenizers==0.23.3
+transformers==5.19.0
+sentence-transformers==6.1.0
+huggingface_hub==1.33.0
+chromadb==1.5.9
+langchain-core==1.6.9
+langchain-chroma==1.0.0
+langchain-huggingface==1.2.1
+langchain-openai==1.7.0
+openai==3.29.0
+langgraph==1.2.14
+httpx==0.28.1

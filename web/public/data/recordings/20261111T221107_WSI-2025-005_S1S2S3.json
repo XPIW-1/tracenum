@@ -1,0 +1,2122 @@
+{
+  "company": "WSI",
+  "duration": 149.0,
+  "events": [
+    {
+      "event": {
+        "budget": 39000,
+        "company": "WSI",
+        "paper": {
+          "question_id": "WSI-2025-005",
+          "question_type": "相似指标与财务口径",
+          "results": {
+            "S1": {
+              "correct": false,
+              "errors": [
+                "E07",
+                "E10"
+              ],
+              "latency": 43.69,
+              "reason": "错误拒答：Gold 为 41.48%，扣非归母净利润 646,404,185.34 元在语料中；答案称未披露并仅引 78 页（分红金额）。以数据缺失为由拒答。",
+              "rounds": 1,
+              "stop": "达到轮次上限",
+              "tokens": 2546
+            },
+            "S2": {
+              "correct": false,
+              "errors": [
+                "E07",
+                "E10"
+              ],
+              "latency": 109.313,
+              "reason": "错误拒答：Gold 为 41.48%，扣非归母 646,404,185.34 元可检索；答案以分母缺失为由拒答。",
+              "rounds": 2,
+              "stop": "固定轮次完成",
+              "tokens": 7396
+            },
+            "S3": {
+              "correct": true,
+              "errors": [],
+              "latency": 148.5,
+              "reason": "五项全通过：41.48%；268,099,563.05÷646,404,185.34=41.4755%→41.48%，口径（扣非归母）正确。",
+              "rounds": 3,
+              "stop": "达到轮次上限",
+              "tokens": 14187
+            }
+          }
+        },
+        "question": "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+        "question_id": "WSI-2025-005",
+        "strategies": [
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "type": "meta"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S1",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S2",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S3",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 0.375
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 0.39
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 0.406
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          2,
+          77,
+          78,
+          79
+        ],
+        "latency": 0.47,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+        "round": 1,
+        "selected_pages": [
+          78,
+          79,
+          2,
+          2,
+          77
+        ],
+        "strategy": "S1",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.859
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          2,
+          77,
+          78,
+          79
+        ],
+        "latency": 0.49,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+        "round": 1,
+        "selected_pages": [
+          78,
+          79,
+          2,
+          2,
+          77
+        ],
+        "strategy": "S3",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.875
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 0.875
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 0.875
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          2,
+          77,
+          78,
+          79
+        ],
+        "latency": 0.51,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+        "round": 1,
+        "selected_pages": [
+          78,
+          79,
+          2,
+          2,
+          77
+        ],
+        "strategy": "S2",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.906
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 0.906
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据（所给原文未披露2025年扣非归母净利润，无法计算该比重）。[第78页] [第79页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 4.1,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S1",
+        "total_tokens": 2217,
+        "type": "node"
+      },
+      "t": 4.968
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 4.968
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": false,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.02,
+        "metric_audit": {
+          "applicable": true,
+          "desired_scope": "adjusted",
+          "missing": "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+          "passed": false,
+          "reason": "target_metric_not_supported",
+          "rows": [
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 78,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 79,
+              "quarterly": false,
+              "scope": "unadjusted"
+            }
+          ],
+          "target_metric": "扣除非经常性损益后的归母净利润"
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[2, 77, 78, 79]。请针对原问题中的关键指标做一次不同的检索",
+          "答案未展示计算过程。请先列出加数再写结果",
+          "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+          "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S1",
+        "total_tokens": 2217,
+        "type": "node"
+      },
+      "t": 4.984
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 4.984
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": false,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "达到轮次上限",
+        "strategy": "S1",
+        "total_tokens": 2217,
+        "type": "node"
+      },
+      "t": 4.984
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "年报中未找到相关数据（所给原文未披露2025年扣非归母净利润，无法计算该比重）。[第78页] [第79页]",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            78,
+            79
+          ],
+          "company": "WSI",
+          "elapsed": 5.0,
+          "evidence": [
+            {
+              "page": 78,
+              "text": "总股\n本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合\n计派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分\n红金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。\n2025年度公司以现金为对价，采用集中竞价方式已实施的股份回购金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净\n利润的62.75%。\n如在利润分配方案披露之日起至实施权益分派股权登记日期间因新增股份上市、股份回购等\n事项导致公司总股本发生变化的，则以未来实施分配方案的股权登记日的总股本扣减回购专用证\n券账户中股份数为基数，按照每股分配比例不变的原则对分配总额进行调整，并将另行公告具体\n调整情况。\n公司2025年度利润分配方案已经公司第三届董事会第二十一次会议审议通过，尚需公司2025\n年年度股东会审议通过后实施。\n(二) 现金分红政策的专项说明\n√适用 □不适用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n| 是否符合公司章程的规定或股东会决议的要求 | √是 □否 |\n| 分红标准和比例是否明确和清晰 | √是 □否 |\n| 相关的决策程序和机制是否完备 | √是 □否 |\n| 独立董事是否履职尽责并发挥了应有的作用 | √是 □否 |\n| 中小股东是否有充分表达意见和诉求的机会，其合法权益是否得到了充分保护 | √是 □否 |\n(三) 报告期内盈利且母公司可供股东分配利润为正，但未提出现金利润分配方案预案的，公司应\n当详细披露原因以及未分配利润的用途和使用计划\n□适用 √不适用\n",
+              "type": "text"
+            },
+            {
+              "page": 79,
+              "text": "金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净\n利润的62.75%。\n(五)最近三个会计年度现金分红情况\n√适用 □不适用\n单位：元 币种：人民币\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：元；实际表头年份：待核验\n| 最近一个会计年度合并报表中归属于上市公司普通股股东的净利润 | 666,266,924.52 |\n| 最近一个会计年度母公司报表年度末未分配利润 | 1,401,370,154.91 |\n| 最近三个会计年度累计现金分红金额（含税）（1） | 734,084,316.46 |\n| 最近三个会计年度累计回购并注销金额（2） | 201,913,896.40 |\n| 最近三个会计年度现金分红和回购并注销累计金额 ↵ （3）=（1）+（2） | 935,998,212.86 |\n| 最近三个会计年度年均净利润金额（4） | 607,398,980.16 |\n| 最近三个会计年度现金分红比例（%）（5）=（3）/ ↵ （4） | 154.10% |\n| 最近三个会计年度累计研发投入金额 | 700,264,187.85 |\n| 最近三个会计年度累计研发投入占累计营业收入比例 ↵ （%） | 8.81 |\n79/262",
+              "type": "text"
+            },
+            {
+              "page": 2,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页2】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 一、本公司董事会及董事、高级管理人员保证年度报告内容的真实性、准确性、完整性，不存在 |\n|  |\n本片原始行序：\n| 4,231,424股后的股本487,453,751股为基数，以此计算合计派发现金红利146,236,125.30元（含税）。 |\n|  |\n| 公司在2025年9月已实施2025年半年度现金分红，以实施权益分派股权登记日登记的总股 |\n|  |\n| 本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合计 |\n|  |\n| 派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分红 |\n|  |\n| 金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 2,
+              "text": "发现金红利3元（含税），不进行资本公积转增股本，不送红股。\n截至 2026 年 1 月 31 日，公司以总股本 491,685,175 股，扣除公司回购专用证券账户中股份数\n4,231,424股后的股本487,453,751股为基数，以此计算合计派发现金红利146,236,125.30元（含税）。\n公司在2025年9月已实施2025年半年度现金分红，以实施权益分派股权登记日登记的总股\n本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合计\n派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分红\n金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。\n2025年度公司以现金为对价，采用集中竞价方式已实施的股份回购金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净利\n润的62.75%。\n如在利润分配方案披露之日起至实施权益分派股权登记日期间因新增股份上市、股份回购等\n事项导致公司总股本发生变化的，则以未来实施分配方案的股权登记日的总股本扣减回购专用证\n2/262",
+              "type": "text"
+            },
+            {
+              "page": 77,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页77】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 发展的需要确实发生冲突的，可以调整利润分配政策，调整后的利润分配政策不得违反中国证监 |\n|  |\n本片原始行序：\n| 分配中所占比例最低应达到百分之四十； |\n|  |\n| C.公司发展阶段属成长期且有重大资金支出安排的，进行利润分配时，现金分红在本次利润 |\n|  |\n| 分配中所占比例最低应达到百分之二十； |\n|  |\n| 公司发展阶段不易区分但有重大资金支出安排的，可以按照前项规定处理。 |\n|  |\n| 现金分红在本次利润分配中所占比例为现金股利除以现金股利与股票股利之和。 |\n|  |",
+              "type": "table"
+            }
+          ],
+          "evidence_status": "evidence_insufficient",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": false,
+            "retrieval_complete": false,
+            "time_match": false
+          },
+          "generated_rounds": 1,
+          "missing": [
+            "答案未找到数据。已检索页：[2, 77, 78, 79]。请针对原问题中的关键指标做一次不同的检索",
+            "答案未展示计算过程。请先列出加数再写结果",
+            "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+            "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+            "计算核验未通过：unsupported_calculation"
+          ],
+          "model_calls": 1,
+          "numbers": [],
+          "queries": [
+            "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）"
+          ],
+          "refused": true,
+          "rounds": 1,
+          "stop_reason": "达到轮次上限",
+          "suggested_pages": [
+            78,
+            79,
+            2
+          ],
+          "termination_status": "max_round_reached",
+          "total_tokens": 2217,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S1",
+        "type": "final"
+      },
+      "t": 4.984
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据。\n\n原文未披露2025年度“扣非归母净利润”，因此无法计算“2025年现金股利总额占当年扣非归母净利润的比重”。（原文仅披露2025年度现金分红金额合计为268,099,563.05元[第78页/第2页]，但缺少扣非归母净利润口径数据。）",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 5.1,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S3",
+        "total_tokens": 2542,
+        "type": "node"
+      },
+      "t": 5.968
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 5.968
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": false,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.01,
+        "metric_audit": {
+          "applicable": true,
+          "desired_scope": "adjusted",
+          "missing": "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+          "passed": false,
+          "reason": "target_metric_not_supported",
+          "rows": [
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 78,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 2,
+              "quarterly": false,
+              "scope": "unadjusted"
+            }
+          ],
+          "target_metric": "扣除非经常性损益后的归母净利润"
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[2, 77, 78, 79]。请针对原问题中的关键指标做一次不同的检索",
+          "答案未展示计算过程。请先列出加数再写结果",
+          "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+          "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S3",
+        "total_tokens": 2542,
+        "type": "node"
+      },
+      "t": 5.984
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 5.984
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": false,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "继续检索",
+        "strategy": "S3",
+        "total_tokens": 2542,
+        "type": "node"
+      },
+      "t": 5.984
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 5.984
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据：原文未披露2025年度扣非归母净利润，无法计算“2025年公司分配的现金股利总额占当年扣非归母净利润的比重”。\n\n原文仅披露：2025年度现金分红金额合计为268,099,563.05元[第78页]，以及最近一个会计年度归属于上市公司普通股股东的净利润为666,266,924.52元[第79页]，但后者并非扣非归母净利润。",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 5.51,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S2",
+        "total_tokens": 2498,
+        "type": "node"
+      },
+      "t": 6.422
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 6.422
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": false,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.01,
+        "metric_audit": {
+          "applicable": true,
+          "desired_scope": "adjusted",
+          "missing": "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+          "passed": false,
+          "reason": "target_metric_not_supported",
+          "rows": [
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 78,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 79,
+              "quarterly": false,
+              "scope": "unadjusted"
+            }
+          ],
+          "target_metric": "扣除非经常性损益后的归母净利润"
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[2, 77, 78, 79]。请针对原问题中的关键指标做一次不同的检索",
+          "答案未展示计算过程。请先列出加数再写结果",
+          "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+          "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S2",
+        "total_tokens": 2498,
+        "type": "node"
+      },
+      "t": 6.437
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 6.437
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": false,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "继续检索",
+        "strategy": "S2",
+        "total_tokens": 2498,
+        "type": "node"
+      },
+      "t": 6.437
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 6.437
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 2.04,
+        "model_calls": 2,
+        "node": "requery",
+        "query": "2025年扣除非经常性损益后归属于母公司股东的净利润 合并利润表 非经常性损益明细表 主要会计数据 金额 单位",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 3203,
+        "type": "node"
+      },
+      "t": 8.031
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 8.031
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 3.13,
+        "model_calls": 2,
+        "node": "requery",
+        "query": "2025年扣除非经常性损益后归属于母公司股东的净利润 合并利润表 主要会计数据 财务报表附注 金额 单位",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 3294,
+        "type": "node"
+      },
+      "t": 9.562
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 9.562
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 10.297
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 14.125
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 14.39
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 17.812
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 18.64
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 22.109
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 22.765
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 26.14
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 27.5
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 30.609
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 31.093
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 32.89
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 35.047
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 36.937
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 38.359
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 40.64
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 40.703
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 42.968
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 43.703
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 45.984
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 48.453
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 49.984
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 52.078
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 54.515
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 57.609
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 59.422
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 61.562
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 63.562
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 65.89
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 67.547
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 70.125
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 71.593
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 76.234
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 76.375
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 79.437
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 79.437
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 81.937
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 82.047
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 86.015
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          2,
+          10,
+          77,
+          78,
+          79,
+          136
+        ],
+        "latency": 78.0,
+        "model_calls": 2,
+        "new_evidence": 4,
+        "node": "retrieve",
+        "query": "2025年扣除非经常性损益后归属于母公司股东的净利润 合并利润表 非经常性损益明细表 主要会计数据 金额 单位",
+        "round": 2,
+        "selected_pages": [
+          136,
+          136,
+          136,
+          10,
+          79
+        ],
+        "strategy": "S3",
+        "total_tokens": 3203,
+        "type": "node"
+      },
+      "t": 86.031
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 86.031
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 86.125
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          2,
+          77,
+          78,
+          79,
+          136
+        ],
+        "latency": 76.56,
+        "model_calls": 2,
+        "new_evidence": 4,
+        "node": "retrieve",
+        "query": "2025年扣除非经常性损益后归属于母公司股东的净利润 合并利润表 主要会计数据 财务报表附注 金额 单位",
+        "round": 2,
+        "selected_pages": [
+          136,
+          136,
+          136,
+          136,
+          79
+        ],
+        "strategy": "S2",
+        "total_tokens": 3294,
+        "type": "node"
+      },
+      "t": 86.14
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 86.14
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据，无法计算该比重。\n\n原因：原文未披露2025年度“扣非归母净利润”。可用于参考的原文数据为：\n\n- 2025年度现金分红金额合计：268,099,563.05元（含税）[第78页]\n- 2025年度归属于母公司股东的净利润：666,266,924.52元[第136页]\n\n但“归属于母公司股东的净利润”并非“扣非归母净利润”，不能替代作为分母。\n\n计算公式应为：\n\n2025年现金股利总额 ÷ 2025年扣非归母净利润 × 100%\n\n由于分母“2025年扣非归母净利润”在原文中未找到，故该比例无法计算。[第78页][第136页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 2,
+        "latency": 5.02,
+        "model_calls": 3,
+        "node": "generate",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 7450,
+        "type": "node"
+      },
+      "t": 91.156
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 91.156
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": false,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.01,
+        "metric_audit": {
+          "applicable": true,
+          "desired_scope": "adjusted",
+          "missing": "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+          "passed": false,
+          "reason": "target_metric_not_supported",
+          "rows": [
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 78,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "666266924.52",
+                "630670074.76"
+              ],
+              "page": 136,
+              "quarterly": false,
+              "scope": "unadjusted"
+            }
+          ],
+          "target_metric": "扣除非经常性损益后的归母净利润"
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[2, 77, 78, 79, 136]。请针对原问题中的关键指标做一次不同的检索",
+          "答案未展示计算过程。请先列出加数再写结果",
+          "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+          "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 3,
+        "node": "check",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 7450,
+        "type": "node"
+      },
+      "t": 91.172
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 91.172
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": false,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 3,
+        "node": "decide",
+        "round": 2,
+        "stop_reason": "固定轮次完成",
+        "strategy": "S2",
+        "total_tokens": 7450,
+        "type": "node"
+      },
+      "t": 91.172
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "年报中未找到相关数据，无法计算该比重。\n\n原因：原文未披露2025年度“扣非归母净利润”。可用于参考的原文数据为：\n\n- 2025年度现金分红金额合计：268,099,563.05元（含税）[第78页]\n- 2025年度归属于母公司股东的净利润：666,266,924.52元[第136页]\n\n但“归属于母公司股东的净利润”并非“扣非归母净利润”，不能替代作为分母。\n\n计算公式应为：\n\n2025年现金股利总额 ÷ 2025年扣非归母净利润 × 100%\n\n由于分母“2025年扣非归母净利润”在原文中未找到，故该比例无法计算。[第78页][第136页]",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            78,
+            136
+          ],
+          "company": "WSI",
+          "elapsed": 91.2,
+          "evidence": [
+            {
+              "page": 78,
+              "text": "总股\n本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合\n计派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分\n红金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。\n2025年度公司以现金为对价，采用集中竞价方式已实施的股份回购金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净\n利润的62.75%。\n如在利润分配方案披露之日起至实施权益分派股权登记日期间因新增股份上市、股份回购等\n事项导致公司总股本发生变化的，则以未来实施分配方案的股权登记日的总股本扣减回购专用证\n券账户中股份数为基数，按照每股分配比例不变的原则对分配总额进行调整，并将另行公告具体\n调整情况。\n公司2025年度利润分配方案已经公司第三届董事会第二十一次会议审议通过，尚需公司2025\n年年度股东会审议通过后实施。\n(二) 现金分红政策的专项说明\n√适用 □不适用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n| 是否符合公司章程的规定或股东会决议的要求 | √是 □否 |\n| 分红标准和比例是否明确和清晰 | √是 □否 |\n| 相关的决策程序和机制是否完备 | √是 □否 |\n| 独立董事是否履职尽责并发挥了应有的作用 | √是 □否 |\n| 中小股东是否有充分表达意见和诉求的机会，其合法权益是否得到了充分保护 | √是 □否 |\n(三) 报告期内盈利且母公司可供股东分配利润为正，但未提出现金利润分配方案预案的，公司应\n当详细披露原因以及未分配利润的用途和使用计划\n□适用 √不适用\n",
+              "type": "text"
+            },
+            {
+              "page": 79,
+              "text": "金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净\n利润的62.75%。\n(五)最近三个会计年度现金分红情况\n√适用 □不适用\n单位：元 币种：人民币\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：元；实际表头年份：待核验\n| 最近一个会计年度合并报表中归属于上市公司普通股股东的净利润 | 666,266,924.52 |\n| 最近一个会计年度母公司报表年度末未分配利润 | 1,401,370,154.91 |\n| 最近三个会计年度累计现金分红金额（含税）（1） | 734,084,316.46 |\n| 最近三个会计年度累计回购并注销金额（2） | 201,913,896.40 |\n| 最近三个会计年度现金分红和回购并注销累计金额 ↵ （3）=（1）+（2） | 935,998,212.86 |\n| 最近三个会计年度年均净利润金额（4） | 607,398,980.16 |\n| 最近三个会计年度现金分红比例（%）（5）=（3）/ ↵ （4） | 154.10% |\n| 最近三个会计年度累计研发投入金额 | 700,264,187.85 |\n| 最近三个会计年度累计研发投入占累计营业收入比例 ↵ （%） | 8.81 |\n79/262",
+              "type": "text"
+            },
+            {
+              "page": 2,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页2】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 一、本公司董事会及董事、高级管理人员保证年度报告内容的真实性、准确性、完整性，不存在 |\n|  |\n本片原始行序：\n| 4,231,424股后的股本487,453,751股为基数，以此计算合计派发现金红利146,236,125.30元（含税）。 |\n|  |\n| 公司在2025年9月已实施2025年半年度现金分红，以实施权益分派股权登记日登记的总股 |\n|  |\n| 本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合计 |\n|  |\n| 派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分红 |\n|  |\n| 金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 2,
+              "text": "发现金红利3元（含税），不进行资本公积转增股本，不送红股。\n截至 2026 年 1 月 31 日，公司以总股本 491,685,175 股，扣除公司回购专用证券账户中股份数\n4,231,424股后的股本487,453,751股为基数，以此计算合计派发现金红利146,236,125.30元（含税）。\n公司在2025年9月已实施2025年半年度现金分红，以实施权益分派股权登记日登记的总股\n本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合计\n派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分红\n金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。\n2025年度公司以现金为对价，采用集中竞价方式已实施的股份回购金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净利\n润的62.75%。\n如在利润分配方案披露之日起至实施权益分派股权登记日期间因新增股份上市、股份回购等\n事项导致公司总股本发生变化的，则以未来实施分配方案的股权登记日的总股本扣减回购专用证\n2/262",
+              "type": "text"
+            },
+            {
+              "page": 77,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页77】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 发展的需要确实发生冲突的，可以调整利润分配政策，调整后的利润分配政策不得违反中国证监 |\n|  |\n本片原始行序：\n| 分配中所占比例最低应达到百分之四十； |\n|  |\n| C.公司发展阶段属成长期且有重大资金支出安排的，进行利润分配时，现金分红在本次利润 |\n|  |\n| 分配中所占比例最低应达到百分之二十； |\n|  |\n| 公司发展阶段不易区分但有重大资金支出安排的，可以按照前项规定处理。 |\n|  |\n| 现金分红在本次利润分配中所占比例为现金股利除以现金股利与股票股利之和。 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 136,
+              "text": "【续表上下文；继承自第135页】表名：合并利润表；口径：合并；单位：元；年份：2025,2024；前页表头：| 项目 | 附注 | 2025年度 | 2024年度 |\n【候选表格；威胜信息；2025年年报；PDF物理页136】\n报表类型：合并利润表；财务口径：合并；单位：元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 投资收益（损失以“－”号填列） | 七、68 | -5,430,094.40 | -14,081,988.91 |\n| 其中：对联营企业和合营企业的投资收益 |  |  |  |\n本片原始行序：\n| （2）其他债权投资公允价值变动 |  |  |  |\n| （3）金融资产重分类计入其他综合收益的金 ↵ 额 |  |  |  |\n| （4）其他债权投资信用减值准备 |  |  |  |\n| （5）现金流量套期储备 |  |  |  |\n| （6）外币财务报表折算差额 |  | 3,547,226.76 | 663,365.78 |\n| （7）其他 |  |  |  |\n| （二）归属于少数股东的其他综合收益的税后净额 |  |  |  |\n| 七、综合收益总额 |  | 669,814,151.28 | 631,580,016.44 |\n| （一）归属于母公司所有者的综合收益总额 |  | 669,814,151.28 | 631,333,440.54 |\n| （二）归属于少数股东的综合收益总额 |  |  | 246,575.90 |",
+              "type": "table"
+            },
+            {
+              "page": 136,
+              "text": "【续表上下文；继承自第135页】表名：合并利润表；口径：合并；单位：元；年份：2025,2024；前页表头：| 项目 | 附注 | 2025年度 | 2024年度 |\n【候选表格；威胜信息；2025年年报；PDF物理页136】\n报表类型：合并利润表；财务口径：合并；单位：元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 投资收益（损失以“－”号填列） | 七、68 | -5,430,094.40 | -14,081,988.91 |\n| 其中：对联营企业和合营企业的投资收益 |  |  |  |\n本片原始行序：\n| 2.少数股东损益（净亏损以“-”号填列） |  |  | 246,575.90 |\n| 六、其他综合收益的税后净额 | 七、77 | 3,547,226.76 | 663,365.78 |\n| （一）归属母公司所有者的其他综合收益的税后净额 |  | 3,547,226.76 | 663,365.78 |\n| 1．不能重分类进损益的其他综合收益 |  |  |  |\n| （1）重新计量设定受益计划变动额 |  |  |  |\n| （2）权益法下不能转损益的其他综合收益 |  |  |  |\n| （3）其他权益工具投资公允价值变动 |  |  |  |\n| （4）企业自身信用风险公允价值变动 |  |  |  |\n| 2．将重分类进损益的其他综合收益 |  | 3,547,226.76 | 663,365.78 |\n| （1）权益法下可转损益的其他综合收益 |  |  |  |",
+              "type": "table"
+            },
+            {
+              "page": 136,
+              "text": "【续表上下文；继承自第135页】表名：合并利润表；口径：合并；单位：元；年份：2025,2024；前页表头：| 项目 | 附注 | 2025年度 | 2024年度 |\n【候选表格；威胜信息；2025年年报；PDF物理页136】\n报表类型：合并利润表；财务口径：合并；单位：元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 投资收益（损失以“－”号填列） | 七、68 | -5,430,094.40 | -14,081,988.91 |\n| 其中：对联营企业和合营企业的投资收益 |  |  |  |\n本片原始行序：\n| 加：营业外收入 | 七、74 | 10,000.06 | 873,884.48 |\n| 减：营业外支出 | 七、75 | 79,341.84 | 1,231,707.02 |\n| 四、利润总额（亏损总额以“－”号填列） |  | 778,596,992.15 | 725,146,606.01 |\n| 减：所得税费用 | 七、76 | 112,330,067.63 | 94,229,955.35 |\n| 五、净利润（净亏损以“－”号填列） |  | 666,266,924.52 | 630,916,650.66 |\n| （一）按经营持续性分类 |  |  |  |\n| 1.持续经营净利润（净亏损以“－”号填列） |  | 666,266,924.52 | 630,916,650.66 |\n| 2.终止经营净利润（净亏损以“－”号填列） |  |  |  |\n| （二）按所有权归属分类 |  |  |  |\n| 1.归属于母公司股东的净利润（净亏损以“-” ↵ 号填列） |  | 666,266,924.52 | 630,670,074.76 |",
+              "type": "table"
+            },
+            {
+              "page": 136,
+              "text": "【续表上下文；继承自第135页】表名：合并利润表；口径：合并；单位：元；年份：2025,2024；前页表头：| 项目 | 附注 | 2025年度 | 2024年度 |\n【候选表格；威胜信息；2025年年报；PDF物理页136】\n报表类型：合并利润表；财务口径：合并；单位：元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 投资收益（损失以“－”号填列） | 七、68 | -5,430,094.40 | -14,081,988.91 |\n| 其中：对联营企业和合营企业的投资收益 |  |  |  |\n本片原始行序：\n| 八、每股收益： |  |  |  |\n| （一）基本每股收益（元/股） |  | 1.36 | 1.28 |\n| （二）稀释每股收益（元/股） |  | 1.36 | 1.28 |",
+              "type": "table"
+            }
+          ],
+          "evidence_status": "evidence_insufficient",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": false,
+            "retrieval_complete": false,
+            "time_match": false
+          },
+          "generated_rounds": 2,
+          "missing": [
+            "答案未找到数据。已检索页：[2, 77, 78, 79, 136]。请针对原问题中的关键指标做一次不同的检索",
+            "答案未展示计算过程。请先列出加数再写结果",
+            "引用证据未支持目标口径：扣除非经常性损益后的归母净利润。不能用另一口径替代；请检索该指标的原始行名、数值、年份与单位。",
+            "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+            "计算核验未通过：unsupported_calculation"
+          ],
+          "model_calls": 3,
+          "numbers": [
+            {
+              "label": "",
+              "line": "| 金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。 |",
+              "pages": [
+                2,
+                78
+              ],
+              "status": "matched",
+              "unit": "",
+              "value": "268,099,563.05"
+            },
+            {
+              "label": "最近一个会计年度合并报表中归属于上市公司普通股股东的净利润",
+              "line": "最近一个会计年度合并报表中归属于上市公司普通股股东的净利润  666,266,924.52",
+              "pages": [
+                79,
+                136
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "666,266,924.52"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "100%"
+            }
+          ],
+          "queries": [
+            "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+            "2025年扣除非经常性损益后归属于母公司股东的净利润 合并利润表 主要会计数据 财务报表附注 金额 单位"
+          ],
+          "refused": true,
+          "rounds": 2,
+          "stop_reason": "固定轮次完成",
+          "suggested_pages": [
+            136,
+            79,
+            10
+          ],
+          "termination_status": "fixed_round_complete",
+          "total_tokens": 7450,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S2",
+        "type": "final"
+      },
+      "t": 91.172
+    },
+    {
+      "event": {
+        "answer": "修正后：原文已披露2025年度扣非归母净利润，可计算。\n\n- 2025年度现金分红金额合计（含中期已分配及年度拟分配）为 **268,099,563.05元**。[第78页/第2页]\n- 2025年度归属于上市公司股东的扣除非经常性损益的净利润为 **646,404,185.34元**。[第10页]\n\n计算：  \n\\[\n\\frac{268,099,563.05}{646,404,185.34}\\times 100\\%\n=41.4755\\ldots\\%\n\\approx \\mathbf{41.48\\%}\n\\]\n\n因此，2025年公司现金分红总额占当年扣非归母净利润的比重为 **41.48%**。",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 2,
+        "latency": 10.67,
+        "model_calls": 3,
+        "node": "generate",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 8525,
+        "type": "node"
+      },
+      "t": 96.703
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 96.703
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.02,
+        "metric_audit": {
+          "applicable": true,
+          "desired_scope": "adjusted",
+          "passed": true,
+          "reason": "metric_scope_supported",
+          "rows": [
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 78,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 2,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "666266924.52",
+                "630670074.76",
+                "5.64",
+                "525259941.21"
+              ],
+              "page": 10,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "646404185.34",
+                "610186963.39",
+                "5.94",
+                "488450211.15"
+              ],
+              "page": 10,
+              "quarterly": false,
+              "scope": "adjusted"
+            }
+          ],
+          "target_metric": "扣除非经常性损益后的归母净利润"
+        },
+        "missing": [
+          "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 3,
+        "node": "check",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 8525,
+        "type": "node"
+      },
+      "t": 96.718
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 96.718
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 3,
+        "node": "decide",
+        "round": 2,
+        "stop_reason": "继续检索",
+        "strategy": "S3",
+        "total_tokens": 8525,
+        "type": "node"
+      },
+      "t": 96.718
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 96.718
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 3.42,
+        "model_calls": 4,
+        "node": "requery",
+        "query": "2025年度报告 扣除非经常性损益后的归属于上市公司股东的净利润 非经常性损益项目及金额 主要会计数据和财务指标 财务报表附注 单位：元",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 9469,
+        "type": "node"
+      },
+      "t": 100.14
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 100.14
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 102.047
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 103.64
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 105.14
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 107.468
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 109.906
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 112.187
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 113.812
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 116.047
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 118.265
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 120.406
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 122.89
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 124.765
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 126.953
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 129.093
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 131.5
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 133.968
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 135.328
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 136.922
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 138.781
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 140.406
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          2,
+          10,
+          11,
+          77,
+          78,
+          79,
+          136
+        ],
+        "latency": 40.28,
+        "model_calls": 4,
+        "new_evidence": 3,
+        "node": "retrieve",
+        "query": "2025年度报告 扣除非经常性损益后的归属于上市公司股东的净利润 非经常性损益项目及金额 主要会计数据和财务指标 财务报表附注 单位：元",
+        "round": 3,
+        "selected_pages": [
+          11,
+          10,
+          11,
+          79,
+          11
+        ],
+        "strategy": "S3",
+        "total_tokens": 9469,
+        "type": "node"
+      },
+      "t": 140.422
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 140.422
+    },
+    {
+      "event": {
+        "answer": "经复核，应采用“现金分红金额合计”，不含股份回购金额。\n\n- 2025年度现金分红金额合计（含中期已分配现金红利及年度拟分配现金红利）为 **268,099,563.05元**。[第78页/第2页]\n- 2025年度归属于上市公司股东的扣除非经常性损益的净利润为 **646,404,185.34元**。[第10页]\n\n计算过程：\n\n\\[\n\\frac{268,099,563.05}{646,404,185.34}\\times 100\\%\n=41.4755\\ldots\\%\n\\approx \\mathbf{41.48\\%}\n\\]\n\n因此，2025年公司分配的现金股利总额占当年扣非归母净利润的比重为 **41.48%**。",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 3,
+        "latency": 8.56,
+        "model_calls": 5,
+        "node": "generate",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 15503,
+        "type": "node"
+      },
+      "t": 148.984
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 148.984
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.01,
+        "metric_audit": {
+          "applicable": true,
+          "desired_scope": "adjusted",
+          "passed": true,
+          "reason": "metric_scope_supported",
+          "rows": [
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 78,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "418055741.50"
+              ],
+              "page": 2,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "666266924.52",
+                "630670074.76",
+                "5.64",
+                "525259941.21"
+              ],
+              "page": 10,
+              "quarterly": false,
+              "scope": "unadjusted"
+            },
+            {
+              "amounts": [
+                "646404185.34",
+                "610186963.39",
+                "5.94",
+                "488450211.15"
+              ],
+              "page": 10,
+              "quarterly": false,
+              "scope": "adjusted"
+            }
+          ],
+          "target_metric": "扣除非经常性损益后的归母净利润"
+        },
+        "missing": [
+          "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 5,
+        "node": "check",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 15503,
+        "type": "node"
+      },
+      "t": 149.0
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 149.0
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 5,
+        "node": "decide",
+        "round": 3,
+        "stop_reason": "达到轮次上限",
+        "strategy": "S3",
+        "total_tokens": 15503,
+        "type": "node"
+      },
+      "t": 149.0
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "经复核，应采用“现金分红金额合计”，不含股份回购金额。\n\n- 2025年度现金分红金额合计（含中期已分配现金红利及年度拟分配现金红利）为 **268,099,563.05元**。[第78页/第2页]\n- 2025年度归属于上市公司股东的扣除非经常性损益的净利润为 **646,404,185.34元**。[第10页]\n\n计算过程：\n\n\\[\n\\frac{268,099,563.05}{646,404,185.34}\\times 100\\%\n=41.4755\\ldots\\%\n\\approx \\mathbf{41.48\\%}\n\\]\n\n因此，2025年公司分配的现金股利总额占当年扣非归母净利润的比重为 **41.48%**。",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            2,
+            10,
+            78
+          ],
+          "company": "WSI",
+          "elapsed": 149.0,
+          "evidence": [
+            {
+              "page": 78,
+              "text": "总股\n本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合\n计派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分\n红金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。\n2025年度公司以现金为对价，采用集中竞价方式已实施的股份回购金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净\n利润的62.75%。\n如在利润分配方案披露之日起至实施权益分派股权登记日期间因新增股份上市、股份回购等\n事项导致公司总股本发生变化的，则以未来实施分配方案的股权登记日的总股本扣减回购专用证\n券账户中股份数为基数，按照每股分配比例不变的原则对分配总额进行调整，并将另行公告具体\n调整情况。\n公司2025年度利润分配方案已经公司第三届董事会第二十一次会议审议通过，尚需公司2025\n年年度股东会审议通过后实施。\n(二) 现金分红政策的专项说明\n√适用 □不适用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n| 是否符合公司章程的规定或股东会决议的要求 | √是 □否 |\n| 分红标准和比例是否明确和清晰 | √是 □否 |\n| 相关的决策程序和机制是否完备 | √是 □否 |\n| 独立董事是否履职尽责并发挥了应有的作用 | √是 □否 |\n| 中小股东是否有充分表达意见和诉求的机会，其合法权益是否得到了充分保护 | √是 □否 |\n(三) 报告期内盈利且母公司可供股东分配利润为正，但未提出现金利润分配方案预案的，公司应\n当详细披露原因以及未分配利润的用途和使用计划\n□适用 √不适用\n",
+              "type": "text"
+            },
+            {
+              "page": 79,
+              "text": "金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净\n利润的62.75%。\n(五)最近三个会计年度现金分红情况\n√适用 □不适用\n单位：元 币种：人民币\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：元；实际表头年份：待核验\n| 最近一个会计年度合并报表中归属于上市公司普通股股东的净利润 | 666,266,924.52 |\n| 最近一个会计年度母公司报表年度末未分配利润 | 1,401,370,154.91 |\n| 最近三个会计年度累计现金分红金额（含税）（1） | 734,084,316.46 |\n| 最近三个会计年度累计回购并注销金额（2） | 201,913,896.40 |\n| 最近三个会计年度现金分红和回购并注销累计金额 ↵ （3）=（1）+（2） | 935,998,212.86 |\n| 最近三个会计年度年均净利润金额（4） | 607,398,980.16 |\n| 最近三个会计年度现金分红比例（%）（5）=（3）/ ↵ （4） | 154.10% |\n| 最近三个会计年度累计研发投入金额 | 700,264,187.85 |\n| 最近三个会计年度累计研发投入占累计营业收入比例 ↵ （%） | 8.81 |\n79/262",
+              "type": "text"
+            },
+            {
+              "page": 2,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页2】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 一、本公司董事会及董事、高级管理人员保证年度报告内容的真实性、准确性、完整性，不存在 |\n|  |\n本片原始行序：\n| 4,231,424股后的股本487,453,751股为基数，以此计算合计派发现金红利146,236,125.30元（含税）。 |\n|  |\n| 公司在2025年9月已实施2025年半年度现金分红，以实施权益分派股权登记日登记的总股 |\n|  |\n| 本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合计 |\n|  |\n| 派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分红 |\n|  |\n| 金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 2,
+              "text": "发现金红利3元（含税），不进行资本公积转增股本，不送红股。\n截至 2026 年 1 月 31 日，公司以总股本 491,685,175 股，扣除公司回购专用证券账户中股份数\n4,231,424股后的股本487,453,751股为基数，以此计算合计派发现金红利146,236,125.30元（含税）。\n公司在2025年9月已实施2025年半年度现金分红，以实施权益分派股权登记日登记的总股\n本扣减公司回购专用证券账户的股份为基数向全体股东每10股派发现金红利2.5元（含税）,合计\n派发现金红利121,863,437.75元（含税）。包括中期已分配的现金红利，本年度公司拟现金分红\n金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。\n2025年度公司以现金为对价，采用集中竞价方式已实施的股份回购金额149,956,178.45元，\n占2025年度归属于上市公司股东净利润的比例22.51%。\n2025年度现金分红和回购金额合计418,055,741.50元，占2025年度归属于上市公司股东净利\n润的62.75%。\n如在利润分配方案披露之日起至实施权益分派股权登记日期间因新增股份上市、股份回购等\n事项导致公司总股本发生变化的，则以未来实施分配方案的股权登记日的总股本扣减回购专用证\n2/262",
+              "type": "text"
+            },
+            {
+              "page": 77,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页77】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n| 发展的需要确实发生冲突的，可以调整利润分配政策，调整后的利润分配政策不得违反中国证监 |\n|  |\n本片原始行序：\n| 分配中所占比例最低应达到百分之四十； |\n|  |\n| C.公司发展阶段属成长期且有重大资金支出安排的，进行利润分配时，现金分红在本次利润 |\n|  |\n| 分配中所占比例最低应达到百分之二十； |\n|  |\n| 公司发展阶段不易区分但有重大资金支出安排的，可以按照前项规定处理。 |\n|  |\n| 现金分红在本次利润分配中所占比例为现金股利除以现金股利与股票股利之和。 |\n|  |",
+              "type": "table"
+            },
+            {
+              "page": 136,
+              "text": "【续表上下文；继承自第135页】表名：合并利润表；口径：合并；单位：元；年份：2025,2024；前页表头：| 项目 | 附注 | 2025年度 | 2024年度 |\n【候选表格；威胜信息；2025年年报；PDF物理页136】\n报表类型：合并利润表；财务口径：合并；单位：元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 投资收益（损失以“－”号填列） | 七、68 | -5,430,094.40 | -14,081,988.91 |\n| 其中：对联营企业和合营企业的投资收益 |  |  |  |\n本片原始行序：\n| 2.少数股东损益（净亏损以“-”号填列） |  |  | 246,575.90 |\n| 六、其他综合收益的税后净额 | 七、77 | 3,547,226.76 | 663,365.78 |\n| （一）归属母公司所有者的其他综合收益的税后净额 |  | 3,547,226.76 | 663,365.78 |\n| 1．不能重分类进损益的其他综合收益 |  |  |  |\n| （1）重新计量设定受益计划变动额 |  |  |  |\n| （2）权益法下不能转损益的其他综合收益 |  |  |  |\n| （3）其他权益工具投资公允价值变动 |  |  |  |\n| （4）企业自身信用风险公允价值变动 |  |  |  |\n| 2．将重分类进损益的其他综合收益 |  | 3,547,226.76 | 663,365.78 |\n| （1）权益法下可转损益的其他综合收益 |  |  |  |",
+              "type": "table"
+            },
+            {
+              "page": 136,
+              "text": "【续表上下文；继承自第135页】表名：合并利润表；口径：合并；单位：元；年份：2025,2024；前页表头：| 项目 | 附注 | 2025年度 | 2024年度 |\n【候选表格；威胜信息；2025年年报；PDF物理页136】\n报表类型：合并利润表；财务口径：合并；单位：元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 投资收益（损失以“－”号填列） | 七、68 | -5,430,094.40 | -14,081,988.91 |\n| 其中：对联营企业和合营企业的投资收益 |  |  |  |\n本片原始行序：\n| 加：营业外收入 | 七、74 | 10,000.06 | 873,884.48 |\n| 减：营业外支出 | 七、75 | 79,341.84 | 1,231,707.02 |\n| 四、利润总额（亏损总额以“－”号填列） |  | 778,596,992.15 | 725,146,606.01 |\n| 减：所得税费用 | 七、76 | 112,330,067.63 | 94,229,955.35 |\n| 五、净利润（净亏损以“－”号填列） |  | 666,266,924.52 | 630,916,650.66 |\n| （一）按经营持续性分类 |  |  |  |\n| 1.持续经营净利润（净亏损以“－”号填列） |  | 666,266,924.52 | 630,916,650.66 |\n| 2.终止经营净利润（净亏损以“－”号填列） |  |  |  |\n| （二）按所有权归属分类 |  |  |  |\n| 1.归属于母公司股东的净利润（净亏损以“-” ↵ 号填列） |  | 666,266,924.52 | 630,670,074.76 |",
+              "type": "table"
+            },
+            {
+              "page": 136,
+              "text": "【续表上下文；继承自第135页】表名：合并利润表；口径：合并；单位：元；年份：2025,2024；前页表头：| 项目 | 附注 | 2025年度 | 2024年度 |\n【候选表格；威胜信息；2025年年报；PDF物理页136】\n报表类型：合并利润表；财务口径：合并；单位：元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 投资收益（损失以“－”号填列） | 七、68 | -5,430,094.40 | -14,081,988.91 |\n| 其中：对联营企业和合营企业的投资收益 |  |  |  |\n本片原始行序：\n| （2）其他债权投资公允价值变动 |  |  |  |\n| （3）金融资产重分类计入其他综合收益的金 ↵ 额 |  |  |  |\n| （4）其他债权投资信用减值准备 |  |  |  |\n| （5）现金流量套期储备 |  |  |  |\n| （6）外币财务报表折算差额 |  | 3,547,226.76 | 663,365.78 |\n| （7）其他 |  |  |  |\n| （二）归属于少数股东的其他综合收益的税后净额 |  |  |  |\n| 七、综合收益总额 |  | 669,814,151.28 | 631,580,016.44 |\n| （一）归属于母公司所有者的综合收益总额 |  | 669,814,151.28 | 631,333,440.54 |\n| （二）归属于少数股东的综合收益总额 |  |  | 246,575.90 |",
+              "type": "table"
+            },
+            {
+              "page": 10,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页10】\n报表类型：(一) 主要会计数据；财务口径：待核验；单位：元；实际表头年份：2025,2024,2023\n表头/表首原行（重复供定位）：\n| 主要会计数据 | 2025年 | 2024年 | 本期比上年同期增减（%） | 2023年 |\n| 营业收入 | 2,977,611,210.11 | 2,744,771,073.32 | 8.48 | 2,225,249,013.18 |\n本片原始行序：\n| 主要会计数据 | 2025年 | 2024年 | 本期比上年同期增减（%） | 2023年 |\n| 营业收入 | 2,977,611,210.11 | 2,744,771,073.32 | 8.48 | 2,225,249,013.18 |\n| 利润总额 | 778,596,992.15 | 725,146,606.01 | 7.37 | 601,967,830.60 |\n| 归属于上市公司股东的净利润 | 666,266,924.52 | 630,670,074.76 | 5.64 | 525,259,941.21 |\n| 归属于上市公司股东的扣除非经常性损益的净利润 | 646,404,185.34 | 610,186,963.39 | 5.94 | 488,450,211.15 |\n| 经营活动产生的现金流量净额 | 516,042,455.05 | 473,834,691.76 | 8.91 | 417,398,251.78 |\n|  | 2025年末 | 2024年末 | 本期末比 ↵ 上年同期 ↵ 末增减（% ↵ ） | 2023年末 |\n| 归属于上市公司股东的净资产 | 3,539,502,388.59 | 3,351,412,938.33 | 5.61 | 2,936,112,073.92 |\n| 总资产 | 5,689,987,924.18 | 4,957,092,465.71 | 14.78 | 4,257,559,449.71 |",
+              "type": "table"
+            },
+            {
+              "page": 11,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页11】\n报表类型：2025年分季度主要财务数据；财务口径：待核验；单位：元；实际表头年份：待核验\n表头/表首原行（重复供定位）：\n|  | 第一季度 ↵ （1-3月份） | 第二季度 ↵ （4-6月份） | 第三季度 ↵ （7-9月份） | 第四季度 ↵ （10-12月份） |\n| 营业收入 | 555,425,609.19 | 812,522,085.63 | 744,033,280.52 | 865,630,234.77 |\n本片原始行序：\n|  | 第一季度 ↵ （1-3月份） | 第二季度 ↵ （4-6月份） | 第三季度 ↵ （7-9月份） | 第四季度 ↵ （10-12月份） |\n| 营业收入 | 555,425,609.19 | 812,522,085.63 | 744,033,280.52 | 865,630,234.77 |\n| 归属于上市公司股东的净利润 | 139,366,328.87 | 165,734,409.09 | 169,087,453.21 | 192,078,733.35 |\n| 归属于上市公司股东的扣除非经常性损益后的净利润 | 136,724,141.86 | 161,425,328.83 | 165,979,924.59 | 182,274,790.06 |\n| 经营活动产生的现金流量净额 | 79,859,686.29 | 98,428,598.11 | 222,250,408.62 | 115,503,762.03 |",
+              "type": "table"
+            },
+            {
+              "page": 11,
+              "text": "【候选表格；威胜信息；2025年年报；PDF物理页11】\n报表类型：待核验；财务口径：待核验；单位：元；实际表头年份：2025,2024,2023\n表头/表首原行（重复供定位）：\n| 非经常性损益项目 | 2025年金额 | 附注（如适用） | 2024年金额 | 2023年金额 |\n| 非流动性资产处置损益，包括已计提资产减值准备的冲销部分 | 70,970.25 |  | 23,432.45 | 17,419.17 |\n本片原始行序：\n| 非经常性损益项目 | 2025年金额 | 附注（如适用） | 2024年金额 | 2023年金额 |\n| 非流动性资产处置损益，包括已计提资产减值准备的冲销部分 | 70,970.25 |  | 23,432.45 | 17,419.17 |\n| 计入当期损益的政府补助，但与公司正常经营业务密切相关、符合国家政策规定、按照确定的标准享有、对公司损益产生持续影响的政府补助除外 | 8,497,483.84 |  | 9,137,812.37 | 20,020,298.22 |\n| 除同公司正常经营业务相关的有效套期保值业务外，非金融企业持有金融资产和金融负债产生的公允价值变动损益以及处置金融资产和金融负债产生的损益 | 13,944,654.13 |  | 14,871,655.36 | -7,313,976.73 |",
+              "type": "table"
+            },
+            {
+              "page": 11,
+              "text": "22,250,408.62 | 115,503,762.03 |\n季度数据与已披露定期报告数据差异说明\n□适用 √不适用\n九、非经常性损益项目和金额\n√适用 □不适用\n单位：元 币种：人民币\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：元；实际表头年份：2025,2024,2023\n| 非经常性损益项目 | 2025年金额 | 附注（如适用） | 2024年金额 | 2023年金额 |\n| 非流动性资产处置损益，包括已计提资产减值准备的冲销部分 | 70,970.25 |  | 23,432.45 | 17,419.17 |\n| 计入当期损益的政府补助，但与公司正常经营业务密切相关、符合国家政策规定、按照确定的标准享有、对公司损益产生持续影响的政府补助除外 | 8,497,483.84 |  | 9,137,812.37 | 20,020,298.22 |\n| 除同公司正常经营业务相关的有效套期保值业务外，非金融企业持有金融资产和金融负债产生的公允价值变动损益以及处置金融资产和金融负债产生的损益 | 13,944,654.13 |  | 14,871,655.36 | -7,313,976.73 |\n11/262",
+              "type": "text"
+            }
+          ],
+          "evidence_status": "evidence_insufficient",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": true,
+            "retrieval_complete": false,
+            "time_match": false
+          },
+          "generated_rounds": 3,
+          "missing": [
+            "缺失或未核验事实：{'fact_id': 'adjusted_parent_np:2025', 'metric': 'adjusted_parent_np', 'year': 2025, 'scope': None}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+            "计算核验未通过：unsupported_calculation"
+          ],
+          "model_calls": 5,
+          "numbers": [
+            {
+              "label": "",
+              "line": "| 金额合计为268,099,563.05元，占2025年度归属于上市公司股东净利润的比例40.24%。 |",
+              "pages": [
+                2,
+                78
+              ],
+              "status": "matched",
+              "unit": "",
+              "value": "268,099,563.05"
+            },
+            {
+              "label": "归属于上市公司股东的扣除非经常性损益的净利润",
+              "line": "归属于上市公司股东的扣除非经常性损益的净利润  646,404,185.34  610,186,963.39  5.94  488,450,211.15",
+              "pages": [
+                10
+              ],
+              "status": "matched",
+              "unit": "%",
+              "value": "646,404,185.34"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "41.4755"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "41.48"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "41.48%"
+            }
+          ],
+          "queries": [
+            "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+            "2025年扣除非经常性损益后归属于母公司股东的净利润 合并利润表 非经常性损益明细表 主要会计数据 金额 单位",
+            "2025年度报告 扣除非经常性损益后的归属于上市公司股东的净利润 非经常性损益项目及金额 主要会计数据和财务指标 财务报表附注 单位：元"
+          ],
+          "refused": false,
+          "rounds": 3,
+          "stop_reason": "达到轮次上限",
+          "suggested_pages": [
+            11,
+            10,
+            79
+          ],
+          "termination_status": "max_round_reached",
+          "total_tokens": 15503,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S3",
+        "type": "final"
+      },
+      "t": 149.0
+    },
+    {
+      "event": {
+        "type": "done"
+      },
+      "t": 149.0
+    }
+  ],
+  "id": "20261111T221107_WSI-2025-005_S1S2S3",
+  "question": "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+  "question_id": "WSI-2025-005",
+  "recorded_at": "2026-11-11T22:11:07+08:00",
+  "strategies": [
+    "S1",
+    "S2",
+    "S3"
+  ],
+  "summary": {
+    "S1": {
+      "answer": "年报中未找到相关数据（所给原文未披露2025年扣非归母净利润，无法计算该比重）。[第78页] [第79页]",
+      "elapsed": 5.0,
+      "refused": true,
+      "rounds": 1,
+      "stop_reason": "达到轮次上限",
+      "tokens": 2217
+    },
+    "S2": {
+      "answer": "年报中未找到相关数据，无法计算该比重。\n\n原因：原文未披露2025年度“扣非归母净利润”。可用于参考的原文数据为：\n\n- 2025年度现金分红金额合计：268,099,563.05元（含税）[第78页]\n- 2025年度归属于母公司股东的净利润：666,266,924.52元[第136页]\n\n但“归属于母公司股东的净利润”并非“扣非归母净利润”，不能替代作为分母。\n\n计算公式应为：\n\n2025年现金股利总额 ÷ 2025年扣非归母净利润 × 100%\n\n由于分母“2025年扣",
+      "elapsed": 91.2,
+      "refused": true,
+      "rounds": 2,
+      "stop_reason": "固定轮次完成",
+      "tokens": 7450
+    },
+    "S3": {
+      "answer": "经复核，应采用“现金分红金额合计”，不含股份回购金额。\n\n- 2025年度现金分红金额合计（含中期已分配现金红利及年度拟分配现金红利）为 **268,099,563.05元**。[第78页/第2页]\n- 2025年度归属于上市公司股东的扣除非经常性损益的净利润为 **646,404,185.34元**。[第10页]\n\n计算过程：\n\n\\[\n\\frac{268,099,563.05}{646,404,185.34}\\times 100\\%\n=41.4755\\ldots\\%\n\\ap",
+      "elapsed": 149.0,
+      "refused": false,
+      "rounds": 3,
+      "stop_reason": "达到轮次上限",
+      "tokens": 15503
+    }
+  }
+}

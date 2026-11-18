@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getJSON } from './api.js'
+import { detectMode, getJSON } from './api.js'
 import Lookup from './components/Lookup.jsx'
 import Lab from './components/Lab.jsx'
 import Method from './components/Method.jsx'
@@ -20,6 +20,8 @@ export default function App() {
   const [view, setView] = useState(() => (location.hash.slice(1) in { lookup: 1, lab: 1, method: 1 } ? location.hash.slice(1) : 'lookup'))
   const [corpus, setCorpus] = useState([])
   const [questions, setQuestions] = useState([])
+  const [featured, setFeatured] = useState([])
+  const [mode, setMode] = useState(null)
   const [status, setStatus] = useState(null)
   const [company, setCompany] = useState('BYD')
   const [pdfTarget, setPdfTarget] = useState(null)
@@ -29,14 +31,30 @@ export default function App() {
   const [toast, setToast] = useState(null)
 
   useEffect(() => {
-    getJSON('/api/corpora').then(setCorpus).catch(() => setStatus({ error: '后端未启动' }))
-    getJSON('/api/questions').then(setQuestions).catch(() => {})
-    let timer
-    const poll = () => getJSON('/api/status').then((s) => { setStatus(s); if (!s.ready && !s.error) timer = setTimeout(poll, 2000) })
-      .catch(() => { setStatus({ error: '后端未启动' }); timer = setTimeout(poll, 4000) })
-    poll()
-    return () => clearTimeout(timer)
+    getJSON('/data/corpora.json').then(setCorpus).catch(() => {})
+    getJSON('/data/questions.json').then(setQuestions).catch(() => {})
+    getJSON('/data/showcase.json').then((showcase) => setFeatured(showcase.featured)).catch(() => {})
+    detectMode().then(setMode)
   }, [])
+  useEffect(() => {
+    if (mode !== 'live') return
+    let timer
+    const controller = new AbortController()
+    const poll = async () => {
+      try {
+        const next = await getJSON('/api/status', controller.signal)
+        if (controller.signal.aborted) return
+        setStatus(next)
+        if (!next.ready && !next.error) timer = setTimeout(poll, 2000)
+      } catch {
+        if (controller.signal.aborted) return
+        setStatus({ error: '后端未启动' })
+        timer = setTimeout(poll, 4000)
+      }
+    }
+    poll()
+    return () => { controller.abort(); clearTimeout(timer) }
+  }, [mode])
   useEffect(() => { try { localStorage.setItem('tracenum.draft', JSON.stringify(draft)) } catch { /* private mode */ } }, [draft])
   useEffect(() => { if (location.hash.slice(1) !== view) history.pushState(null, '', `#${view}`); window.scrollTo(0, 0) }, [view])
   useEffect(() => {
@@ -53,7 +71,8 @@ export default function App() {
   )
   const draftIds = new Set(draft.map((d) => d.id))
   const addDraft = (item) => { setDraft((d) => (d.some((x) => x.id === item.id) ? d : [...d, item])); setToast(`已加入底稿：${item.value}`) }
-  const statusLabel = !status ? '连接中' : status.error ? `后端不可用` : status.ready ? `${status.model} 已就绪` : '正在加载检索模型'
+  const statusLabel = mode === 'static' ? '公开演示 · 预计算结果' : !status ? '连接中' : status.error ? '后端不可用' : status.ready ? `${status.model} 已就绪` : '正在加载检索模型'
+  const statusClass = mode === 'static' ? 'static' : status?.error ? 'error' : status?.ready ? 'ready' : ''
 
   return (
     <>
@@ -65,7 +84,7 @@ export default function App() {
           {VIEWS.map((v) => <button key={v.id} type="button" aria-current={view === v.id ? 'page' : undefined} onClick={() => setView(v.id)}>{v.label}</button>)}
         </nav>
         <div className="topbar-right">
-          <span className={`status-dot ${status?.error ? 'error' : status?.ready ? 'ready' : ''}`} title={status?.error || ''}><i /><span className="status-text">{statusLabel}</span></span>
+          <span className={`status-dot ${statusClass}`} title={status?.error || ''}><i /><span className="status-text">{statusLabel}</span></span>
           <button type="button" className="draft-button" onClick={() => setDrawer(true)}>底稿 <b>{draft.length}</b></button>
         </div>
       </header>
@@ -73,7 +92,7 @@ export default function App() {
       {view === 'lookup' && (
         <div className="lookup">
           <main className="lookup-main">
-            <Lookup corpus={corpus} company={company} setCompany={setCompany} questions={questions} openPdf={setPdfTarget}
+            <Lookup mode={mode} featured={featured} corpus={corpus} company={company} setCompany={setCompany} questions={questions} openPdf={setPdfTarget}
               addDraft={addDraft} draftIds={draftIds} openMethod={() => setView('method')} status={status} />
           </main>
           <aside className="lookup-side" aria-label="年报原页">
@@ -83,7 +102,7 @@ export default function App() {
       )}
       {view === 'lab' && (
         <>
-          <Lab corpus={corpus} questions={questions} openPdf={setLabPdf} budget={status?.budget} />
+          <Lab mode={mode} featured={featured} corpus={corpus} questions={questions} openPdf={setLabPdf} budget={status?.budget} />
           {labPdf && (
             <>
               <div className="drawer-scrim" onClick={() => setLabPdf(null)} />
@@ -95,10 +114,10 @@ export default function App() {
           )}
         </>
       )}
-      {view === 'method' && <Method questions={questions} goLab={() => setView('lab')} />}
+      {view === 'method' && <Method mode={mode} questions={questions} goLab={() => setView('lab')} />}
 
       {drawer && <Draft items={draft} setItems={setDraft} onClose={() => setDrawer(false)} corpus={corpus}
-        openPdf={(t) => { setDrawer(false); setView('lookup'); setPdfTarget(t) }} toast={setToast} />}
+        openPdf={(t) => { setDrawer(false); setView('lookup'); setCompany(t.company); setPdfTarget(t) }} toast={setToast} />}
       {toast && <div className="toast" role="status">{toast}</div>}
     </>
   )
