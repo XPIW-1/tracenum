@@ -28,11 +28,27 @@ from quota import Quota
 # DEV=1 on the laptop: the old local workbench (strategy lab live runs for all three
 # strategies, recordings admin, server-side export). Production never sets it.
 DEV = os.environ.get("TRACENUM_DEV") == "1"
+if DEV and Path("/.dockerenv").exists():
+    raise RuntimeError("TRACENUM_DEV=1 is for the local workbench only; refusing to start inside a container")
 # Live questions need both an explicit switch and a valid private-link session.
 LIVE_ENABLED = os.environ.get("LIVE_ENABLED") == "1"
 DATA_DIR = Path(os.environ.get("TRACENUM_DATA_DIR", Path(__file__).resolve().parent / "data"))
 QUOTA = Quota(DATA_DIR / "quota.sqlite3")
 MAX_QUESTION_CHARS = 200
+# Written by scripts/compare_rerank.py --out; live stays off unless the hosted reranker
+# reproduced the paper's local top-5 order in every sampled round.
+RERANK_VALIDATION = DATA_DIR / "rerank_validation.json"
+
+
+def rerank_validated() -> bool:
+    if os.environ.get("TRACENUM_RERANKER", "local").lower() != "siliconflow":
+        return True  # the paper's own local model
+    try:
+        summary = json.loads(RERANK_VALIDATION.read_text(encoding="utf-8"))["summary"]
+    except (OSError, ValueError, KeyError):
+        return False
+    import rerank
+    return summary.get("all_equal") is True and summary.get("model") == rerank.SILICONFLOW_MODEL         and summary.get("rounds", 0) >= 10
 
 app = FastAPI(title="TraceNum API", docs_url="/api/docs" if DEV else None, redoc_url=None, openapi_url=None if not DEV else "/openapi.json")
 _origins = [o for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o]
@@ -58,9 +74,9 @@ def current_access(request: Request):
 
 
 class AskBody(BaseModel):
-    company: str
+    company: str = Field(max_length=8)
     question: str = Field(max_length=MAX_QUESTION_CHARS * 2)
-    strategies: list[str] = ["S3"]
+    strategies: list[str] = Field(default=["S3"], max_length=3)
 
 
 @app.get("/api/health")
@@ -113,8 +129,10 @@ def session(request: Request):
         reason = "disabled"
     elif not granted:
         reason = "no_access"
-    elif P.PIPELINE.error:
+    elif P.PIPELINE.error or not rerank_validated():
         reason = "unavailable"
+    elif not P.PIPELINE.ready:
+        reason = "loading"
     elif not snap["budget_ok"]:
         reason = "budget"
     return {"access": bool(granted), "live": reason is None, "reason": reason,
@@ -252,6 +270,20 @@ def sse(event: dict) -> bytes:
     return f"data: {json.dumps(event, ensure_ascii=False, default=str)}\n\n".encode("utf-8")
 
 
+_ask_attempts: dict[str, deque] = defaultdict(deque)
+
+
+def _allow_attempt(ip: str, limit: int = 20, window: int = 3600) -> bool:
+    """Caps all /api/ask attempts per IP, including free boundary-year refusals."""
+    now, q = time.time(), _ask_attempts[ip]
+    while q and q[0] < now - window:
+        q.popleft()
+    if len(q) >= limit:
+        return False
+    q.append(now)
+    return True
+
+
 def refuse(status: int, reason: str, message: str):
     return JSONResponse({"reason": reason, "message": message}, status_code=status)
 
@@ -274,6 +306,12 @@ async def ask(body: AskBody, request: Request):
         strategies = ["S3"]  # live runs are S3 only; strategy comparison uses recordings
     request_id = uuid.uuid4().hex
     if not DEV:
+        if P.PIPELINE.error or not rerank_validated():
+            return refuse(503, "unavailable", "实时服务暂不可用，下面是预先运行的真实结果。")
+        if not P.PIPELINE.ready:
+            return refuse(503, "loading", "检索模型正在加载（约 1 分钟），请稍后再试。")
+        if not _allow_attempt(client_ip(request)):
+            return refuse(429, "attempts", "提交过于频繁，请稍后再试。")
         decision = QUOTA.reserve(request_id, granted[0], client_ip(request))
         if not decision.ok:
             return refuse(429, decision.reason, decision.message)
@@ -329,6 +367,8 @@ async def ask(body: AskBody, request: Request):
     guard = threading.Lock()
 
     def on_usage(event):
+        if event.get("blocked"):
+            return  # budget_control stopped this call before it was sent: nothing to pay
         with guard:
             ledger["calls"] += 1
             cost = billing.call_cost(event.get("prompt_tokens"), event.get("completion_tokens"))
@@ -343,8 +383,8 @@ async def ask(body: AskBody, request: Request):
     def worker(strategy):
         def emit(e):
             if e.get("type") == "usage":
-                on_usage(e)
-                e = {"type": "usage", "system_fingerprint": e.get("system_fingerprint")}
+                on_usage(e)  # billing only; not streamed to the browser or recorded
+                return
             push({**e, "strategy": strategy})
         started = time.perf_counter()
         emit({"type": "start"})
@@ -355,7 +395,9 @@ async def ask(body: AskBody, request: Request):
             emit({"type": "final", "result": result})
         except Exception as exc:
             with guard:
-                ledger["unknown"] = ledger["unknown"] or ledger["calls"] > 0 or not P.PIPELINE.ready
+                # A call may have been sent (and billed) before its usage reached us, e.g. if
+                # writing the run log failed. Keep the full reservation; never refund here.
+                ledger["unknown"] = True
             emit({"type": "error", "message": f"{type(exc).__name__}: {exc}" if DEV else "这次运行失败了，未产生答案。",
                   **({"trace": traceback.format_exc()[-800:]} if DEV else {})})
             print(f"[ask {request_id}] {type(exc).__name__}: {exc}", flush=True)
@@ -365,9 +407,13 @@ async def ask(body: AskBody, request: Request):
             with guard:
                 running["n"] -= 1
                 last = running["n"] == 0
-            if last:
-                settle()
-            push({"type": "_worker_done"})
+            try:
+                if last:
+                    settle()
+            except Exception as exc:  # ledger trouble must not hang the stream
+                print(f"[ask {request_id}] settle failed: {exc}", flush=True)
+            finally:
+                push({"type": "_worker_done"})
 
     loading = not P.PIPELINE.ready
     for s in strategies:

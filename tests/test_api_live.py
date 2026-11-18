@@ -89,6 +89,53 @@ class ApiLiveTest(unittest.TestCase):
         self.assertIn("语料边界外", r.text)
         self.assertEqual(c.get("/api/session").json()["quota"]["code_remaining"], before)
 
+    def ledger_rows(self):
+        with server.QUOTA.lock, access.closing(server.QUOTA._connect()) as db:
+            return db.execute("SELECT COUNT(*) FROM ledger").fetchone()[0]
+
+    def test_loading_model_is_refused_without_reservation(self):
+        c = self.client()
+        c.post("/api/access/session", json={"code": self.code})
+        before = self.ledger_rows()
+        P.PIPELINE.ready = False
+        try:
+            r = self.ask(c)
+            self.assertEqual((r.status_code, r.json()["reason"]), (503, "loading"))
+            self.assertEqual(c.get("/api/session").json()["reason"], "loading")
+        finally:
+            P.PIPELINE.ready = True
+        self.assertEqual(self.ledger_rows(), before)
+
+    def test_blocked_call_is_not_billed(self):
+        original = P.PIPELINE.run
+
+        def blocked_then_one(question, strategy, emit):
+            emit({"type": "usage", "prompt_tokens": None, "completion_tokens": None, "blocked": True})
+            emit({"type": "usage", "prompt_tokens": 100, "completion_tokens": 10, "blocked": False})
+            return {}
+        P.PIPELINE.run = blocked_then_one
+        try:
+            c = self.client()
+            c.post("/api/access/session", json={"code": self.code})
+            server.QUOTA.finish  # noqa: B018
+            self.ask(c, "比亚迪2025年净利润是多少？")
+            time.sleep(0.2)
+            with server.QUOTA.lock, access.closing(server.QUOTA._connect()) as db:
+                status, cost = db.execute("SELECT status, cost FROM ledger ORDER BY created DESC").fetchone()
+            self.assertEqual((status, cost), ("settled", 100 * 2 + 10 * 8))
+        finally:
+            P.PIPELINE.run = original
+
+    def test_unvalidated_hosted_reranker_keeps_live_off(self):
+        os.environ["TRACENUM_RERANKER"] = "siliconflow"
+        try:
+            c = self.client()
+            c.post("/api/access/session", json={"code": self.code})
+            self.assertEqual(c.get("/api/session").json()["reason"], "unavailable")
+            self.assertEqual(self.ask(c).status_code, 503)
+        finally:
+            os.environ.pop("TRACENUM_RERANKER")
+
     def test_question_length_limit(self):
         c = self.client()
         c.post("/api/access/session", json={"code": self.code})

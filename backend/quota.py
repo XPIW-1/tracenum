@@ -26,7 +26,10 @@ from pathlib import Path
 import billing
 
 BEIJING = timezone(timedelta(hours=8))
-STALE_SECONDS = 20 * 60  # an in-flight slot older than this is from a crashed process
+# The API runs as one process (uvicorn --workers 1). An "inflight" row whose request this
+# process is not running was left by a crashed or restarted process, and is reclaimed at
+# once. A row this process *is* running is never reclaimed, however long it takes.
+STALE_SECONDS = 60 * 60  # only for rows of unknown origin (e.g. a second process by mistake)
 
 
 def _env_int(name, default):
@@ -70,8 +73,12 @@ class Quota:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.lock = threading.Lock()
+        self.live: set[str] = set()  # request ids this process is currently running
         with closing(self._connect()) as db:
             db.executescript(SCHEMA)
+            # Anything still "inflight" at start-up belongs to a previous process.
+            db.execute("UPDATE ledger SET status='unknown', note='process restarted while running' "
+                       "WHERE status='inflight'")
 
     def _connect(self):
         db = sqlite3.connect(self.path, timeout=10, isolation_level=None)
@@ -94,9 +101,11 @@ class Quota:
         with self.lock, closing(self._connect()) as db:
             db.execute("BEGIN IMMEDIATE")
             try:
-                # A crashed worker leaves "inflight"; free the slot but keep the money as unknown.
-                db.execute("UPDATE ledger SET status='unknown', note='stale inflight' "
-                           "WHERE status='inflight' AND created < ?", (stamp - STALE_SECONDS,))
+                # Free slots of runs that are not alive here; keep their money as unknown.
+                live = tuple(self.live) or ("",)
+                db.execute(f"UPDATE ledger SET status='unknown', note='stale inflight' WHERE status='inflight' "
+                           f"AND request_id NOT IN ({','.join('?' * len(live))}) AND created < ?",
+                           (*live, stamp - STALE_SECONDS))
                 count = lambda where, *a: db.execute(
                     f"SELECT COUNT(*) FROM ledger WHERE day=? AND status!='rejected' AND {where}", (day, *a)).fetchone()[0]
                 reason = None
@@ -117,6 +126,7 @@ class Quota:
                            "VALUES (?,?,?,?,?,?,'inflight',?)",
                            (request_id, stamp, day, month, code_hash, ip, billing.RESERVE_PER_QUESTION))
                 db.execute("COMMIT")
+                self.live.add(request_id)
                 return Decision(True)
             except BaseException:
                 db.execute("ROLLBACK")
@@ -127,6 +137,7 @@ class Quota:
         and the attempt does not count against daily limits."""
         stamp, _, _ = self._now()
         with self.lock, closing(self._connect()) as db:
+            self.live.discard(request_id)
             if refund:
                 db.execute("UPDATE ledger SET status='rejected', cost=0, finished=?, note=? WHERE request_id=?",
                            (stamp, note or "no model call", request_id))

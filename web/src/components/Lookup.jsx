@@ -114,6 +114,20 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
   const isLive = mode === 'live'
 
   useEffect(() => () => abortRef.current?.abort(), [])
+  // The company can also change from outside (opening a draft row of another company):
+  // an answer must never be shown against another company's PDF or written to the draft
+  // under the wrong name, so drop it.
+  const runCompanyRef = useRef(null)
+  useEffect(() => {
+    if (runCompanyRef.current && runCompanyRef.current !== company) {
+      abortRef.current?.abort()
+      runCompanyRef.current = null
+      setRun(null)
+      setMeta(null)
+      setError(null)
+      setRecordedAt(null)
+    }
+  }, [company])
 
   const examples = useMemo(() => {
     const own = questions.filter((q) => q.company === company)
@@ -132,6 +146,7 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
     setError(null)
     setMeta(null)
     setRecordedAt(recording?.recorded_at ?? null)
+    runCompanyRef.current = company
     let current = emptyRun('S3')
     setRun(current)
     const onEvent = (event) => {

@@ -116,9 +116,19 @@ class CachedReranker:
 
     def _disk(self, key):
         path = self.cache_dir / f"{key}.json"
-        if path.is_file():
-            return json.loads(path.read_text(encoding="utf-8"))
-        return None
+        try:
+            return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
+        except (OSError, ValueError):
+            return None  # unreadable or half-written entry: score again
+
+    def _store(self, key, scores):
+        # Atomic and best-effort: a cache that cannot be written must not fail the answer.
+        try:
+            tmp = self.cache_dir / f".{key}.{threading.get_ident()}.tmp"
+            tmp.write_text(json.dumps([float(s) for s in scores]), encoding="utf-8")
+            os.replace(tmp, self.cache_dir / f"{key}.json")
+        except OSError as exc:
+            print(f"[rerank cache] not written: {exc}", flush=True)
 
     def predict(self, pairs, *args, **kwargs):
         import numpy as np
@@ -141,7 +151,7 @@ class CachedReranker:
                 scores = self.inner.predict(pairs)
                 if sink:
                     sink({"type": "progress", "node": "retrieve", "done": len(pairs), "total": len(pairs)})
-                (self.cache_dir / f"{key}.json").write_text(json.dumps([float(s) for s in scores]), encoding="utf-8")
+                self._store(key, scores)
             else:
                 # Score one pair per forward pass. In a padded batch every pair is
                 # padded to the longest chunk (up to ~3.5k tokens); the attention
@@ -156,7 +166,7 @@ class CachedReranker:
                     if sink:
                         sink({"type": "progress", "node": "retrieve", "done": index + 1, "total": len(pairs)})
                 scores = np.asarray(parts, dtype=np.float32)
-                (self.cache_dir / f"{key}.json").write_text(json.dumps([float(s) for s in scores]), encoding="utf-8")
+                self._store(key, scores)
             with self.guard:
                 self.cache[key] = scores
             return scores
@@ -216,6 +226,7 @@ def _install_logger():
             if name == "calls" and sink:
                 sink({"type": "usage", "prompt_tokens": row.get("prompt_tokens"),
                       "completion_tokens": row.get("completion_tokens"), "status": row.get("status"),
+                      "blocked": bool(row.get("blocked")),
                       "system_fingerprint": row.get("system_fingerprint"), "model": row.get("response_model")})
             return result
 
@@ -279,7 +290,8 @@ class Pipeline:
             if not key:
                 raise RuntimeError("DEEPSEEK_API_KEY is not configured")
             llm = DeepSeekChatOpenAI(model=FREEZE["model"]["alias"], api_key=key, base_url="https://api.deepseek.com",
-                                     temperature=FREEZE["model"]["temperature"], max_retries=0)
+                                     temperature=FREEZE["model"]["temperature"], max_retries=0,
+                                     timeout=float(os.environ.get("DEEPSEEK_TIMEOUT_SECONDS", "180")))
             namespace.update(vectorstore=None, reranker=reranker, llm=llm, corpus_stores=stores)
             _install_logger()
             LOG_ROOT.mkdir(parents=True, exist_ok=True)

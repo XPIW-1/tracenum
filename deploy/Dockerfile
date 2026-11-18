@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 \
     HF_HOME=/app/hf HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
     TRACENUM_RERANKER=siliconflow TRACENUM_TORCH_THREADS=2 \
     OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 \
-    TRACENUM_CACHE_DIR=/data/cache
+    TRACENUM_CACHE_DIR=/data/cache TRACENUM_DATA_DIR=/data
 
 WORKDIR /app
 COPY requirements-runtime.txt /tmp/requirements.txt
@@ -23,8 +23,12 @@ COPY --chown=root:root deepseek_workspace /app/deepseek_workspace
 COPY --chown=root:root tracenum /app/tracenum
 COPY RUNTIME.json /app/RUNTIME.json
 
-# Run logs and caches go to the /data volume; the frozen tree stays read-only.
-RUN ln -s /data/runs /app/tracenum/backend/runs && ln -s /data/recordings /app/tracenum/backend/recordings
+# Run logs and caches go to the /data volume; the frozen tree stays read-only, except the
+# Chroma folder: chromadb opens its SQLite file read-write even for queries. It is the
+# image's own copy (rebuilt from the locked bytes on every deploy), and corpus_routing
+# still verifies collection identity, metadata hashes and chunk counts on every run.
+RUN ln -s /data/runs /app/tracenum/backend/runs && ln -s /data/recordings /app/tracenum/backend/recordings \
+ && chown -R tracenum /app/v2/vector_db_formal_v1
 USER tracenum
 WORKDIR /app/tracenum/backend
 EXPOSE 8765

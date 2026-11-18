@@ -85,8 +85,22 @@ class QuotaTest(unittest.TestCase):
         finally:
             quota.SITE, quota.PER_CODE, quota.PER_IP = old_site, old_code, old_ip
 
+    def test_long_running_live_request_keeps_its_slot(self):
+        self.assertTrue(self.q.reserve("a", "c", "ip").ok)
+        with quota.closing(self.q._connect()) as db:
+            db.execute("UPDATE ledger SET created = created - ?", (quota.STALE_SECONDS * 3,))
+        self.assertEqual(self.q.reserve("b", "c2", "ip2").reason, "busy")
+
+    def test_restart_reclaims_slot_but_keeps_money(self):
+        self.assertTrue(self.q.reserve("a", "c", "ip").ok)
+        self.q = quota.Quota(self.q.path)  # process restart while "a" was running
+        self.assertTrue(self.q.reserve("b", "c2", "ip2").ok)
+        with quota.closing(self.q._connect()) as db:
+            self.assertEqual(db.execute("SELECT status FROM ledger WHERE request_id='a'").fetchone()[0], "unknown")
+
     def test_stale_inflight_frees_slot_but_keeps_money(self):
         self.assertTrue(self.q.reserve("a", "c", "ip").ok)
+        self.q.live.discard("a")  # e.g. written by another process
         with quota.closing(self.q._connect()) as db:
             db.execute("UPDATE ledger SET created = created - ?", (quota.STALE_SECONDS + 5,))
         self.assertTrue(self.q.reserve("b", "c2", "ip2").ok)

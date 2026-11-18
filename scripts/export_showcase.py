@@ -58,6 +58,8 @@ def public_recording(question_id, recording_id):
     for item in record["events"]:
         event = item["event"]
         kind = event["type"]
+        if kind == "usage":  # billing detail, never public
+            continue
         if kind == "error":
             raise ValueError(f"Featured recording contains an error event: {recording_id}")
         if kind not in EVENT_FIELDS:
@@ -114,6 +116,11 @@ def main():
             raise ValueError(f"{code}: corpus PDF SHA-256 does not match the frozen manifest")
         pdfs[code] = data
 
+    # Start from an empty recordings folder so a recording taken off the featured list
+    # stops being served (the folder is published as-is).
+    import shutil
+    if (OUTPUT / "recordings").is_dir():
+        shutil.rmtree(OUTPUT / "recordings")
     write_json(OUTPUT / "corpora.json", corpora)
     write_json(OUTPUT / "questions.json", questions)
     write_json(OUTPUT / "showcase.json", showcase)

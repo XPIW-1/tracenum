@@ -47,9 +47,17 @@ def main():
     parser.add_argument("--no-model", action="store_true", help="skip copying the embedding model")
     args = parser.parse_args()
     out = Path(args.out).resolve()
+    marker = out / ".tracenum-runtime"
+    # Only ever delete a folder this script created before; never a source tree.
+    protected = {ROOT.resolve(), REPO.resolve(), *(p.resolve() for p in (ROOT / "v2", REPO / "backend", REPO / "web"))}
+    if out in protected or any(out in p.parents for p in protected):
+        sys.exit(f"refusing to use {out} as output: it is (or contains) a source folder")
     if out.exists():
+        if any(out.iterdir()) and not marker.is_file():
+            sys.exit(f"refusing to overwrite {out}: not empty and not created by this script")
         shutil.rmtree(out)
     out.mkdir(parents=True)
+    marker.write_text("created by deploy/package_runtime.py\n", encoding="utf-8")
 
     lock = json.loads(LOCK.read_text(encoding="utf-8"))
     for item in lock["files"]:

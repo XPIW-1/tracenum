@@ -14,7 +14,9 @@ function formatTime(iso) {
 
 export default function Lab({ mode, featured, corpus, questions, openPdf, budget }) {
   const options = useMemo(() => featured.map(({ question_id }) => questions.find((q) => q.question_id === question_id)).filter(Boolean), [featured, questions])
-  const isLive = mode === 'live'
+  // Live three-strategy runs exist only on the local workbench (TRACENUM_DEV); production
+  // live sessions run S3 alone, so the lab there is replay-only.
+  const isLive = mode === 'live' && import.meta.env.DEV
   const [picked, setPicked] = useState(null)
   const [runs, setRuns] = useState(null)
   const [meta, setMeta] = useState(null)
