@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
-import { FILING_NUMBER } from '../site.js'
+import { FILING_NUMBER, LIVE_DIFFERENCES } from '../site.js'
 
 const GOLD_EXAMPLE = `题号  BYD-2025-003（比亚迪，基础财务事实）
 问题  2025年合并口径下，投资活动产生的现金流量净额相较2024年变动了多少（千元）？原因是什么？
@@ -96,9 +96,13 @@ export default function Method({ mode, questions, goLab }) {
         <p className="lab-note">
           S3 平均消耗约为 S1 的 {ratio.toFixed(1)} 倍。逐题看，没有一道题是少轮策略答对而多轮策略答错。结论基于 20 道目的性构建的题目、单一模型、每格单次运行，属于描述性比较，不宜直接推广。
         </p>
-        <button type="button" className="btn ghost" onClick={goLab}>{mode === 'live' ? '在实验台上实时运行三种策略' : '在实验台回放三种策略'}</button>
+        <button type="button" className="btn ghost" onClick={goLab}>{mode === 'live' && import.meta.env.DEV ? '在实验台上实时运行三种策略' : '在实验台回放三种策略'}</button>
       </section>
-      <footer className="lab-note">生成模型：DeepSeek（deepseek-flash）· 备案号：{FILING_NUMBER || '待核实'}</footer>
+      <section className="lab-note">
+        <h2>线上服务与论文实验的差异</h2>
+        <ul>{LIVE_DIFFERENCES.map((d) => <li key={d}>{d}</li>)}</ul>
+        <p>生成模型：DeepSeek（deepseek-flash）· 备案号：{FILING_NUMBER || '待核实'}</p>
+      </section>
 
       <section className="design-map">
         <h2>论文发现了什么，溯数怎么做</h2>

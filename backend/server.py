@@ -48,12 +48,21 @@ def rerank_validated() -> bool:
         summary = json.loads(RERANK_VALIDATION.read_text(encoding="utf-8"))["summary"]
         rounds = int(summary["rounds"])
         chunks = os.environ.get("SILICONFLOW_MAX_CHUNKS_PER_DOC")
-        return (summary["all_equal"] is True and rounds >= 10
+        accepted = summary.get("accepted") or {}
+        # Exact top-5 everywhere, or a deviation the owner accepted after the hosted reranker
+        # proved no worse end to end than the local control (see scripts/accept_rerank.py).
+        control_misses = set(accepted.get("control", {}).get("misses", []))
+        runs = accepted.get("hosted_runs") or []
+        passed = summary["all_equal"] is True or (
+            bool(accepted.get("by")) and accepted.get("parity") is True and len(runs) >= 1
+            and all(int(r["total"]) >= 5 and set(r["misses"]) <= control_misses for r in runs))
+        return (bool(passed) and rounds >= 10
                 and summary["logged_texts_verified_by_cache"] == rounds
                 and summary["model"] == rerank.SILICONFLOW_MODEL and summary["url"] == rerank.SILICONFLOW_URL
                 and summary["max_chunks_per_doc"] == (int(chunks) if chunks else None))
-    except (OSError, ValueError, KeyError, TypeError):
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
         return False
+
 
 app = FastAPI(title="TraceNum API", docs_url="/api/docs" if DEV else None, redoc_url=None, openapi_url=None if not DEV else "/openapi.json")
 _origins = [o for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o]

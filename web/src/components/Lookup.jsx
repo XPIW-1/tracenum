@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowUp, Plus, Check, Square } from 'lucide-react'
 import { replayStrategy, streamAsk, emptyRun, reduceRun, NODE_LABEL } from '../api.js'
 import AnswerText, { normNum, TickMark } from './AnswerText.jsx'
+import { FEATURED_NOTES } from '../site.js'
 
 // Exact question_type values from the frozen question set.
 const TYPE_ORDER = ['基础财务事实', '相似指标与财务口径', '多证据/计算', '跨页/分散证据', '语料边界/拒答']
@@ -237,6 +238,7 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
             {featured.filter((q) => q.company === company).map((q) => (
               <button className="example" key={q.question_id} type="button" onClick={() => ask(null, q)}>
                 <span>{q.question}</span><small>{q.question_id}</small>
+                {FEATURED_NOTES[q.question_id] && <small className="featured-note">{FEATURED_NOTES[q.question_id]}</small>}
               </button>
             ))}
           </div>

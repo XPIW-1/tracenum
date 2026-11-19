@@ -136,6 +136,22 @@ class ApiLiveTest(unittest.TestCase):
         finally:
             os.environ.pop("TRACENUM_RERANKER")
 
+    def test_archived_acceptance_passes_and_worse_hosted_fails(self):
+        archived = Path(__file__).resolve().parents[1] / "deploy/validation/rerank_validation.json"
+        data = json.loads(archived.read_text(encoding="utf-8"))
+        os.environ["TRACENUM_RERANKER"] = "siliconflow"
+        try:
+            server.RERANK_VALIDATION.write_text(json.dumps(data), encoding="utf-8")
+            self.assertTrue(server.rerank_validated())
+            data["summary"]["accepted"]["hosted_runs"][0]["misses"].append("BYD-2025-002")
+            server.RERANK_VALIDATION.write_text(json.dumps(data), encoding="utf-8")
+            self.assertFalse(server.rerank_validated())
+            server.RERANK_VALIDATION.write_text('{"summary": null}', encoding="utf-8")
+            self.assertFalse(server.rerank_validated())
+        finally:
+            os.environ.pop("TRACENUM_RERANKER")
+            server.RERANK_VALIDATION.unlink(missing_ok=True)
+
     def test_question_length_limit(self):
         c = self.client()
         c.post("/api/access/session", json={"code": self.code})

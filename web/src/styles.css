@@ -371,3 +371,7 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+.featured-questions .example { flex-wrap: wrap; }
+.featured-questions .example span { flex: 1 1 0; min-width: 0; }
+.example small.featured-note { flex: 1 0 100%; margin-top: 2px; color: var(--amber); line-height: 1.5; }
