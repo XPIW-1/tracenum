@@ -95,7 +95,8 @@ DISCLOSURE_COLUMNS = (
     ("承租方名称", "租赁资产种类", "本期确认的租赁收入"),
 )
 INVESTEE_NOTE = re.compile(rf"^(?:{NUMBERING})?在其他主体中的权益$")
-GROUP_WORDING = re.compile(r"本集团|本公司[及和与](?:其)?子公司|合并范围内")
+# "合并范围内" must not match inside "非合并范围内" (owner recheck, SEMCORP 2024 p149/152).
+GROUP_WORDING = re.compile(r"本集团|本公司[及和与](?:其)?子公司|(?<![非不])合并范围内")
 PARENT_HEADING = re.compile(r"^母公司(?:$|财务|报表|主要|附注|口径|[：:])")
 SUPPLEMENT_TABLE = re.compile(r"^(?:当[期年]|本[期年]|报告期)?(?:非经常性损益(?:项目)?明细表|净资产收益率(?:及|和|与)每股收益)$")
 GUARANTEE_HEADING = re.compile(

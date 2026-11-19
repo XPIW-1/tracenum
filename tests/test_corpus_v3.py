@@ -408,3 +408,12 @@ class PdfTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GroupWordingNegationTest(unittest.TestCase):
+    def test_negated_consolidation_scope_is_not_group_evidence(self):
+        from corpus.v3 import parse as P  # noqa: F401  (import path as used by the other tests)
+        pattern = P.GROUP_WORDING
+        self.assertIsNotNone(pattern.search("本集团采用现金流量套期"))
+        self.assertIsNotNone(pattern.search("合并范围内关联方组合"))
+        self.assertIsNone(pattern.search("按组合计提坏账准备：非合并范围内公司"))
