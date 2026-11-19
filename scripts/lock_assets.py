@@ -31,6 +31,29 @@ V2_DIRS = ["src", "vector_db_formal_v1"]
 OTHER = ["deepseek_workspace/20261110_unblind/unblinded_scores.csv"]
 
 
+CHROMA_VOLATILE = {"acquire_write"}  # chromadb's own write-lock bookkeeping, touched on every open
+
+
+def file_digest(path: Path) -> tuple[str, str]:
+    """(digest, method). Chroma's SQLite file is rewritten by chromadb whenever it is opened
+    (even for queries), so it is hashed by content: every table except CHROMA_VOLATILE,
+    rows sorted. Every other file is hashed byte for byte."""
+    if path.name == "chroma.sqlite3":
+        import sqlite3
+        db = sqlite3.connect(f"file:{path.as_posix()}?mode=ro", uri=True)
+        try:
+            h = hashlib.sha256()
+            for (table,) in db.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"):
+                if table in CHROMA_VOLATILE:
+                    continue
+                rows = sorted(repr(r) for r in db.execute(f'SELECT * FROM "{table}"'))
+                h.update(table.encode() + b"|" + "\n".join(rows).encode("utf-8") + b"|")
+            return h.hexdigest(), "sqlite-content-excluding-acquire_write"
+        finally:
+            db.close()
+    return hashlib.sha256(path.read_bytes()).hexdigest(), "bytes"
+
+
 def manifest_entries():
     freeze = json.loads((ROOT / "v2/config/formal_freeze_v1.json").read_text(encoding="utf-8"))
     return json.loads((ROOT / "v2" / freeze["manifest"]["path"]).read_text(encoding="utf-8"))
@@ -52,12 +75,12 @@ def collect() -> list[dict]:
     for path in sorted({p.resolve() for p in paths}):
         if not path.is_file():
             sys.exit(f"missing asset: {path}")
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        digest, method = file_digest(path)
         role, expected = roles.get(path, (None, None))
         if expected and digest != expected:
             sys.exit(f"{role} hash differs from the frozen manifest: {path}")
         out.append({"path": path.relative_to(ROOT).as_posix(), "bytes": path.stat().st_size, "sha256": digest,
-                    **({"role": role} if role else {})})
+                    **({"hash": method} if method != "bytes" else {}), **({"role": role} if role else {})})
     return out
 
 

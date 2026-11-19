@@ -1,0 +1,31 @@
+# Temporary config while the domain is still in registry review: plain HTTP on the
+# server IP, serving the TraceNum static site and the API. Replace with deploy/Caddyfile
+# (automatic HTTPS) once DNS records point here.
+:80 {
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+	handle /private/* {
+		respond 404
+	}
+	handle /api/* {
+		request_body {
+			max_size 16KB
+		}
+		reverse_proxy api:8765 {
+			flush_interval -1
+		}
+	}
+	handle_path /home/* {
+		root * /srv/portfolio
+		try_files {path} {path}/ /index.html
+		file_server
+	}
+	handle {
+		root * /srv/tracenum
+		try_files {path} /index.html
+		file_server
+	}
+}

@@ -33,7 +33,8 @@ LOCK = REPO / "deploy" / "assets.lock.json"
 MANIFEST_REL = "v2/config/dataset_manifest_v1.draft.json"
 HF_MODEL = "models--BAAI--bge-base-zh-v1.5"
 HF_CACHE = Path.home() / ".cache" / "huggingface" / "hub"
-BACKEND_FILES = ["pipeline.py", "server.py", "rerank.py", "access.py", "quota.py", "billing.py"]
+BACKEND_FILES = ["pipeline.py", "server.py", "rerank.py", "access.py", "quota.py", "billing.py",
+                 "review_recordings.py"]  # the last one grades the post-deploy smoke test
 
 
 def sha(path: Path) -> str:
@@ -59,10 +60,12 @@ def main():
     out.mkdir(parents=True)
     marker.write_text("created by deploy/package_runtime.py\n", encoding="utf-8")
 
+    sys.path.insert(0, str(REPO / "scripts"))
+    from lock_assets import file_digest
     lock = json.loads(LOCK.read_text(encoding="utf-8"))
     for item in lock["files"]:
         src = ROOT / item["path"]
-        if sha(src) != item["sha256"]:
+        if file_digest(src)[0] != item["sha256"]:
             sys.exit(f"asset changed since lock: {item['path']} (run scripts/lock_assets.py --check)")
         dst = out / item["path"]
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -92,6 +95,19 @@ def main():
     for name in BACKEND_FILES:
         if (REPO / "backend" / name).is_file():
             shutil.copy2(REPO / "backend" / name, backend / name)
+
+    # Post-deploy smoke test (scripts/e2e_featured.py): the featured list and the paper's Gold
+    # answers for grading. Neither is served; the Gold file is checked against the freeze.
+    (out / "tracenum" / "scripts").mkdir(parents=True)
+    shutil.copy2(REPO / "scripts" / "e2e_featured.py", out / "tracenum" / "scripts" / "e2e_featured.py")
+    (out / "tracenum" / "web" / "public" / "data").mkdir(parents=True)
+    shutil.copy2(REPO / "web/public/data/showcase.json", out / "tracenum/web/public/data/showcase.json")
+    freeze = json.loads((ROOT / "v2/config/formal_freeze_v1.json").read_text(encoding="utf-8"))
+    gold = ROOT / "v2" / freeze["gold"]["path"]
+    if sha(gold) != freeze["gold"]["sha256"]:
+        sys.exit("gold answers differ from the freeze")
+    (out / "v2" / gold.relative_to(ROOT / "v2")).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(gold, out / "v2" / gold.relative_to(ROOT / "v2"))
 
     if not args.no_model:
         model = HF_CACHE / HF_MODEL

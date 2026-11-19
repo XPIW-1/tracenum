@@ -204,7 +204,8 @@
   {
    "path": "v2/vector_db_formal_v1/chroma.sqlite3",
    "bytes": 33837056,
-   "sha256": "dd0a3500b6e60cad7420e5f6a7c8aaebfaad830334bb75c34dcc595c2e84d208"
+   "sha256": "a54500b15f3854a180608990d2b43726e762041a5ab8fc594ca15e52eb26d3b8",
+   "hash": "sqlite-content-excluding-acquire_write"
   }
  ]
 }
