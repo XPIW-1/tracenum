@@ -1,0 +1,1072 @@
+[
+  {
+    "id": "002594-2025-2025-OPERATE_INCOME",
+    "report_id": "002594_2025_v3",
+    "code": "002594",
+    "company": "比亚迪",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "803964958000",
+    "printed_value": "803,964,958",
+    "unit": "千元",
+    "pdf_page": 126,
+    "table_id": "002594_2025_v3:710d8b2e08e37ba5:p0126:g000:period_grid",
+    "row_id": "002594_2025_v3:710d8b2e08e37ba5:p0126:g000:period_grid:r0002",
+    "row_label": "一、营业收入",
+    "column_label": "2025年",
+    "column_row_id": "002594_2025_v3:710d8b2e08e37ba5:p0126:g000:period_grid:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "803964958000",
+    "akshare_notice_date": "2026-03-28 00:00:00",
+    "akshare_update_date": "2026-03-28 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据比亚迪 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "803964958000",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 126
+  },
+  {
+    "id": "002594-2023-2023-OPERATE_COST",
+    "report_id": "002594_2023_v3",
+    "code": "002594",
+    "company": "比亚迪",
+    "report_year": 2023,
+    "data_year": 2023,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "480558350000",
+    "printed_value": "480,558,350",
+    "unit": "千元",
+    "pdf_page": 140,
+    "table_id": "002594_2023_v3:959b00a12055470a:p0140:g000:period_grid",
+    "row_id": "002594_2023_v3:959b00a12055470a:p0140:g000:period_grid:r0002",
+    "row_label": "减：营业成本",
+    "column_label": "2023年",
+    "column_row_id": "002594_2023_v3:959b00a12055470a:p0140:g000:period_grid:r0000",
+    "column_qualifier": null,
+    "unit_evidence_page": 153,
+    "unit_evidence_text": "除有特别说明外，均以人民币千元为单位表示",
+    "akshare_value_yuan": "490398945000",
+    "akshare_notice_date": "2024-03-27 00:00:00",
+    "akshare_update_date": "2025-03-25 00:00:00",
+    "akshare_check": "restated_in_next_report",
+    "usable": true,
+    "restated_in": {
+      "report_year": 2024,
+      "value_yuan": "490398945000",
+      "printed_value": "490,398,945",
+      "unit": "千元",
+      "pdf_page": 145,
+      "table_id": "002594_2024_v3:e9c2d7fdd088e151:p0145:g000:period_grid",
+      "row_id": "002594_2024_v3:e9c2d7fdd088e151:p0145:g000:period_grid:r0003",
+      "row_label": "减：营业成本",
+      "column_label": "2023年",
+      "column_row_id": "002594_2024_v3:e9c2d7fdd088e151:p0145:g000:period_grid:r0000",
+      "column_qualifier": null
+    },
+    "difference_kind": "amount_changed",
+    "question": "根据比亚迪 2023 年年报，2023 年合并口径下的营业成本是多少？",
+    "expected_value_yuan": "480558350000",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 140
+  },
+  {
+    "id": "601633-2025-2025-OPERATE_INCOME",
+    "report_id": "601633_2025_v3",
+    "code": "601633",
+    "company": "长城汽车",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "222824238516.25",
+    "printed_value": "222,824,238,516.25",
+    "unit": "元",
+    "pdf_page": 146,
+    "table_id": "601633_2025_v3:5f1ef188878af8d5:p0146:t000",
+    "row_id": "601633_2025_v3:5f1ef188878af8d5:p0146:t000:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "601633_2025_v3:5f1ef188878af8d5:p0146:t000:r0000",
+    "column_qualifier": "(经审计)",
+    "akshare_value_yuan": "222824238516.25",
+    "akshare_notice_date": "2026-03-28 00:00:00",
+    "akshare_update_date": "2026-03-28 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据长城汽车 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "222824238516.25",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 146
+  },
+  {
+    "id": "601633-2024-2024-OPERATE_COST",
+    "report_id": "601633_2024_v3",
+    "code": "601633",
+    "company": "长城汽车",
+    "report_year": 2024,
+    "data_year": 2024,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "162746753859.32",
+    "printed_value": "162,746,753,859.32",
+    "unit": "元",
+    "pdf_page": 175,
+    "table_id": "601633_2024_v3:da4a2d594878268f:p0175:t000",
+    "row_id": "601633_2024_v3:da4a2d594878268f:p0175:t000:r0004",
+    "row_label": "其中：营业成本",
+    "column_label": "2024年度",
+    "column_row_id": "601633_2024_v3:da4a2d594878268f:p0175:t000:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "162751816682.8099975586",
+    "akshare_notice_date": "2025-03-29 00:00:00",
+    "akshare_update_date": "2026-03-28 00:00:00",
+    "akshare_check": "restated_in_next_report",
+    "usable": true,
+    "restated_in": {
+      "report_year": 2025,
+      "value_yuan": "162751816682.81",
+      "printed_value": "162,751,816,682.81",
+      "unit": "元",
+      "pdf_page": 146,
+      "table_id": "601633_2025_v3:5f1ef188878af8d5:p0146:t000",
+      "row_id": "601633_2025_v3:5f1ef188878af8d5:p0146:t000:r0004",
+      "row_label": "其中：营业成本",
+      "column_label": "2024年度",
+      "column_row_id": "601633_2025_v3:5f1ef188878af8d5:p0146:t000:r0000",
+      "column_qualifier": "(已重述)"
+    },
+    "difference_kind": "amount_changed",
+    "question": "根据长城汽车 2024 年年报，2024 年合并口径下的营业成本是多少？",
+    "expected_value_yuan": "162746753859.32",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 175
+  },
+  {
+    "id": "300750-2025-2025-OPERATE_INCOME",
+    "report_id": "300750_2025_v3",
+    "code": "300750",
+    "company": "宁德时代",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "423701834000",
+    "printed_value": "423,701,834",
+    "unit": "千元",
+    "pdf_page": 116,
+    "table_id": "300750_2025_v3:c15272977147dee7:p0116:t001",
+    "row_id": "300750_2025_v3:c15272977147dee7:p0116:t001:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "300750_2025_v3:c15272977147dee7:p0116:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "423701834000.0",
+    "akshare_notice_date": "2026-03-10 00:00:00",
+    "akshare_update_date": "2026-03-10 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据宁德时代 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "423701834000",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 116
+  },
+  {
+    "id": "300750-2023-2023-OPERATE_COST",
+    "report_id": "300750_2023_v3",
+    "code": "300750",
+    "company": "宁德时代",
+    "report_year": 2023,
+    "data_year": 2023,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "309070434000",
+    "printed_value": "30,907,043.40",
+    "unit": "万元",
+    "pdf_page": 120,
+    "table_id": "300750_2023_v3:6081f0377617dddb:p0120:t000",
+    "row_id": "300750_2023_v3:6081f0377617dddb:p0120:t000:r0006",
+    "row_label": "其中：营业成本",
+    "column_label": "2023年度",
+    "column_row_id": "300750_2023_v3:6081f0377617dddb:p0119:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "323982130000.0",
+    "akshare_notice_date": "2024-03-16 00:00:00",
+    "akshare_update_date": "2025-03-15 00:00:00",
+    "akshare_check": "restated_in_next_report",
+    "usable": true,
+    "restated_in": {
+      "report_year": 2024,
+      "value_yuan": "323982130000",
+      "printed_value": "323,982,130",
+      "unit": "千元",
+      "pdf_page": 119,
+      "table_id": "300750_2024_v3:b4f1713d7b821eb0:p0119:t001",
+      "row_id": "300750_2024_v3:b4f1713d7b821eb0:p0119:t001:r0007",
+      "row_label": "其中：营业成本",
+      "column_label": "2023年度",
+      "column_row_id": "300750_2024_v3:b4f1713d7b821eb0:p0119:t001:r0000",
+      "column_qualifier": null
+    },
+    "difference_kind": "amount_changed",
+    "question": "根据宁德时代 2023 年年报，2023 年合并口径下的营业成本是多少？",
+    "expected_value_yuan": "309070434000",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 120
+  },
+  {
+    "id": "300014-2025-2025-OPERATE_INCOME",
+    "report_id": "300014_2025_v3",
+    "code": "300014",
+    "company": "亿纬锂能",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "61469630776.09",
+    "printed_value": "61,469,630,776.09",
+    "unit": "元",
+    "pdf_page": 90,
+    "table_id": "300014_2025_v3:3bee0ca9a6232c60:p0090:t001",
+    "row_id": "300014_2025_v3:3bee0ca9a6232c60:p0090:t001:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "300014_2025_v3:3bee0ca9a6232c60:p0090:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "61469630776.0899963379",
+    "akshare_notice_date": "2026-03-28 00:00:00",
+    "akshare_update_date": "2026-03-28 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据亿纬锂能 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "61469630776.09",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 90
+  },
+  {
+    "id": "300014-2023-2023-OPERATE_COST",
+    "report_id": "300014_2023_v3",
+    "code": "300014",
+    "company": "亿纬锂能",
+    "report_year": 2023,
+    "data_year": 2023,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "40473296810.60",
+    "printed_value": "40,473,296,810.60",
+    "unit": "元",
+    "pdf_page": 99,
+    "table_id": "300014_2023_v3:959d6d51d529fd51:p0099:t001",
+    "row_id": "300014_2023_v3:959d6d51d529fd51:p0099:t001:r0007",
+    "row_label": "其中：营业成本",
+    "column_label": "2023年度",
+    "column_row_id": "300014_2023_v3:959d6d51d529fd51:p0099:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "40664273886.8600006104",
+    "akshare_notice_date": "2024-04-19 00:00:00",
+    "akshare_update_date": "2025-04-18 00:00:00",
+    "akshare_check": "restated_in_next_report",
+    "usable": true,
+    "restated_in": {
+      "report_year": 2024,
+      "value_yuan": "40664273886.86",
+      "printed_value": "40,664,273,886.86",
+      "unit": "元",
+      "pdf_page": 97,
+      "table_id": "300014_2024_v3:06be1a045d1ec713:p0097:t001",
+      "row_id": "300014_2024_v3:06be1a045d1ec713:p0097:t001:r0007",
+      "row_label": "其中：营业成本",
+      "column_label": "2023年度",
+      "column_row_id": "300014_2024_v3:06be1a045d1ec713:p0097:t001:r0000",
+      "column_qualifier": null
+    },
+    "difference_kind": "amount_changed",
+    "question": "根据亿纬锂能 2023 年年报，2023 年合并口径下的营业成本是多少？",
+    "expected_value_yuan": "40473296810.60",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 99
+  },
+  {
+    "id": "301358-2025-2025-OPERATE_INCOME",
+    "report_id": "301358_2025_v3",
+    "code": "301358",
+    "company": "湖南裕能",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "34624768328.39",
+    "printed_value": "34,624,768,328.39",
+    "unit": "元",
+    "pdf_page": 96,
+    "table_id": "301358_2025_v3:50f66313aa7c6e4c:p0096:t000",
+    "row_id": "301358_2025_v3:50f66313aa7c6e4c:p0096:t000:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "301358_2025_v3:50f66313aa7c6e4c:p0096:t000:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "34624768328.3899993896",
+    "akshare_notice_date": "2026-04-23 00:00:00",
+    "akshare_update_date": "2026-04-23 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据湖南裕能 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "34624768328.39",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 96
+  },
+  {
+    "id": "301358-2025-2024-OPERATE_COST",
+    "report_id": "301358_2025_v3",
+    "code": "301358",
+    "company": "湖南裕能",
+    "report_year": 2025,
+    "data_year": 2024,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "20825021307.44",
+    "printed_value": "20,825,021,307.44",
+    "unit": "元",
+    "pdf_page": 96,
+    "table_id": "301358_2025_v3:50f66313aa7c6e4c:p0096:t000",
+    "row_id": "301358_2025_v3:50f66313aa7c6e4c:p0096:t000:r0007",
+    "row_label": "其中：营业成本",
+    "column_label": "2024年度",
+    "column_row_id": "301358_2025_v3:50f66313aa7c6e4c:p0096:t000:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "20825021307.4399986267",
+    "akshare_notice_date": "2025-03-15 00:00:00",
+    "akshare_update_date": "2026-04-23 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据湖南裕能 2025 年年报，2024 年（比较期）合并口径下的营业成本是多少？",
+    "expected_value_yuan": "20825021307.44",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 96
+  },
+  {
+    "id": "688005-2025-2025-OPERATE_INCOME",
+    "report_id": "688005_2025_v3",
+    "code": "688005",
+    "company": "容百科技",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "12267435004.35",
+    "printed_value": "12,267,435,004.35",
+    "unit": "元",
+    "pdf_page": 124,
+    "table_id": "688005_2025_v3:9ce8d55df8859fa5:p0124:t001",
+    "row_id": "688005_2025_v3:9ce8d55df8859fa5:p0124:t001:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "688005_2025_v3:9ce8d55df8859fa5:p0124:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "12267435004.3500003815",
+    "akshare_notice_date": "2026-04-11 00:00:00",
+    "akshare_update_date": "2026-04-11 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据容百科技 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "12267435004.35",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 124
+  },
+  {
+    "id": "688005-2025-2024-OPERATE_COST",
+    "report_id": "688005_2025_v3",
+    "code": "688005",
+    "company": "容百科技",
+    "report_year": 2025,
+    "data_year": 2024,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "13576435854.14",
+    "printed_value": "13,576,435,854.14",
+    "unit": "元",
+    "pdf_page": 124,
+    "table_id": "688005_2025_v3:9ce8d55df8859fa5:p0124:t001",
+    "row_id": "688005_2025_v3:9ce8d55df8859fa5:p0124:t001:r0007",
+    "row_label": "其中：营业成本",
+    "column_label": "2024年度",
+    "column_row_id": "688005_2025_v3:9ce8d55df8859fa5:p0124:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "13576435854.1399993896",
+    "akshare_notice_date": "2025-04-10 00:00:00",
+    "akshare_update_date": "2026-04-11 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据容百科技 2025 年年报，2024 年（比较期）合并口径下的营业成本是多少？",
+    "expected_value_yuan": "13576435854.14",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 124
+  },
+  {
+    "id": "001301-2025-2025-OPERATE_INCOME",
+    "report_id": "001301_2025_v3",
+    "code": "001301",
+    "company": "尚太科技",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "7943039962.41",
+    "printed_value": "7,943,039,962.41",
+    "unit": "元",
+    "pdf_page": 149,
+    "table_id": "001301_2025_v3:f114852f3b63afe2:p0149:t001",
+    "row_id": "001301_2025_v3:f114852f3b63afe2:p0149:t001:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "001301_2025_v3:f114852f3b63afe2:p0149:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "7943039962.4099998474",
+    "akshare_notice_date": "2026-04-22 00:00:00",
+    "akshare_update_date": "2026-04-22 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据尚太科技 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "7943039962.41",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 149
+  },
+  {
+    "id": "001301-2025-2024-OPERATE_COST",
+    "report_id": "001301_2025_v3",
+    "code": "001301",
+    "company": "尚太科技",
+    "report_year": 2025,
+    "data_year": 2024,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "3884114033.88",
+    "printed_value": "3,884,114,033.88",
+    "unit": "元",
+    "pdf_page": 149,
+    "table_id": "001301_2025_v3:f114852f3b63afe2:p0149:t001",
+    "row_id": "001301_2025_v3:f114852f3b63afe2:p0149:t001:r0007",
+    "row_label": "其中：营业成本",
+    "column_label": "2024年度",
+    "column_row_id": "001301_2025_v3:f114852f3b63afe2:p0149:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "3884114033.8800001144",
+    "akshare_notice_date": "2025-03-15 00:00:00",
+    "akshare_update_date": "2026-04-22 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据尚太科技 2025 年年报，2024 年（比较期）合并口径下的营业成本是多少？",
+    "expected_value_yuan": "3884114033.88",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 149
+  },
+  {
+    "id": "002709-2025-2025-OPERATE_INCOME",
+    "report_id": "002709_2025_v3",
+    "code": "002709",
+    "company": "天赐材料",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "16649892556.28",
+    "printed_value": "16,649,892,556.28",
+    "unit": "元",
+    "pdf_page": 83,
+    "table_id": "002709_2025_v3:81877607987489f2:p0083:t001",
+    "row_id": "002709_2025_v3:81877607987489f2:p0083:t001:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "002709_2025_v3:81877607987489f2:p0083:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "16649892556.2800006866",
+    "akshare_notice_date": "2026-03-10 00:00:00",
+    "akshare_update_date": "2026-03-10 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据天赐材料 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "16649892556.28",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 83
+  },
+  {
+    "id": "002709-2025-2024-OPERATE_COST",
+    "report_id": "002709_2025_v3",
+    "code": "002709",
+    "company": "天赐材料",
+    "report_year": 2025,
+    "data_year": 2024,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "10154135596.71",
+    "printed_value": "10,154,135,596.71",
+    "unit": "元",
+    "pdf_page": 84,
+    "table_id": "002709_2025_v3:81877607987489f2:p0084:t000",
+    "row_id": "002709_2025_v3:81877607987489f2:p0084:t000:r0002",
+    "row_label": "其中：营业成本",
+    "column_label": "2024年度",
+    "column_row_id": "002709_2025_v3:81877607987489f2:p0083:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "10154135596.7099990845",
+    "akshare_notice_date": "2025-04-15 00:00:00",
+    "akshare_update_date": "2026-03-10 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据天赐材料 2025 年年报，2024 年（比较期）合并口径下的营业成本是多少？",
+    "expected_value_yuan": "10154135596.71",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 84
+  },
+  {
+    "id": "002812-2025-2025-OPERATE_INCOME",
+    "report_id": "002812_2025_v3",
+    "code": "002812",
+    "company": "恩捷股份",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "13632727136.01",
+    "printed_value": "13,632,727,136.01",
+    "unit": "元",
+    "pdf_page": 101,
+    "table_id": "002812_2025_v3:99206da4fa5fe3ae:p0101:t001",
+    "row_id": "002812_2025_v3:99206da4fa5fe3ae:p0101:t001:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "002812_2025_v3:99206da4fa5fe3ae:p0101:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "13632727136.0100002289",
+    "akshare_notice_date": "2026-04-23 00:00:00",
+    "akshare_update_date": "2026-04-23 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据恩捷股份 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "13632727136.01",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 101
+  },
+  {
+    "id": "002812-2025-2024-OPERATE_COST",
+    "report_id": "002812_2025_v3",
+    "code": "002812",
+    "company": "恩捷股份",
+    "report_year": 2025,
+    "data_year": 2024,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "9038746050.98",
+    "printed_value": "9,038,746,050.98",
+    "unit": "元",
+    "pdf_page": 101,
+    "table_id": "002812_2025_v3:99206da4fa5fe3ae:p0101:t001",
+    "row_id": "002812_2025_v3:99206da4fa5fe3ae:p0101:t001:r0007",
+    "row_label": "其中：营业成本",
+    "column_label": "2024年度",
+    "column_row_id": "002812_2025_v3:99206da4fa5fe3ae:p0101:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "9038746050.9799995422",
+    "akshare_notice_date": "2025-04-23 00:00:00",
+    "akshare_update_date": "2026-04-23 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据恩捷股份 2025 年年报，2024 年（比较期）合并口径下的营业成本是多少？",
+    "expected_value_yuan": "9038746050.98",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 101
+  },
+  {
+    "id": "002460-2025-2025-OPERATE_INCOME",
+    "report_id": "002460_2025_v3",
+    "code": "002460",
+    "company": "赣锋锂业",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "23081732746.32",
+    "printed_value": "23,081,732,746.32",
+    "unit": "元",
+    "pdf_page": 132,
+    "table_id": "002460_2025_v3:80b32c84cfb34719:p0132:t001",
+    "row_id": "002460_2025_v3:80b32c84cfb34719:p0132:t001:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "002460_2025_v3:80b32c84cfb34719:p0132:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "23081732746.3199996948",
+    "akshare_notice_date": "2026-03-31 00:00:00",
+    "akshare_update_date": "2026-03-31 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据赣锋锂业 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "23081732746.32",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 132
+  },
+  {
+    "id": "002460-2023-2023-OPERATE_COST",
+    "report_id": "002460_2023_v3",
+    "code": "002460",
+    "company": "赣锋锂业",
+    "report_year": 2023,
+    "data_year": 2023,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "28396866986.37",
+    "printed_value": "28,396,866,986.37",
+    "unit": "元",
+    "pdf_page": 127,
+    "table_id": "002460_2023_v3:8c2f955210634e9e:p0127:t001",
+    "row_id": "002460_2023_v3:8c2f955210634e9e:p0127:t001:r0007",
+    "row_label": "其中：营业成本",
+    "column_label": "2023年度",
+    "column_row_id": "002460_2023_v3:8c2f955210634e9e:p0127:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "28462706780.2900009155",
+    "akshare_notice_date": "2024-03-29 00:00:00",
+    "akshare_update_date": "2025-03-29 00:00:00",
+    "akshare_check": "restated_in_next_report",
+    "usable": true,
+    "restated_in": {
+      "report_year": 2024,
+      "value_yuan": "28462706780.29",
+      "printed_value": "28,462,706,780.29",
+      "unit": "元",
+      "pdf_page": 147,
+      "table_id": "002460_2024_v3:74db32844c877e0d:p0147:t001",
+      "row_id": "002460_2024_v3:74db32844c877e0d:p0147:t001:r0007",
+      "row_label": "其中：营业成本",
+      "column_label": "2023年度",
+      "column_row_id": "002460_2024_v3:74db32844c877e0d:p0147:t001:r0000",
+      "column_qualifier": null
+    },
+    "difference_kind": "amount_changed",
+    "question": "根据赣锋锂业 2023 年年报，2023 年合并口径下的营业成本是多少？",
+    "expected_value_yuan": "28396866986.37",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 127
+  },
+  {
+    "id": "002466-2025-2025-OPERATE_INCOME",
+    "report_id": "002466_2025_v3",
+    "code": "002466",
+    "company": "天齐锂业",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "10346364563.27",
+    "printed_value": "10,346,364,563.27",
+    "unit": "元",
+    "pdf_page": 143,
+    "table_id": "002466_2025_v3:01a95a85fe6da381:p0143:t000",
+    "row_id": "002466_2025_v3:01a95a85fe6da381:p0143:t000:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "002466_2025_v3:01a95a85fe6da381:p0143:t000:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "10346364563.2700004578",
+    "akshare_notice_date": "2026-03-28 00:00:00",
+    "akshare_update_date": "2026-03-28 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据天齐锂业 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "10346364563.27",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 143
+  },
+  {
+    "id": "002466-2025-2024-OPERATE_COST",
+    "report_id": "002466_2025_v3",
+    "code": "002466",
+    "company": "天齐锂业",
+    "report_year": 2025,
+    "data_year": 2024,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "7044561174.46",
+    "printed_value": "7,044,561,174.46",
+    "unit": "元",
+    "pdf_page": 143,
+    "table_id": "002466_2025_v3:01a95a85fe6da381:p0143:t000",
+    "row_id": "002466_2025_v3:01a95a85fe6da381:p0143:t000:r0007",
+    "row_label": "其中：营业成本",
+    "column_label": "2024年度",
+    "column_row_id": "002466_2025_v3:01a95a85fe6da381:p0143:t000:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "7044561174.4600000381",
+    "akshare_notice_date": "2025-03-27 00:00:00",
+    "akshare_update_date": "2026-03-28 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据天齐锂业 2025 年年报，2024 年（比较期）合并口径下的营业成本是多少？",
+    "expected_value_yuan": "7044561174.46",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 143
+  },
+  {
+    "id": "300124-2025-2025-OPERATE_INCOME",
+    "report_id": "300124_2025_v3",
+    "code": "300124",
+    "company": "汇川技术",
+    "report_year": 2025,
+    "data_year": 2025,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业收入",
+    "metric_code": "OPERATE_INCOME",
+    "value_yuan": "45104844200.13",
+    "printed_value": "45,104,844,200.13",
+    "unit": "元",
+    "pdf_page": 120,
+    "table_id": "300124_2025_v3:622e4c655a31d41e:p0120:t001",
+    "row_id": "300124_2025_v3:622e4c655a31d41e:p0120:t001:r0002",
+    "row_label": "其中：营业收入",
+    "column_label": "2025年度",
+    "column_row_id": "300124_2025_v3:622e4c655a31d41e:p0120:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "45104844200.1299972534",
+    "akshare_notice_date": "2026-04-28 00:00:00",
+    "akshare_update_date": "2026-04-28 00:00:00",
+    "akshare_check": "match",
+    "usable": true,
+    "question": "根据汇川技术 2025 年年报，2025 年合并口径下的营业收入是多少？",
+    "expected_value_yuan": "45104844200.13",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 120
+  },
+  {
+    "id": "300124-2023-2023-OPERATE_COST",
+    "report_id": "300124_2023_v3",
+    "code": "300124",
+    "company": "汇川技术",
+    "report_year": 2023,
+    "data_year": 2023,
+    "scope": "合并",
+    "statement_type": "利润表",
+    "metric": "营业成本",
+    "metric_code": "OPERATE_COST",
+    "value_yuan": "20214696609.82",
+    "printed_value": "20,214,696,609.82",
+    "unit": "元",
+    "pdf_page": 124,
+    "table_id": "300124_2023_v3:d6a0bcc9e9486616:p0124:t001",
+    "row_id": "300124_2023_v3:d6a0bcc9e9486616:p0124:t001:r0007",
+    "row_label": "其中：营业成本",
+    "column_label": "2023年度",
+    "column_row_id": "300124_2023_v3:d6a0bcc9e9486616:p0124:t001:r0000",
+    "column_qualifier": null,
+    "akshare_value_yuan": "20583517306.0800018311",
+    "akshare_notice_date": "2024-04-23 00:00:00",
+    "akshare_update_date": "2025-04-29 00:00:00",
+    "akshare_check": "restated_in_next_report",
+    "usable": true,
+    "restated_in": {
+      "report_year": 2024,
+      "value_yuan": "20583517306.08",
+      "printed_value": "20,583,517,306.08",
+      "unit": "元",
+      "pdf_page": 120,
+      "table_id": "300124_2024_v3:271b6fa60c777541:p0120:t001",
+      "row_id": "300124_2024_v3:271b6fa60c777541:p0120:t001:r0007",
+      "row_label": "其中：营业成本",
+      "column_label": "2023年度",
+      "column_row_id": "300124_2024_v3:271b6fa60c777541:p0120:t001:r0000",
+      "column_qualifier": null
+    },
+    "difference_kind": "amount_changed",
+    "question": "根据汇川技术 2023 年年报，2023 年合并口径下的营业成本是多少？",
+    "expected_value_yuan": "20214696609.82",
+    "tolerance": {
+      "元": {
+        "absolute_yuan": 0
+      },
+      "万元": {
+        "relative": 0.005
+      },
+      "亿元": {
+        "relative": 0.005
+      }
+    },
+    "evidence_page": 124
+  }
+]
