@@ -292,7 +292,8 @@ class Pipeline:
             llm = DeepSeekChatOpenAI(model=FREEZE["model"]["alias"], api_key=key, base_url="https://api.deepseek.com",
                                      temperature=FREEZE["model"]["temperature"], max_retries=0,
                                      timeout=float(os.environ.get("DEEPSEEK_TIMEOUT_SECONDS", "180")))
-            namespace.update(vectorstore=None, reranker=reranker, llm=llm, corpus_stores=stores)
+            namespace.update(vectorstore=None, reranker=reranker, llm=llm, corpus_stores=stores,
+                             corpus_embeddings=embeddings)  # reused by backend/expansion.py
             _install_logger()
             LOG_ROOT.mkdir(parents=True, exist_ok=True)
             self.namespace = namespace
