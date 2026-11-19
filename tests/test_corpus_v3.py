@@ -9,6 +9,7 @@ from corpus.v3.parse import (
     raw_pages, registry, resolve_segments,
 )
 from corpus.v3.qc import identities
+from corpus.v3 import signoff
 
 
 def page(number, prefix=(), header=("项目", "2025年", "2024年"),
@@ -237,6 +238,86 @@ class PdfTests(unittest.TestCase):
             self.skipTest(f"Cached raw pages missing: {identifier}")
         raw = (json.loads(path.read_bytes()) for path in paths)
         return list(resolve_segments((p, clean_page(p)) for p in raw))
+
+    def test_investee_names_bind_each_row_on_both_tables(self):
+        _, cleaned, _ = self.cached_segments("002460_2023", 233, 237, 238)[-1]
+        tables = [t for t in cleaned["tables"] if t["primary"]]
+        self.assertEqual(len(tables), 2)
+        for table in tables:
+            context = table["context"]
+            self.assertEqual(context["scope"], "被投资主体")
+            self.assertNotIn("entity", context)
+            self.assertTrue(context["numeric_answer_allowed"])
+            self.assertEqual(list(context["entity_by_row"].values()),
+                             ["Minera Exar", "江西赣锋锂电科技股份有限公司"])
+
+    def test_investee_columns_and_unresolved_joint_heading(self):
+        lead = ("十、在其他主体中的权益", "（3）重要非全资子公司的主要财务信息")
+        investors = ("Minera Exar", "江西赣锋锂电科技股份有限公司")
+        contexts, _ = resolve(page(1, lead, header=("项目", *investors), label="流动资产"))
+        self.assertEqual(contexts[0]["entity_by_column"], dict(enumerate(investors, 1)))
+        self.assertNotIn("entity", contexts[0])
+        contexts, _ = resolve(page(1, lead, header=("项目", "、".join(investors), ""), label="流动资产"))
+        self.assertEqual(contexts[0]["entities"], list(investors))
+        self.assertTrue(contexts[0]["entity_unknown"])
+        self.assertFalse(contexts[0]["numeric_answer_allowed"])
+
+    def test_hedging_group_wording_and_parent_precedence(self):
+        _, cleaned, _ = self.cached_segments("002460_2025", 169, 244, 248, 249)[-1]
+        table, = [t for t in cleaned["tables"] if t["primary"]]
+        context = table["context"]
+        self.assertEqual((context["scope"], context["scope_source"]), ("合并", "group_wording"))
+        self.assertIn("本集团采用现金", context["scope_evidence"][0]["text"])
+        contexts, _ = resolve(page(1, ("九、母公司财务报表附注", "本集团采用现金流量套期和公允价值套期")))
+        self.assertEqual((contexts[0]["scope"], contexts[0]["scope_source"]), ("母公司", "section_heading"))
+        contexts, _ = resolve(page(1, ("九、合并财务报表附注", "本集团采用现金流量套期和公允价值套期")))
+        self.assertEqual((contexts[0]["scope"], contexts[0]["scope_source"]), ("合并", "group_wording"))
+
+    def test_supplement_follows_parent_notes(self):
+        _, cleaned, _ = self.cached_segments("300014_2023", 224, 235)[-1]
+        parent, supplement = [t["context"] for t in cleaned["tables"] if t["primary"]]
+        self.assertEqual(parent["scope"], "母公司")
+        self.assertEqual((supplement["scope"], supplement["scope_source"]), ("合并", "section_heading"))
+        self.assertEqual([a["rule"] for a in supplement["scope_evidence"]],
+                         ["supplement_section_heading", "supplement_table_title", "minority_interest_row"])
+
+    def test_guarantee_heading_applies_to_lower_table_only(self):
+        _, cleaned, _ = self.cached_segments("001301_2025", 128)[-1]
+        upper, lower = [t["context"] for t in cleaned["tables"] if t["primary"]]
+        self.assertEqual(lower["scope"], "不适用")
+        self.assertEqual(lower["table_title"]["text"], "2、重大担保")
+        self.assertNotEqual(upper.get("table_title"), lower["table_title"])
+
+    def test_opening_period_survives_continuation_with_report_evidence(self):
+        _, cleaned, _ = self.cached_segments("300750_2023", 115, 116)[-1]
+        table, = [t for t in cleaned["tables"] if t["primary"]]
+        closing, opening = table["period_columns"]
+        self.assertEqual((closing["data_year"], opening["data_year"]), (2023, 2022))
+        self.assertEqual((opening["printed_label"], opening["label"], opening["opening_year"]),
+                         ("2023年1月1日", "2023年初（=2022年末）", 2023))
+        self.assertFalse(opening["restated"])
+        raw, cleaned = page(1, ("合并资产负债表",), header=("项目", "2023年12月31日", "2023年1月1日（经重述）"),
+                            label="流动资产：")
+        result = next(resolve_segments([(raw, cleaned)]))[1]
+        self.assertTrue(result["tables"][0]["period_columns"][1]["restated"])
+        raw, cleaned = page(1, ("合并资产负债表",), header=("项目", "期末余额", "期初余额"), label="流动资产：")
+        result = next(resolve_segments([(raw, cleaned)], report_year=2023))[1]
+        self.assertEqual(result["tables"][0]["period_columns"][1]["data_year"], 2022)
+
+    def test_signoff_points_to_each_table_on_a_split_page(self):
+        resolved = {raw["page"]: cleaned for raw, cleaned, _ in
+                    self.cached_segments("300750_2023", 115, 116, 117)}
+        upper, lower = [t for t in resolved[117]["tables"] if t["primary"]]
+        read_page = signoff.cached_page
+        with patch.object(signoff, "cached_page", side_effect=lambda rid, directory, number:
+                          resolved[number] if directory == "cleaned" else read_page(rid, directory, number)):
+            upper_claim = signoff.describe_table("300750_2023", 117, upper["table_id"])
+            lower_claim = signoff.describe_table("300750_2023", 117, lower["table_id"])
+        self.assertIn("上方第1张表", upper_claim)
+        self.assertIn("第116页续接源表", upper_claim)
+        self.assertIn("2023年1月1日", upper_claim)
+        self.assertIn("下方第2张表", lower_claim)
+        self.assertNotIn("续接源表", lower_claim)
 
     def test_statement_title_and_body_on_different_pages(self):
         cases = (

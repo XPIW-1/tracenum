@@ -12,6 +12,7 @@ from __future__ import annotations
 import html
 import json
 import random
+from functools import lru_cache
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -27,8 +28,8 @@ def load(rid):
     segs = json.loads((d / "segments.json").read_text(encoding="utf-8"))
     segs = segs if isinstance(segs, list) else segs.get("segments", [])
     qc = json.loads((d / "qc.json").read_text(encoding="utf-8"))
-    chunks = [json.loads(l)["metadata"] | {"_text": json.loads(l)["text"]}
-              for l in (d / "chunks.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    with (d / "chunks.jsonl").open(encoding="utf-8") as stream:
+        chunks = [json.loads(line)["metadata"] for line in stream if line.strip()]
     return segs, qc, chunks
 
 
@@ -36,41 +37,99 @@ def seg(segs, stype, scope):
     return next((s for s in segs if s.get("statement_type") == stype and s.get("scope") == scope), None)
 
 
+def cached_page(rid, directory, page):
+    return json.loads((CORPUS / f"{rid}_v3" / directory / f"page_{page:04d}.json").read_bytes())
+
+
+def describe_table(rid, page, table_id):
+    tables = sorted(cached_page(rid, "cleaned", page)["tables"], key=lambda t: (t["bbox"][1], t["bbox"][0]))
+    table = next(t for t in tables if t["table_id"] == table_id)
+    primary = [t for t in tables if t["primary"]]
+    order = primary if table["primary"] else tables
+    index = order.index(table)
+    position = (("上方" if index == 0 else "下方" if index == len(order) - 1 else "中部")
+                if len(order) > 1 else "")
+    marker = "第" if table["primary"] else "备选取表第"
+    description = f"本页{position}{marker}{index + 1}张表（{table_id.rsplit(':', 1)[-1]}）"
+    context = table["context"]
+    if title := context.get("table_title"):
+        description += f"「{title['text']}」"
+    else:
+        headers = table.get("header_rows") or table["rows"][:1]
+        first_row = "｜".join(" ".join(cell.split()) for cell in headers[0]["cells"] if cell and cell.strip())
+        if first_row:
+            description += f"（表格开头「{first_row[:95]}」）"
+
+    earlier_title = next((a for a in context["scope_evidence"]
+                          if a["rule"] == "explicit_statement_title" and a["source_page"] < page), None)
+    continuation = next((a for a in context["scope_evidence"]
+                         if a.get("source_table_id") and a["source_page"] == page - 1), None)
+    if continuation:
+        previous = cached_page(rid, "cleaned", page - 1)
+        source = next(t for t in previous["tables"] if t["table_id"] == continuation["source_table_id"])
+        headers = source["header_rows"] or source.get("repeated_header_rows", [])
+        header_page = page - 1 if source["header_rows"] else source.get("header_source_page")
+        if headers and header_page:
+            line_ids = {lid for row in headers for lid in row.get("source_line_ids", [])}
+            original = cached_page(rid, "raw", header_page)["lines"]
+            texts = [line["text"].strip() for line in original if line["line_id"] in line_ids]
+            if not texts:
+                texts = ["｜".join(" ".join(cell.split()) for cell in row["cells"] if cell) for row in headers]
+            description += f"。第{page - 1}页续接源表"
+            if header_page != page - 1:
+                description += f"沿用第{header_page}页"
+            description += f"表头「{' / '.join(texts)}」"
+    if earlier_title:
+        description += f"。第{earlier_title['source_page']}页报表标题原文「{earlier_title['text']}」"
+    return description
+
+
 def pick():
     rng = random.Random(20261119)
     items = []
 
-    def add(rid, page, kind, claim, ask):
+    @lru_cache(maxsize=None)
+    def report(rid):
+        return load(rid)
+
+    def add(rid, page, table_id, kind, claim, ask):
+        claim = f"{describe_table(rid, page, table_id)}。{claim}"
         items.append({"id": f"{rid}:p{page}:{len(items)}", "report": rid, "page": int(page), "kind": kind,
-                      "claim": claim, "ask": ask})
+                      "table_id": table_id, "claim": claim, "ask": ask})
+
+    def add_statement(rid, s, kind, claim, ask):
+        table = s["tables"][0]
+        add(rid, table["page"], table["table_id"], kind, claim, ask)
 
     # 1. Restated comparatives (2024 reports of BYD, Great Wall, CATL)
     for rid in ("002594_2024", "601633_2024", "300750_2024"):
-        segs, _, _ = load(rid)
+        segs, _, _ = report(rid)
         s = seg(segs, "利润表", "合并")
-        add(rid, s["start_page"], "追溯调整", f"合并利润表（第{s['start_page']}–{s['end_page']}页），单位 {s.get('unit')}，"
-            f"含 2023 年比较列", "这一页是合并利润表吗？2023 年比较列是否为调整后的数字（与 2023 年报原数不同）？")
+        add_statement(rid, s, "追溯调整", f"合并利润表，单位 {s.get('unit')}，含 2023 年比较列。",
+                      "这张表是合并利润表吗？2023 年比较列是否为调整后的数字（与 2023 年报原数不同）？")
     # 2. Parent-company statements (scope switch), one per company family
     for rid in ("002594_2025", "002466_2025", "002812_2024", "301358_2025", "688005_2023", "300014_2024"):
-        segs, _, _ = load(rid)
+        segs, _, _ = report(rid)
         s = seg(segs, "现金流量表", "母公司") or seg(segs, "资产负债表", "母公司")
-        add(rid, s["start_page"], "母公司口径", f"{s['statement_type']}，口径=母公司（第{s['start_page']}–{s['end_page']}页）",
-            "这一页确实是母公司（或「公司」）报表，而不是合并报表吗？")
+        add_statement(rid, s, "母公司口径", f"{s['statement_type']}，口径为母公司。",
+                      "这张表是母公司（或「公司」）报表吗？")
     # 3. Title printed on the previous page
-    add("300750_2023", 120, "标题在上一页", "合并利润表正文从第120页开始，标题在第119页末尾",
-        "第120页的表格是否就是第119页末尾标题所指的合并利润表？")
+    catl, _, _ = report("300750_2023")
+    add_statement("300750_2023", seg(catl, "利润表", "合并"), "标题在上一页", "合并利润表正文。",
+                  "这张表是上一页标题所指的合并利润表吗？")
     # 4. Row-sequence continuations
     conts = []
     for rid in sorted(REG):
-        _, qc, _ = load(rid)
+        _, qc, _ = report(rid)
         conts += [(rid, c) for c in qc.get("accepted_continuations", []) if c.get("rule") == "row_sequence"]
     for rid, c in rng.sample(conts, min(5, len(conts))):
-        add(rid, c["page"], "跨页续表", f"第{c['page']}页的表格被判定为第{c['source_page']}页报表的续表（规则：行序衔接）",
-            "这一页的表格确实是上一页同一张报表的延续（口径、单位都相同）吗？")
+        add(rid, c["page"], c["table_id"], "跨页续表",
+            f"按行序识别为第{c['source_page']}页报表的续表。",
+            "这张表和上一页续接源表的口径、单位一致吗？")
     # 5. Investee, section-default 合并, not-applicable, blocked
     pools = {"被投资主体": [], "章节推定合并": [], "不适用": [], "未知已阻断": []}
     for rid in sorted(REG):
-        _, _, chunks = load(rid)
+        _, _, chunks = report(rid)
         for m in chunks:
             if m.get("type") != "table":
                 continue
@@ -93,13 +152,18 @@ def pick():
                 continue
             seen.add((rid, m["page"]))
             extra = f"，主体={m.get('entity')}" if kind == "被投资主体" else ""
-            add(rid, m["page"], kind, f"口径={m.get('scope')}（来源 {m.get('scope_source') or m.get('scope_unknown_reason')}）{extra}；"
-                f"表格开头：{m['_text'][:90]}", asks[kind])
+            add(rid, m["page"], m["table_id"], kind,
+                f"口径为 {m.get('scope')}（来源 {m.get('scope_source') or m.get('scope_unknown_reason')}）{extra}。",
+                asks[kind])
             if len(seen) >= n:
                 break
     # 6. Opening-balance column ("YYYY年1月1日")
-    add("300750_2023", 116, "期初调整列", "资产负债表比较列表头为「2023年1月1日」（调整后期初），而非 2022年12月31日",
-        "比较列是否为调整后的 2023 年初余额？与 2022 年报的年末数是否不同？")
+    catl_balance = seg(catl, "资产负债表", "合并")
+    table = next(t for t in catl_balance["tables"] if t["page"] == 116)
+    opening = next(p for p in table["period_columns"] if p.get("period") == "opening")
+    add("300750_2023", table["page"], table["table_id"], "期初余额列",
+        f"资产负债表印刷表头「{opening['printed_label']}」，绑定为「{opening['label']}」。",
+        "比较列对应本年期初吗？报告有明确说明该列已调整或重述吗？")
     return items
 
 

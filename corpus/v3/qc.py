@@ -9,7 +9,7 @@ from pathlib import Path
 SCOPES = ("合并", "母公司")
 TABLE_SCOPES = (*SCOPES, "不适用", "被投资主体", "unknown")
 REQUIRED = ("资产负债表", "利润表", "现金流量表")
-SCOPE_SOURCES = ("statement_title", "section_heading", "section_default", "disclosure_heading",
+SCOPE_SOURCES = ("statement_title", "section_heading", "group_wording", "section_default", "disclosure_heading",
                  "investee_summary", "unknown")
 UNKNOWN_REASONS = {
     "before_outline": "尚无可定位的章节标题",
@@ -286,7 +286,7 @@ def write_batch(path, before, reports):
     def unknown_cell(unknown, table):
         return f"{unknown:,}（{rate(unknown, table):.2%}）"
 
-    lines = ["# TraceNum v3 第四轮年报 QC", "",
+    lines = ["# TraceNum v3 第五轮年报 QC", "",
              "共 36 份登记年报，使用已缓存的原始页。页码均为 PDF 物理页。",
              "未知率以全部表格块为分母，分子为未知口径块扣除标记 `fragment_without_scope` 的块。目标为逐份 ≤8%，整体 ≤6%。",
              "核心报表段为资产负债表、利润表、现金流量表各自的合并及母公司口径。恒等式检查每份固定八项。",
@@ -353,7 +353,7 @@ def write_batch(path, before, reports):
                   "- `corpus/v3/parse.py`　缓存回放、章节边界、报表标题与续表识别。",
                   "- `corpus/v3/qc.py`　固定恒等式检查和批量 QC。",
                   "- `tests/test_corpus_v3.py`　真实缓存回归、比亚迪第 137 页及切块确定性。",
-                  "- `batch4_baseline.json`　改动前逐份统计。各年报子目录提供 `qc.json`、`segments.json`、"
+                  "- `batch5_baseline.json`　改动前逐份统计。各年报子目录提供 `qc.json`、`segments.json`、"
                   "`chunks.jsonl`、`trace.jsonl`、`issues.jsonl` 和清洗页。"])
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 

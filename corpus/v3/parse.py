@@ -95,6 +95,14 @@ DISCLOSURE_COLUMNS = (
     ("承租方名称", "租赁资产种类", "本期确认的租赁收入"),
 )
 INVESTEE_NOTE = re.compile(rf"^(?:{NUMBERING})?在其他主体中的权益$")
+GROUP_WORDING = re.compile(r"本集团|本公司[及和与](?:其)?子公司|合并范围内")
+PARENT_HEADING = re.compile(r"^母公司(?:$|财务|报表|主要|附注|口径|[：:])")
+SUPPLEMENT_TABLE = re.compile(r"^(?:当[期年]|本[期年]|报告期)?(?:非经常性损益(?:项目)?明细表|净资产收益率(?:及|和|与)每股收益)$")
+GUARANTEE_HEADING = re.compile(
+    r"^(?:报告期内)?(?:(?:公司|本公司)(?:及其?子公司)?)?(?:对外|对子公司|对子公司以外的)?"
+    r"(?:重大担保(?:事项|情况)?|担保情况(?:表)?|担保事项|担保)(?:[（(]不包括对子公司的担保[)）])?$"
+)
+CONTRACT_HEADING = re.compile(r"^重大合同(?:及其?履行情况|履行情况)$")
 INVESTEE_SUMMARY = re.compile(r"(?:子公司|合营企业|联营企业|公司).*?(?:主要|汇总|简要)财务信息$")
 ENTITY_NAME = re.compile(
     r"^[\u4e00-\u9fffA-Za-z][\u4e00-\u9fffA-Za-z0-9·（）()&.\-]{0,75}?"
@@ -102,14 +110,24 @@ ENTITY_NAME = re.compile(
     r"(?=$|[（(:：]|\s+[-(\d]|(?:的)?(?:主要|简要)财务信息)", re.I
 )
 EXPLICIT_SCOPE_LABEL = re.compile(rf"(?:合并|母公司)(?:{STATEMENT.pattern})(?!附注)")
+LATIN_ENTITY = re.compile(r"[A-Z][A-Za-z0-9&.'’-]*(?: +[A-Z][A-Za-z0-9&.'’-]*)+|[A-Z]{2,10}")
+ENTITY_LABEL = re.compile(r"^(?:(?:子公司|合营企业|联营企业|被投资(?:单位|主体)|公司)(?:的)?(?:名称|简称))$")
+NON_ENTITY_LABEL = re.compile(r"^(?:其中|合计|小计|期末|期初|本期|上期|月末|年末|年初|本年|上年|项目|单位|名称|简称|公司|集团|"
+                              r"直接$|间接$|人民币|万元|金额|现金|资产|负债|持股|比例|净额|合营企业|联营企业|"
+                              r"(?:非)?流动|营业收|净利润|综合收益|经营活动|动资$|动负$)")
 METRICS_EVIDENCE = re.compile(r"归属于(?:上市公司|母公司)(?:股东|所有者)")
 SCOPE_KEYWORD = re.compile(r"母公司|合并")
 HEADER_YEAR = re.compile(r"((?:19|20)\d{2})(?:年(?:度|\d{1,2}月(?:\d{1,2}日)?)?|[-/.]\d{1,2}[-/.]\d{1,2})?")
-PERIOD_QUALIFIER = re.compile(r"[（(](?:经审计|未经审计|已重述|经重述|重述后|调整前|调整后)[)）]$")
+PERIOD_QUALIFIER = re.compile(r"[（(](?:经审计|未经审计|已重述|经重述|重述(?:后)?|调整前|调整后|追溯调整(?:后)?)[)）]$")
+RESTATED = re.compile(r"调整后|重述|追溯调整")
+OPENING_DATE = re.compile(r"((?:19|20)\d{2})(?:年0?1月0?1日|[-/.]0?1[-/.]0?1)")
+OPENING_RELATIVE = {"期初余额", "期初数", "年初余额", "年初数"}
+CLOSING_RELATIVE = {"期末余额", "期末数", "年末余额", "年末数"}
 PRINTED_YEAR = re.compile(r"(?:19|20)\d{2}年(?:度|\d{1,2}月\d{1,2}日)?")
 RELATIVE_PERIOD = {"期末余额", "期初余额", "期末数", "期初数", "年末余额", "年初余额", "本期金额",
                    "上期金额", "本年金额", "上年金额", "本期发生额", "上期发生额", "本期数", "上期数"}
 NUMBER = re.compile(r"[-−－+]?\d+(?:\.\d+)?|[（(]?[-−－+]?\d{1,3}(?:,\d{3})+(?:\.\d+)?[）)]?")
+RELATIVE_PERIOD |= OPENING_RELATIVE | CLOSING_RELATIVE
 
 
 def digest(path):
@@ -338,6 +356,7 @@ def table_title_line(line):
     value = compact(line["text"])
     label = heading_text(value)
     if (DISCLOSURE_TITLE.fullmatch(label) or FINANCIAL_DISCLOSURE_TITLE.fullmatch(label)
+            or GUARANTEE_HEADING.fullmatch(label) or CONTRACT_HEADING.fullmatch(label)
             or INVESTEE_SUMMARY.search(label)):
         return True
     dated_label = re.sub(r"(?:19|20)\d{2}年度?", "", label)
@@ -359,22 +378,84 @@ def table_lead(table, lines, top, earliest):
     return [line for line in lines if earliest < line["bbox"][1] <= top + 1.5]
 
 
-def investee_entity(page, table, title, lead):
-    names = {}
-    for row in table["rows"]:
-        for cell in row["cells"]:
-            if (match := ENTITY_NAME.match(compact(cell or ""))) and match[0] not in {"本公司", "该公司", "子公司", "母公司"}:
-                names[match[0]] = {"rule": "investee_name_cell", "source_page": page,
-                                   "row_id": row["row_id"], "text": cell}
-    if (match := ENTITY_NAME.match(heading_text(compact(title["text"])))) and not match[0].endswith("子公司"):
-        names[match[0]] = title
+def entity_names(text, *, labeled=False):
+    for part in re.split(r"[、，,；;／/]|(?<=公司)[和及与](?=[\u4e00-\u9fffA-Z])", text):
+        value = compact(part)
+        match = ENTITY_NAME.match(part.strip()) or ENTITY_NAME.match(value)
+        if match and match[0] not in {
+            "本公司", "该公司", "子公司", "母公司", "公司", "联营公司", "合营公司", "本集团"
+        }:
+            yield compact(match[0])
+        else:
+            # A narrow column can wrap a name as Miner / a / Exar.
+            unwrapped = re.sub(r"(?<=[A-Za-z])\n([a-z])(?=\n|$)", r"\1", part.strip())
+            name = " ".join(unwrapped.split())
+            if (LATIN_ENTITY.fullmatch(name) and name not in {"RMB", "USD", "HKD", "EUR", "CNY"}) or (
+                    labeled and not NON_ENTITY_LABEL.match(value) and re.fullmatch(
+                    r"[\u4e00-\u9fffA-Z][\u4e00-\u9fffA-Za-z0-9·.（）()\-]{1,40}", value)
+                    and not ENTITY_LABEL.fullmatch(value)):
+                yield name
+
+
+def investee_binding(page, table, title, lead):
+    rows = table["rows"]
+    split = next((i for i, row in enumerate(rows[:table["first_body"]])
+                  if row["cells"][0] and list(entity_names(row["cells"][0]))
+                  and any(is_amount(cell) for cell in row["cells"][1:])), table["first_body"])
+    names, row_names, col_names = {}, {}, {}
+    labeled = any(ENTITY_LABEL.fullmatch(compact(cell or "")) for row in rows[:split]
+                  for cell in row["cells"][:2])
+    amount_rows, amount_cols = set(), set()
+    for i, row in enumerate(rows):
+        for col, cell in enumerate(row["cells"]):
+            if col and i >= split and is_amount(cell):
+                amount_rows.add(row["row_id"])
+                amount_cols.add(col)
+            if not cell or (col and i >= split):
+                continue
+            # A header row consisting solely of labels above amount columns
+            # can contain abbreviated investee names (one per period or entity).
+            short_header = (not labeled and 0 < col and i < split and not compact(row["cells"][0] or "")
+                            and len([value for value in row["cells"] if value and value.strip()]) >= 2
+                            and all(not value or not NON_ENTITY_LABEL.match(compact(value))
+                                    for value in row["cells"]))
+            found = list(entity_names(cell, labeled=short_header or (labeled and not col and i >= split)))
+            for name in found:
+                anchor = {"rule": "investee_name_cell", "source_page": page, "row_id": row["row_id"],
+                          "column": col, "text": cell}
+                names.setdefault(name, anchor)
+                if len(found) == 1:
+                    if not col and i >= split:
+                        row_names[row["row_id"]] = name
+                    elif col:
+                        boxes = row.get("cell_bboxes")
+                        aligned = amount_columns(rows[split:], boxes[col]) if boxes and boxes[col] else {col}
+                        for target in aligned:
+                            col_names.setdefault(target, set()).add(name)
+    label = TITLE_NUMBERING.sub("", title["text"].strip()).strip()
+    label = re.sub(r"(?:的)?(?:主要|汇总|简要)财务信息$", "", label)
+    for name in entity_names(label):
+        if not name.endswith("子公司"):
+            names.setdefault(name, title)
     if not names and any("上述子公司" in compact(line["text"]) for line in lead):
         for line in lead:
-            if match := ENTITY_NAME.match(line["text"].strip()):
-                names[match[0]] = line_anchor(page, line, "referenced_subsidiary_name")
-    if len(names) == 1:
-        return next(iter(names.items()))
-    return None, None
+            for name in entity_names(line["text"]):
+                names.setdefault(name, line_anchor(page, line, "referenced_subsidiary_name"))
+
+    evidence = list(names.values())
+    if len(names) == 1 and ((amount_cols and amount_cols <= col_names.keys()) or row_names or
+                            any(a.get("column") in (None, 0) for a in evidence)):
+        return {"entity": next(iter(names)), "numeric_answer_allowed": True}, evidence
+    binding = {"entity_unknown": True, "numeric_answer_allowed": False}
+    if len(names) > 1:
+        binding["entities"] = list(names)
+        if amount_rows and amount_rows <= row_names.keys() and set(row_names.values()) == set(names):
+            binding = {"entities": list(names), "entity_by_row": row_names, "numeric_answer_allowed": True}
+        elif (amount_cols and amount_cols <= col_names.keys() and all(len(v) == 1 for v in col_names.values())
+              and set().union(*col_names.values()) == set(names)):
+            binding = {"entities": list(names), "entity_by_column": {k: next(iter(v)) for k, v in col_names.items()},
+                       "numeric_answer_allowed": True}
+    return binding, evidence
 
 
 def roster_rows(rows):
@@ -398,6 +479,8 @@ class DocumentOutline:
         self.metrics_default = self.disclosure = self.disclosure_title = None
         self.disclosure_chapter = False
         self.tax = self.investee_note = self.investee_summary = None
+        self.notes_area = False
+        self.supplement = self.supplement_title = None
 
     def advance(self, page, line, *, inside_table=False):
         value = compact(line["text"])
@@ -411,10 +494,13 @@ class DocumentOutline:
             self.note_boundary_in_table = False
             self.metrics_default = self.disclosure = self.disclosure_title = None
             self.tax = self.investee_note = self.investee_summary = None
+            self.notes_area = False
+            self.supplement = self.supplement_title = None
             self.disclosure_chapter = bool(chapter and DISCLOSURE_CHAPTER.match(chapter["title"]))
             if self.disclosure_chapter:
                 self.disclosure = self.chapter
         elif match := NOTE_HEADING.fullmatch(value):
+            self.notes_area = True
             scope = "合并" if match["scope"] == "合并" else "母公司"
             self.note = (scope, line_anchor(page, line, "scoped_note_heading"))
             self.note_boundary_in_table = False
@@ -447,6 +533,19 @@ class DocumentOutline:
                 if self.metrics_number is None or (peer is not None and peer > self.metrics_number):
                     self.metrics = None
 
+        if not inside_table and (self.financial_chapter() or self.notes_area):
+            if label in {"财务报表附注", "财务报表项目注释", "财务报表项目附注", "公司基本情况", "重要会计政策及会计估计"}:
+                self.notes_area = True
+            if label == "补充资料":
+                self.supplement = line_anchor(page, line, "supplement_section_heading")
+                self.supplement_title = None
+            elif NOTE_HEADING.fullmatch(value) or OUTLINE_ITEM.fullmatch(value):
+                self.supplement = self.supplement_title = None
+            elif self.supplement and SUPPLEMENT_TABLE.fullmatch(label):
+                self.supplement_title = line_anchor(page, line, "supplement_table_title")
+            elif self.supplement and table_title_line(line):
+                self.supplement_title = None
+
         if INVESTEE_NOTE.fullmatch(label):
             self.investee_note = line_anchor(page, line, "investee_note_heading")
             self.investee_summary = None
@@ -471,7 +570,7 @@ class DocumentOutline:
             elif OUTLINE_ITEM.fullmatch(value):
                 self.metrics_default = None
         if self.chapter and not self.disclosure_chapter and not self.financial_chapter():
-            if DISCLOSURE_SUBSECTION.fullmatch(label) and TITLE_NUMBERING.match(value):
+            if (DISCLOSURE_SUBSECTION.fullmatch(label) or CONTRACT_HEADING.fullmatch(label)) and TITLE_NUMBERING.match(value):
                 self.disclosure = line_anchor(page, line, "disclosure_heading")
                 self.disclosure_title = None
             elif self.disclosure and OUTLINE_ITEM.fullmatch(value):
@@ -510,15 +609,49 @@ class DocumentOutline:
                         if INVESTEE_SUMMARY.search(heading_text(compact(line["text"])))
                         and table_title_line(line)), self.investee_summary)
         if self.investee_note and summary:
-            entity, name_anchor = investee_entity(page, table, summary, lead)
-            evidence = [self.investee_note, summary]
-            if name_anchor and name_anchor not in evidence:
-                evidence.append(name_anchor)
+            binding, anchors = investee_binding(page, table, summary, lead)
+            evidence = [self.investee_note, summary, *(a for a in anchors if a != summary)]
             return {"scope": "被投资主体", "scope_source": "investee_summary", "scope_evidence": evidence,
-                    "numeric_answer_allowed": entity is not None,
-                    **({"entity": entity} if entity else {"entity_unknown": True})}
+                    **binding}
+
+        supplement_title = next((line_anchor(page, line, "supplement_table_title") for line in reversed(lead)
+                                 if SUPPLEMENT_TABLE.fullmatch(heading_text(compact(line["text"])))),
+                                self.supplement_title)
+        if self.supplement and supplement_title:
+            minority = next((line for line in lines if table["bbox"][1] - 1 <= line["bbox"][1] <= table["bbox"][3]
+                             and "少数股东权益影响额" in compact(line["text"])), None)
+            evidence = [self.supplement, supplement_title]
+            if minority:
+                evidence.append(line_anchor(page, minority, "minority_interest_row"))
+            return {"scope": "合并", "scope_source": "section_heading", "scope_evidence": evidence,
+                    "table_title": supplement_title, "numeric_answer_allowed": True}
+
+        # Parent headings take precedence over wording about the group.
+        parent = table["context"]["scope"] == "母公司" or any(
+            PARENT_HEADING.match(heading_text(compact(line["text"]))) and
+            not re.search(r"[。；]", line["text"])
+            for line in lead)
+        group = [line for line in lead if GROUP_WORDING.search(compact(line["text"]))]
+        group_category = None
+        if group and self.notes_area and not parent and table["context"]["scope"] in {"unknown", "合并"}:
+            # A separate, later heading governs its own table. A numbered
+            # subtable of the same hedging disclosure may follow the wording
+            # in the preceding risk-disclosure grid.
+            wording = group[-1]
+            later_titles = [line for line in lead if line["bbox"][1] > wording["bbox"][1] + 1
+                            and table_title_line(line)]
+            if not later_titles or (
+                    any("套期" in compact(line["text"]) for line in later_titles)
+                    and "套期" in "".join(row_text[:3])
+                    and any("套期" in compact(line["text"]) for line in lead
+                            if wording["bbox"][1] - 20 <= line["bbox"][1] <= wording["bbox"][1] + 20)):
+                evidence = [line_anchor(page, wording, "group_wording"), *table["context"]["scope_evidence"]]
+                group_category = {"scope": "合并", "scope_source": "group_wording", "scope_evidence": evidence,
+                                  "numeric_answer_allowed": True}
 
         tax_title = next((line for line in reversed(lead) if TAX_HEADING.fullmatch(compact(line["text"]))), None)
+        nearest_title = next((line for line in reversed(lead) if line is tax_title or table_title_line(line)), None)
+        guarantee_title = nearest_title and GUARANTEE_HEADING.fullmatch(heading_text(compact(nearest_title["text"])))
         tax_header = any("税率" in row and any(key in row for key in ("计税依据", "纳税主体名称", "优惠期间"))
                          for row in row_text)
         financial_title = next((line for line in reversed(lead)
@@ -549,6 +682,9 @@ class DocumentOutline:
             disclosure = self.tax
         elif financial_title and self.financial_chapter():
             disclosure = line_anchor(page, financial_title, "disclosure_heading")
+        elif guarantee_title and (is_guarantee_grid(table, compact(nearest_title["text"])) or
+                                  re.search(r"担保对象|担保方|担保金额|担保额度", "".join(row_text[:5]))):
+            disclosure = line_anchor(page, nearest_title, "guarantee_disclosure_heading")
         elif lease_role and table["context"]["scope"] == "unknown":
             disclosure = line_anchor(page, lease_role, "related_lease_role")
         elif credit_anchors and self.financial_chapter() and table["context"]["scope"] == "unknown":
@@ -564,14 +700,13 @@ class DocumentOutline:
         else:
             disclosure = self.disclosure
         if not disclosure:
-            return {}
+            return group_category or {}
         # An accounting adjustment can appear in the important-matters
         # chapter with consolidated and parent labels outside formal statements.
         if any(EXPLICIT_SCOPE_LABEL.search(compact(line["text"])) for line in lead) or any(
                 EXPLICIT_SCOPE_LABEL.search(row) for row in row_text):
             return {}
-        title = next((line_anchor(page, line, "table_title") for line in reversed(lead)
-                      if line is tax_title or table_title_line(line)), None)
+        title = line_anchor(page, nearest_title, "table_title") if nearest_title else None
         title = title or (self.disclosure_title if disclosure is self.disclosure else None) or disclosure
         if disclosure is self.disclosure and table["primary"] and title["source_page"] == page:
             self.disclosure_title = title
@@ -650,6 +785,8 @@ def header_info(table):
                 periods[column] = new
                 period_sources[column] = {"row_id": row["row_id"], "printed_column": printed_column,
                                           "bbox": printed_box}
+                if cells[printed_column] != cell:
+                    period_sources[column]["printed_qualifier"] = cells[printed_column][len(cell):]
                 signature[column] = cell
                 header = True
             elif re.fullmatch(r"附注[一二三四五六七八九十]*|注释", cell):
@@ -821,8 +958,8 @@ def aligned_period_columns(previous, table):
     if len(columns) != len(previous_periods):
         return None
     current = table["period_columns"]
-    if current and ([(p["column"], p["label"]) for p in current] !=
-                    [(i, old["label"]) for i, old in zip(columns, previous_periods)]):
+    if current and ([(p["column"], printed_period(p)) for p in current] !=
+                    [(i, printed_period(old)) for i, old in zip(columns, previous_periods)]):
         return None
     return columns
 
@@ -859,8 +996,12 @@ def header_matches(previous, current):
 
 
 def period_conflict(previous, current):
-    old = {p["column"]: p["label"] for p in previous["period_columns"]}
-    return any(p["column"] in old and p["label"] != old[p["column"]] for p in current["period_columns"])
+    old = {p["column"]: printed_period(p) for p in previous["period_columns"]}
+    return any(p["column"] in old and printed_period(p) != old[p["column"]] for p in current["period_columns"])
+
+
+def printed_period(period):
+    return period.get("printed_label", period["label"])
 
 
 def printed_unit(line):
@@ -884,26 +1025,64 @@ def carry_printed_periods(table, previous, previous_page):
         table["data_years"][period["column"]] = period["data_year"]
 
 
-def bind_balance_date(table, page, lines, paired_periods=()):
+def bind_balance_date(table, page, lines, paired_periods=(), *, report_year=None):
     periods = table["period_columns"]
-    if [p["label"] for p in periods] not in (["期末余额", "期初余额"], ["年末余额", "年初余额"],
-                                               ["期末数", "期初数"]):
+    relative = [p for p in periods if printed_period(p) in OPENING_RELATIVE | CLOSING_RELATIVE]
+    if not relative:
         return
     dates = [(line, re.fullmatch(r"((?:19|20)\d{2})年12月31日", compact(line["text"]))) for line in lines]
     dated = [(line, int(match[1])) for line, match in dates if match]
     if len(dated) == 1:
         line, year = dated[0]
         evidence = line_anchor(page, line, "annual_balance_sheet_date")
-    elif not dated and [p["label"] for p in paired_periods] == [p["label"] for p in periods]:
-        evidence = paired_periods[0].get("date_evidence")
-        if not evidence:
-            return
-        year = paired_periods[0]["data_year"]
+    elif not dated and (paired := next((p for p in paired_periods if printed_period(p) in CLOSING_RELATIVE
+                                        and p.get("date_evidence")), None)):
+        evidence = paired["date_evidence"]
+        year = paired["data_year"]
         evidence = {**evidence, "rule": "paired_balance_sheet_date"}
+    elif not dated and report_year:
+        year = report_year
+        evidence = {"rule": "registered_annual_report_year", "source_page": page, "report_year": year}
     else:
         return
-    for period, data_year in zip(periods, (year, year - 1)):
+    for period in relative:
+        data_year = year - (printed_period(period) in OPENING_RELATIVE)
         period.update(data_year=data_year, date_evidence=evidence)
+        table["data_years"][period["column"]] = data_year
+
+
+def mark_opening_periods(table, page, lines, prior_periods=()):
+    for period in table["period_columns"]:
+        if "opening_year" in period:
+            continue
+        label = printed_period(period)
+        if match := OPENING_DATE.fullmatch(label):
+            year = int(match[1])
+        elif label in OPENING_RELATIVE and period["data_year"] is not None:
+            year = period["data_year"] + 1
+        else:
+            continue
+        data_year = year - 1
+        qualified = RESTATED.search(period.get("printed_qualifier", ""))
+        local = next((line for line in lines if RESTATED.search(compact(line["text"]))
+                      and (str(year) + "年1月1日" in compact(line["text"]) or
+                           re.search(r"(?:追溯调整|重述).{0,16}(?:期初|年初)|(?:期初|年初).{0,16}(?:调整后|重述)",
+                                     compact(line["text"])))), None)
+        inherited = next((p["restatement_evidence"] for p in prior_periods
+                          if printed_period(p) == label and p.get("opening_year") == year
+                          and p.get("restatement_evidence")), None)
+        restated = "调整前" not in period.get("printed_qualifier", "") and bool(qualified or local or inherited)
+        label_suffix = f"（调整后，对应{data_year}年末）" if restated else f"（={data_year}年末）"
+        period.update(label=f"{year}年初{label_suffix}", printed_label=label, period="opening",
+                      opening_year=year, data_year=data_year, restated=restated)
+        if restated and qualified:
+            period["restatement_evidence"] = {"rule": "printed_period_qualifier",
+                                              "source_page": period.get("source_page", page),
+                                              "row_id": period["row_id"], "text": period["printed_qualifier"]}
+        elif restated and local:
+            period["restatement_evidence"] = line_anchor(page, local, "opening_restatement_wording")
+        elif restated and inherited:
+            period["restatement_evidence"] = inherited
         table["data_years"][period["column"]] = data_year
 
 
@@ -1015,7 +1194,7 @@ def continued_guarantee(page, table, previous):
              "source_table_id": prior_table["table_id"], "row_ids": [row["row_id"] for row in rows]}]}
 
 
-def resolve_segments(pages):
+def resolve_segments(pages, *, report_year=None):
     """Yield pages with table contexts, keeping only the immediately prior table."""
     segments = []
     prior = None
@@ -1134,7 +1313,7 @@ def resolve_segments(pages):
                                 (paired[2]["statement_type"], paired[2]["scope"]) == ("资产负债表", "合并")):
                             paired_periods = paired[1]["period_columns"]
                         date_lines = [l for l in local if title_page != page or l["bbox"][1] > line["bbox"][1]]
-                        bind_balance_date(table, page, date_lines, paired_periods)
+                        bind_balance_date(table, page, date_lines, paired_periods, report_year=report_year)
                         if title_page != page and not any(p.get("date_evidence") for p in table["period_columns"]):
                             bind_balance_date(table, title_page, earlier_lead)
                     if not unit_anchor:
@@ -1233,6 +1412,9 @@ def resolve_segments(pages):
             active = None
             if new:
                 previous_guarantee = None
+                if new["statement_type"] == "资产负债表":
+                    continued = prior and prior[2] is new
+                    mark_opening_periods(table, page, local, prior[1]["period_columns"] if continued else ())
                 new["end_page"] = page
                 new["tables"].append({"page": page, "table_id": table["table_id"],
                                       "period_columns": table["period_columns"]})
@@ -1240,7 +1422,7 @@ def resolve_segments(pages):
                 scope_evidence = evidence if title_evidence in evidence else [title_evidence, *evidence]
                 context.pop("scope_unknown_reason", None)
                 context.pop("outline_heading", None)
-                for field in ("table_title", "entity", "entity_unknown"):
+                for field in ("table_title", "entity", "entity_unknown", "entities", "entity_by_row", "entity_by_column"):
                     context.pop(field, None)
                 context.update(statement_type=new["statement_type"], scope=new["scope"], unit=new["unit"],
                                scope_source="statement_title" if new["scope"] != "unknown" else "unknown",
@@ -1499,6 +1681,7 @@ def make_chunks(raw, cleaned, report):
             anchors.append({"rule": "printed_table_header", "source_page": table.get("header_source_page", page),
                             "row_ids": [row["row_id"] for row in headers],
                             "line_ids": [line for row in headers for line in row.get("source_line_ids", [])]})
+        opening = [p for p in table["period_columns"] if p.get("period") == "opening"]
         for rows in table_groups(table["rows"]):
             origin = {"table_id": table["table_id"], "raw_variant": table["raw_variant"],
                       "raw_table_id": raw_table_id,
@@ -1511,6 +1694,14 @@ def make_chunks(raw, cleaned, report):
                 text += f"引用表题（PDF物理页{title['source_page']}）：{title['text']}\n"
             if entity := ctx.get("entity"):
                 text += f"被投资主体：{entity}\n"
+            if bindings := ctx.get("entity_by_row"):
+                text += "被投资主体按本片行序对应："
+                text += "、".join(f"第{i}行 {bindings[row['row_id']]}" for i, row in enumerate(rows, 1)
+                                  if row["row_id"] in bindings) + "\n"
+            if bindings := ctx.get("entity_by_column"):
+                text += "被投资主体按列对应：" + "、".join(f"第{col + 1}列 {name}" for col, name in bindings.items()) + "\n"
+            if opening:
+                text += "期初列：" + "、".join(f"第{p['column'] + 1}列 {p['label']}" for p in opening) + "\n"
             if headers:
                 text += "表头（重复供定位）：\n" + table_render(headers) + "\n"
             text += "本片原始行序：\n" + table_render(rows)
@@ -1557,7 +1748,8 @@ def parse_report(report, output, pages=None, baseline=None, *, cached_only=False
     raw_stream = raw_pages(report, out, pages, cached_only=cached_only)
     with ExitStack() as stack:
         stack.callback(raw_stream.close)
-        for raw, cleaned, segments in resolve_segments((raw, clean_page(raw)) for raw in raw_stream):
+        for raw, cleaned, segments in resolve_segments(
+                ((raw, clean_page(raw)) for raw in raw_stream), report_year=report["report_year"]):
             if not raw_count:
                 streams = {name: stack.enter_context((out / f"{name}.jsonl").open("w", encoding="utf-8", newline="\n"))
                            for name in ("chunks", "trace", "issues")}
