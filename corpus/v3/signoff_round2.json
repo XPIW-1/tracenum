@@ -1,0 +1,9 @@
+{
+ "round": 2,
+ "date": "2026-11-20",
+ "signed_by": "owner",
+ "pages": 7,
+ "summary": {"correct": 6, "wrong": 1, "unclear": 0},
+ "follow_up": "#3 (one table holding both 合并 and 母公司 columns) fixed as a general per-column scope rule in parser round 6.",
+ "results": [{"n":1,"id":"601633_2023:p281:0","verdict":"对","note":""},{"n":2,"id":"601633_2024:p288:1","verdict":"对","note":""},{"n":3,"id":"300014_2024:p140:2","verdict":"错","note":"同一张表同时包含2023年度合并和母公司两种口径，必须按列拆分或标记mixed_scope，不能整表赋予合并口径。"},{"n":4,"id":"002594_2024:p207:3","verdict":"对","note":""},{"n":5,"id":"002460_2023:p238:4","verdict":"对","note":""},{"n":6,"id":"301358_2023:p199:5","verdict":"对","note":""},{"n":7,"id":"002812_2023:p84:6","verdict":"对","note":""}]
+}

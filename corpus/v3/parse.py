@@ -811,6 +811,134 @@ def header_info(table):
             "first_body": first_body}
 
 
+SCOPE_LABEL = r"合并|母公司|本公司|公司"
+SCOPE_SUFFIX = rf"(?:口径|数|金额|财务报表|报表|{STATEMENT.pattern})?"
+SCOPED_HEADER = re.compile(
+    rf"^(?:(?:\d{{4}}年(?:度)?(?:末|初)?|期末|期初|本期|上期)[:：]?)?"
+    rf"(?:[（(](?P<bracket>{SCOPE_LABEL})[)）]|(?P<plain>{SCOPE_LABEL}){SCOPE_SUFFIX})"
+    rf"(?:[（(]?(?:\d{{4}}年(?:度)?(?:末|初)?|期末|期初|本期|上期)[)）]?)?[:：]?$"
+)
+COMBINED_SCOPE = re.compile(rf"^[（(]?合并(?:及|和|与|[、/／])(?:母|本)?公司{SCOPE_SUFFIX}[)）]?[:：]?$")
+
+
+def printed_scopes(cell):
+    label = TITLE_NUMBERING.sub("", compact(cell or ""))
+    if COMBINED_SCOPE.fullmatch(label):
+        return ("合并", "母公司")
+    if match := SCOPED_HEADER.fullmatch(label):
+        return ("合并" if (match["bracket"] or match["plain"]) == "合并" else "母公司",)
+    return ()
+
+
+def mixed_scope_binding(page, table, first_body):
+    """Use printed scope cells and bind amounts only where the grid supports them."""
+    rows = table["rows"]
+    headers, groups, row_labels = [], {}, {}
+    for i, row in enumerate(rows):
+        filled = [(column, cell) for column, cell in enumerate(row["cells"]) if compact(cell or "")]
+        for column, cell in filled:
+            scopes = printed_scopes(cell)
+            if not scopes:
+                continue
+            box = row.get("cell_bboxes", [None] * len(row["cells"]))[column]
+            anchor = {"source_page": page, "table_id": table["table_id"], "row_id": row["row_id"],
+                      "column": column, "bbox": box, "text": cell}
+            if i < first_body and (len(filled) > 1 or len(scopes) == 2):
+                headers.append({**anchor, "rule": "column_scope_header", "scopes": scopes})
+            if len(filled) == 1 and len(scopes) == 1:
+                groups[i] = {**anchor, "rule": "row_scope_heading", "scopes": scopes}
+            elif i >= first_body and len(scopes) == 1 and any(is_amount(value) for _, value in filled):
+                row_labels.setdefault(column, {})[i] = {**anchor, "rule": "row_scope_label", "scopes": scopes}
+
+    def has_both(anchors):
+        return {scope for anchor in anchors for scope in anchor["scopes"]} == {"合并", "母公司"}
+
+    # A header can print its scopes on separate lines, each in its own column.
+    prefix_groups = [anchor for i, anchor in groups.items() if i < first_body]
+    if has_both(prefix_groups) and len({anchor["column"] for anchor in prefix_groups}) > 1:
+        headers.extend({**anchor, "rule": "column_scope_header"} for anchor in prefix_groups)
+        groups = {i: anchor for i, anchor in groups.items() if i >= first_body}
+    # Extractors may put pieces of one long label (e.g. 合并…公司) on separate
+    # rows of a narrow column. Those pieces are not separate column groups.
+    column_split = has_both(headers) and (
+        any(len(header["scopes"]) == 2 for header in headers)
+        or len({header["column"] for header in headers}) > 1
+    )
+    grouped_rows = has_both(groups.values())
+    label_columns = [labels for labels in row_labels.values() if has_both(labels.values())]
+    row_split = grouped_rows or bool(label_columns)
+    if not (column_split or row_split):
+        return None
+
+    result = {"scope": "混合", "scope_evidence": [], "numeric_answer_allowed": False}
+    if column_split:
+        amounts = {}
+        for row in rows[first_body:]:
+            for column, cell in enumerate(row["cells"]):
+                if is_amount(cell):
+                    box = row.get("cell_bboxes", [None] * len(row["cells"]))[column]
+                    amounts.setdefault(column, set()).add(tuple(box[::2]) if box else None)
+        mapping, evidence = {}, {}
+        for column, spans in amounts.items():
+            matches = []
+            for span in spans:
+                anchors = []
+                for header in headers:
+                    if len(header["scopes"]) != 1:
+                        continue
+                    box = header["bbox"]
+                    if span and box:
+                        overlap = min(span[1], box[2]) - max(span[0], box[0])
+                        aligned = span[1] > span[0] and overlap >= 0.9 * (span[1] - span[0])
+                    else:
+                        aligned = span is None and box is None and header["column"] == column
+                    if aligned:
+                        anchors.append(header)
+                if len({h["scopes"][0] for h in anchors}) != 1:
+                    break
+                matches.extend(anchors)
+            else:
+                scopes = {h["scopes"][0] for h in matches}
+                if len(scopes) == 1:
+                    mapping[column] = scopes.pop()
+                    evidence[column] = [header for header in headers if header in matches]
+        result.update(scope_by_column=mapping, scope_by_column_evidence=evidence,
+                      numeric_answer_allowed_by_column={column: column in mapping for column in amounts})
+        result["scope_evidence"].extend(headers)
+    if row_split:
+        mapping, evidence = {}, {}
+        heading = None
+        for i, row in enumerate(rows):
+            if grouped_rows and i in groups:
+                heading = groups[i]
+                continue
+            anchors = [labels[i] for labels in label_columns if i in labels]
+            if heading and any(is_amount(cell) for cell in row["cells"]):
+                anchors.append(heading)
+            scopes = {anchor["scopes"][0] for anchor in anchors}
+            if len(scopes) == 1:
+                mapping[row["row_id"]] = scopes.pop()
+                evidence[row["row_id"]] = anchors
+        result.update(scope_by_row=mapping, scope_by_row_evidence=evidence,
+                      numeric_answer_allowed_by_row={row["row_id"]: row["row_id"] in mapping
+                                                     for row in rows[first_body:]
+                                                     if any(is_amount(cell) for cell in row["cells"])})
+        if grouped_rows:
+            result["scope_evidence"].extend(groups.values())
+        for labels in label_columns:
+            result["scope_evidence"].extend(labels.values())
+    result["scope_source"] = "column_scope_header" if column_split else "row_scope_heading"
+    # Two simultaneous layouts need cell-level evidence before either can authorize amounts.
+    if column_split and row_split:
+        for axis in ("column", "row"):
+            result[f"scope_by_{axis}"].clear()
+            result[f"scope_by_{axis}_evidence"].clear()
+            result[f"numeric_answer_allowed_by_{axis}"] = dict.fromkeys(
+                result[f"numeric_answer_allowed_by_{axis}"], False)
+    result["numeric_answer_allowed"] = bool(result.get("scope_by_column") or result.get("scope_by_row"))
+    return result
+
+
 def title_scope(match):
     printed = match["scope"]
     if printed == "合并":
@@ -1231,10 +1359,19 @@ def resolve_segments(pages, *, report_year=None):
             if scope_reason:
                 context.update(scope_unknown_reason=scope_reason, outline_heading=outline.boundary)
             table["context"] = context
+            mixed = mixed_scope_binding(page, table, info["first_body"])
+            if mixed:
+                context.pop("scope_unknown_reason", None)
+                context.pop("outline_heading", None)
+                context.update(mixed, anchors=list(mixed["scope_evidence"]))
+                header_ids = {row["row_id"] for row in info["header_rows"]}
+                header_ids.update(anchor["row_id"] for anchor in mixed["scope_evidence"]
+                                  if anchor["rule"] == "column_scope_header")
+                table["header_rows"] = [row for row in table["rows"] if row["row_id"] in header_ids]
             if not table["primary"]:
                 continue
             lead = table_lead(table, lines, top, earliest)
-            category = outline.non_statement_scope(page, table, lead, lines)
+            category = None if mixed else outline.non_statement_scope(page, table, lead, lines)
             if not category and context["scope"] == "unknown" and earliest == -1 and not blockers(lead):
                 category = continued_guarantee(page, table, previous_guarantee)
             previous_guarantee = None
@@ -1297,7 +1434,7 @@ def resolve_segments(pages, *, report_year=None):
                     statement = match["type"]
                     if statement.startswith("股东权益"):
                         statement = "所有者权益变动表"
-                    scope = title_scope(match)
+                    scope = "混合" if mixed else title_scope(match)
                     evidence = [line_anchor(title_page, line, "explicit_statement_title")]
                     if title_page != page:
                         evidence.append({"rule": "adjacent_page_statement_opening", "source_page": title_page,
@@ -1329,11 +1466,11 @@ def resolve_segments(pages, *, report_year=None):
                            "evidence": evidence + ([unit_anchor] if unit_anchor else []),
                            "tables": []}
                     segments.append(new)
-                    if statement == "所有者权益变动表":
+                    if statement == "所有者权益变动表" and not mixed:
                         equity_template = (page, table)
-            elif ((previous := active or prior) and
+            elif (not mixed and (previous := active or prior) and
                   previous[2]["statement_type"] == "所有者权益变动表" and
-                  previous[2]["scope"] != "unknown" and not blockers(local) and
+                  previous[2]["scope"] not in {"unknown", "混合"} and not blockers(local) and
                   (previous[0] == page or (previous[0] == page - 1 and earliest == -1)) and
                   (grid := equity_grid_evidence(equity_template[1] if previous[0] == page else previous[1],
                                                  table, same_page=previous[0] == page,
@@ -1345,7 +1482,7 @@ def resolve_segments(pages, *, report_year=None):
                 evidence = [{**grid, "source_page": old, "page": page,
                              "source_table_id": prev_table["table_id"], "table_id": table["table_id"]}]
                 new["evidence"].extend(evidence)
-            elif prior:
+            elif not mixed and prior and prior[2]["scope"] != "混合":
                 old, prev_table, prev_segment = prior
                 blocked_by = blockers(before)
                 if page == old + 1 and earliest == -1:
@@ -1430,6 +1567,8 @@ def resolve_segments(pages, *, report_year=None):
                                segment_id=new["segment_id"], scope_evidence=scope_evidence,
                                anchors=scope_evidence + [a for a in new["evidence"] if "value" in a],
                                numeric_answer_allowed=new["scope"] != "unknown")
+                if mixed:
+                    context.update(mixed, anchors=[*mixed["scope_evidence"], *context["anchors"]])
                 if new["scope"] == "unknown":
                     context["scope_unknown_reason"] = "statement_title_without_unique_scope"
                 active = (page, table, new)
@@ -1453,11 +1592,14 @@ def contains(outer, inner):
 
 
 def scope_table_fragments(tables):
-    statements = [t for t in tables if t["primary"] and t["context"]["segment_id"]]
+    statements = [t for t in tables if t["primary"] and
+                  (t["context"]["segment_id"] or t["context"]["scope"] == "混合")]
     for fragment in tables:
         if fragment["primary"]:
             continue
         context = fragment["context"]
+        if context["scope"] == "混合":
+            continue
         matches = [table for table in statements if contains(table["bbox"], fragment["bbox"])]
         if len(matches) == 1:
             parent = matches[0]
@@ -1469,6 +1611,9 @@ def scope_table_fragments(tables):
                            numeric_answer_allowed=source["numeric_answer_allowed"],
                            anchors=[*source["anchors"], {"rule": "contained_statement_fragment",
                                                         "table_id": parent["table_id"]}])
+            if source["scope"] == "混合":
+                # The parent's row and column indices do not describe this grid.
+                context["numeric_answer_allowed"] = False
             if source["scope"] == "unknown":
                 context["scope_unknown_reason"] = source["scope_unknown_reason"]
         elif context["scope"] == "unknown" and context["scope_unknown_reason"] in {"before_outline", "no_scoped_section"}:
@@ -1683,14 +1828,31 @@ def make_chunks(raw, cleaned, report):
                             "row_ids": [row["row_id"] for row in headers],
                             "line_ids": [line for row in headers for line in row.get("source_line_ids", [])]})
         opening = [p for p in table["period_columns"] if p.get("period") == "opening"]
+        data_row_ids = ({row["row_id"] for row in table["rows"][table["first_body"]:]}
+                        if ctx["scope"] == "混合" else set())
         for rows in table_groups(table["rows"]):
             origin = {"table_id": table["table_id"], "raw_variant": table["raw_variant"],
                       "raw_table_id": raw_table_id,
                       "row_ids": [row["row_id"] for row in rows],
                       "header_row_ids": [row["row_id"] for row in headers],
                       "source_line_ids": [line for row in rows for line in row.get("source_line_ids", [])]}
+            scope_text = ctx["scope"]
+            numeric_allowed = ctx["numeric_answer_allowed"]
+            if ctx["scope"] == "混合":
+                columns = ctx.get("scope_by_column", {})
+                row_scopes = ctx.get("scope_by_row", {})
+                bindings = [f"第{col + 1}列 {scope}" for col, scope in sorted(columns.items())]
+                bindings.extend(f"本片第{i}行 {row_scopes[row['row_id']]}" for i, row in enumerate(rows, 1)
+                                if row["row_id"] in row_scopes)
+                if bindings:
+                    scope_text += f"（{'、'.join(bindings)}；仅已绑定的行或列可用于数值回答）"
+                else:
+                    scope_text += "（本片金额无可用口径绑定，禁止用于数值回答）"
+                numeric_allowed = any(is_amount(cell) and (col in columns or row["row_id"] in row_scopes)
+                                      for row in rows if row["row_id"] in data_row_ids
+                                      for col, cell in enumerate(row["cells"]))
             text = (f"【{base['company']} {base['report_year']}年年报｜PDF物理页{page}】\n"
-                    f"报表类型：{ctx['statement_type']}；财务口径：{ctx['scope']}；单位：{ctx['unit'] or '待核验'}\n")
+                    f"报表类型：{ctx['statement_type']}；财务口径：{scope_text}；单位：{ctx['unit'] or '待核验'}\n")
             if title := ctx.get("table_title"):
                 text += f"引用表题（PDF物理页{title['source_page']}）：{title['text']}\n"
             if entity := ctx.get("entity"):
@@ -1709,7 +1871,7 @@ def make_chunks(raw, cleaned, report):
             metadata = {**ctx, **origin, "anchors": anchors,
                         "bbox": table["bbox"], "data_years": table["data_years"],
                         "period_columns": table["period_columns"], "extraction_method": table["method"],
-                        "context": ctx}
+                        "numeric_answer_allowed": numeric_allowed, "context": ctx}
             yield record("table", text, metadata, origin)
     for start, end, text in text_spans(cleaned["text"]):
         lines = [line for line in cleaned["text_lines"] if line["start"] < end and line["end"] > start]
@@ -1760,8 +1922,13 @@ def parse_report(report, output, pages=None, baseline=None, *, cached_only=False
                 streams[name].write(json.dumps(value, ensure_ascii=False, allow_nan=False) + "\n")
 
             cleaned["raw_sha256"] = digest(out / cleaned["raw_ref"])
+            page_chunks = list(make_chunks(raw, cleaned, report))
+            allowed_counts = Counter(c["metadata"]["table_id"] for c in page_chunks
+                                     if c["metadata"]["type"] == "table" and c["metadata"]["numeric_answer_allowed"])
             for table in cleaned["tables"]:
                 table["chunk_count"] = len(table_groups(table["rows"]))
+                if table["context"]["scope"] == "混合":
+                    table["numeric_allowed_chunk_count"] = allowed_counts[table["table_id"]]
                 if table["context"]["scope"] == "unknown" and table["primary"]:
                     cleaned["issues"].append({"page": raw["page"], "code": "TABLE_SCOPE_NOT_ESTABLISHED",
                                               "table_id": table["table_id"],
@@ -1772,7 +1939,7 @@ def parse_report(report, output, pages=None, baseline=None, *, cached_only=False
             for issue in cleaned["issues"]:
                 emit("issues", issue)
             write_json(out / "cleaned" / f"page_{raw['page']:04d}.json", cleaned)
-            for chunk in make_chunks(raw, cleaned, report):
+            for chunk in page_chunks:
                 m = chunk["metadata"]
                 chunks[m["type"]] += 1
                 emit("chunks", chunk)

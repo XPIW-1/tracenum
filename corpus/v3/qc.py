@@ -7,10 +7,10 @@ from decimal import Decimal
 from pathlib import Path
 
 SCOPES = ("合并", "母公司")
-TABLE_SCOPES = (*SCOPES, "不适用", "被投资主体", "unknown")
+TABLE_SCOPES = (*SCOPES, "混合", "不适用", "被投资主体", "unknown")
 REQUIRED = ("资产负债表", "利润表", "现金流量表")
 SCOPE_SOURCES = ("statement_title", "section_heading", "group_wording", "section_default", "disclosure_heading",
-                 "investee_summary", "unknown")
+                 "investee_summary", "column_scope_header", "row_scope_heading", "unknown")
 UNKNOWN_REASONS = {
     "before_outline": "尚无可定位的章节标题",
     "no_scoped_section": "所在章节或同级附注未提供适用的口径",
@@ -54,7 +54,7 @@ def count_scope(tables):
         if scope == "unknown":
             unknown["non_fragment" if table["primary"] else "fragment"] += count
         if context["numeric_answer_allowed"]:
-            allowed += count
+            allowed += table.get("numeric_allowed_chunk_count", count)
     return scopes, sources, unknown, allowed
 
 
@@ -99,7 +99,8 @@ def summarize_page(raw, cleaned):
                                             "scope": context["scope"], "statement_type": context["statement_type"],
                                             "scope_source": context["scope_source"],
                                             "scope_evidence": context["scope_evidence"]})
-        patterns = {"资产负债表": BALANCE, "现金流量表": CASH}.get(context["statement_type"], {})
+        patterns = ({"资产负债表": BALANCE, "现金流量表": CASH}.get(context["statement_type"], {})
+                    if context["scope"] != "混合" else {})
         for row in table["rows"]:
             summary["repairs"] += sum(repair["rule"] == "same_cell_glyph_numeric_wrap"
                                       for repair in row["repairs"])
@@ -386,10 +387,10 @@ def write_pilot(path, reports):
                   "「被投资主体」块仅在唯一主体可核实时开放数值回答。", "",
                   "| 年报 | " + " | ".join(TABLE_SCOPES) +
                   " | 未知碎片 | 未知非碎片 | 未知非碎片占全部表格块 | <5% | 可答数值 |",
-                  "|" + "---|" * 11])
+                  "|" + "---|" * (6 + len(TABLE_SCOPES))])
     for r in reports:
         before = r.get("round2_baseline", {})
-        scopes = [f"{before.get('scope_counts', {}).get(s, 0) if before else '—'}→{r['scope_counts'][s]}"
+        scopes = [f"{before.get('scope_counts', {}).get(s, 0) if before else '—'}→{r['scope_counts'].get(s, 0)}"
                   for s in TABLE_SCOPES]
         splits = [f"{before.get('unknown_scope_split', {}).get(k, 0) if before else '—'}→{r['unknown_scope_split'][k]}"
                   for k in ("fragment", "non_fragment")]
@@ -407,7 +408,7 @@ def write_pilot(path, reports):
                   "|" + "---|" * (1 + len(SCOPE_SOURCES))])
     for r in reports:
         before = r.get("round2_baseline", {}).get("scope_source_counts")
-        counts = (f"{before.get(s, 0) if before else '—'}→{r['scope_source_counts'][s]}" for s in SCOPE_SOURCES)
+        counts = (f"{before.get(s, 0) if before else '—'}→{r['scope_source_counts'].get(s, 0)}" for s in SCOPE_SOURCES)
         lines.append(f"| {r['report_id']} {r['company']} | " + " | ".join(counts) + " |")
     for r in reports:
         lines.extend(["", f"## {r['report_id']} {r['company']}", "",

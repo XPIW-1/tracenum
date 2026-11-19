@@ -5,7 +5,7 @@ from unittest.mock import patch
 from uuid import uuid4
 
 from corpus.v3.parse import (
-    DEFAULT_OUT, ROOT, clean_cell, clean_page, parse_report,
+    DEFAULT_OUT, ROOT, clean_cell, clean_page, make_chunks, parse_report,
     raw_pages, registry, resolve_segments,
 )
 from corpus.v3.qc import identities
@@ -58,6 +58,38 @@ class SegmentTests(unittest.TestCase):
         self.assertEqual(segments[0]["statement_type"], "资产负债表")
         self.assertEqual(contexts[0]["scope"], "unknown")
         self.assertFalse(contexts[0]["numeric_answer_allowed"])
+
+    def test_mixed_scope_row_groups_override_single_scope_title(self):
+        rows = (("项目", "2025年", "2024年"),
+                ("未归类费用", "3.00", "2.00"),
+                ("（一）合并", None, None),
+                ("销售费用", "10.00", "8.00"),
+                ("（二）公司", None, None),
+                ("销售费用", "4.00", "3.00"))
+        contexts, segments = resolve(page(8, ("2、母公司利润表",), rows=rows))
+        context, = contexts
+        self.assertEqual(segments[0]["scope"], "混合")
+        self.assertEqual((context["scope"], context["scope_source"]), ("混合", "row_scope_heading"))
+        self.assertEqual(context["scope_by_row"], {"p8:r3": "合并", "p8:r5": "母公司"})
+        self.assertEqual(context["scope_by_row_evidence"]["p8:r5"][0]["row_id"], "p8:r4")
+        self.assertEqual(context["numeric_answer_allowed_by_row"],
+                         {"p8:r1": False, "p8:r3": True, "p8:r5": True})
+
+    def test_mixed_scope_with_unresolved_and_partly_bound_columns(self):
+        cases = (
+            (("项目", "合并及母公司", None), {}, {1: False, 2: False}),
+            (("项目", "合并", "母公司", None), {1: "合并", 2: "母公司"},
+             {1: True, 2: True, 3: False}),
+        )
+        for header, mapping, allowed in cases:
+            with self.subTest(header=header):
+                with_data = ("费用", *("1.00" for _ in header[1:]))
+                contexts, _ = resolve(page(8, ("九、合并财务报表附注",), rows=(header, with_data)))
+                context, = contexts
+                self.assertEqual(context["scope"], "混合")
+                self.assertEqual(context["scope_by_column"], mapping)
+                self.assertEqual(context["numeric_answer_allowed_by_column"], allowed)
+                self.assertEqual(context["numeric_answer_allowed"], bool(mapping))
 
     def test_continuation_breaks(self):
         cases = {
@@ -238,6 +270,31 @@ class PdfTests(unittest.TestCase):
             self.skipTest(f"Cached raw pages missing: {identifier}")
         raw = (json.loads(path.read_bytes()) for path in paths)
         return list(resolve_segments((p, clean_page(p)) for p in raw))
+
+    def test_300014_2024_warranty_cost_scope_spans(self):
+        identifier = "300014_2024"
+        raw, cleaned, _ = self.cached_segments(identifier, 140)[0]
+        table, = [t for t in cleaned["tables"] if t["table_id"].endswith(":t001")]
+        context = table["context"]
+        self.assertEqual((context["scope"], context["scope_source"]), ("混合", "column_scope_header"))
+        self.assertEqual(context["scope_by_column"], {1: "合并", 2: "合并", 4: "母公司", 5: "母公司"})
+        self.assertEqual(context["scope_by_column_evidence"][2][0]["text"], "2023年度（合并）")
+        self.assertEqual(context["scope_by_column_evidence"][5][0]["text"], "2023年度（母公司）")
+        self.assertTrue(context["numeric_answer_allowed"])
+        chunk, = [c for c in make_chunks(raw, cleaned, registry()[identifier])
+                  if c["metadata"]["table_id"] == table["table_id"]]
+        self.assertIn("财务口径：混合（第2列 合并、第3列 合并、第5列 母公司、第6列 母公司", chunk["text"])
+        self.assertTrue(chunk["metadata"]["numeric_answer_allowed"])
+
+    def test_restatement_rows_print_scope_in_each_amount_row(self):
+        _, cleaned, _ = self.cached_segments("601633_2024", 219)[0]
+        table, = [t for t in cleaned["tables"] if t["table_id"].endswith(":t000")]
+        self.assertEqual(list(table["context"]["scope_by_row"].values()), ["合并", "合并", "母公司", "母公司"])
+
+    def test_wrapped_disposal_header_is_not_a_scope_split(self):
+        _, cleaned, _ = self.cached_segments("301358_2024", 187)[0]
+        table, = [t for t in cleaned["tables"] if t["table_id"].endswith(":t001")]
+        self.assertNotEqual(table["context"]["scope"], "混合")
 
     def test_investee_names_bind_each_row_on_both_tables(self):
         _, cleaned, _ = self.cached_segments("002460_2023", 233, 237, 238)[-1]
