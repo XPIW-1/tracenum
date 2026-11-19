@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| 在线体验 | *上线后填写*（公开页可看 5 道精选题的真实运行回放；自由提问对专属链接开放） |
+| 在线体验 | [tracenum.yiningchen.com](https://tracenum.yiningchen.com)（公开页可看 5 道精选题的真实运行回放；自由提问对专属链接开放） |
 | 90 秒演示 | *录制后填写* |
 | 论文实验回放 | [xpiw-1.github.io/financerag-workbench](https://xpiw-1.github.io/financerag-workbench/)：20 道正式题 × 3 种策略、60 条正式运行逐条回放 |
 
