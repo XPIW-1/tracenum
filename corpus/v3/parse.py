@@ -72,7 +72,27 @@ FINANCIAL_DISCLOSURE_TITLE = re.compile(
     r"^(?:关键管理人员(?:报酬|薪酬)|独立非执行董事(?:薪酬|酬金)|"
     r"执行董事[、及和]非执行董事[、及和]监事|董事(?:[、及和]监事)?(?:报酬|薪酬)|"
     r"(?:本集团本年度)?薪酬最高的前[五十](?:位|名雇员)|薪酬介于下列区间的雇员数量|"
-    r"关联担保情况|关联方(?:提供的)?担保|本公司作为(?:被)?担保方)$"
+    r"关联担保情况|关联方(?:提供的)?担保|本公司作为(?:被)?担保方(?:[-—－](?:母公司为子公司|子公司为母公司)担保)?|"
+    r"企业集团的构成|(?:全资或直接|间接)控股子公司|重要的非全资子公司|"
+    r"本期发生的非同一控制下企业合并|购销商品、提供和接受劳务的关联(?:方)?交易|"
+    r"股份支付总体情况|本期股份支付费用|按照信用风险特征组合计提坏账准备的组合类别及确定依据)$"
+)
+CREDIT_LOSS_COLUMNS = ("账龄", "预期信用损失率", "应收账款", "其他应收款")
+SHARE_METHOD_LABELS = ("授予日权益工具公允价值的确定方法", "授予日权益工具公允价值的重要参数")
+DISCLOSURE_COLUMNS = (
+    ("担保金额", "担保起始日", "担保到期日"),
+    ("子公司名称", "注册资本", "注册地", "业务性质"),
+    ("少数股东持股比例", "期末少数股东权益"),
+    ("被购买方名称", "股权取得时点", "股权取得成本"),
+    ("关联方", "关联交易内容", "本期发生额", "上期发生额"),
+    ("授予对象类别", "以权益结算的股份支付费用"),
+    ("授予对象类别", "本期授予", "本期行权"),
+    ("授予对象类别", "本年授予", "本年行权"),
+    ("组合类别", "确定组合的依据", "计量预期信用损失的方法"),
+    ("序号", "简称", "公司名称"),
+    ("序号", "简称", "全称"),
+    ("折旧方法", "折旧年限", "残值率", "年折旧率"),
+    ("承租方名称", "租赁资产种类", "本期确认的租赁收入"),
 )
 INVESTEE_NOTE = re.compile(rf"^(?:{NUMBERING})?在其他主体中的权益$")
 INVESTEE_SUMMARY = re.compile(r"(?:子公司|合营企业|联营企业|公司).*?(?:主要|汇总|简要)财务信息$")
@@ -85,6 +105,7 @@ EXPLICIT_SCOPE_LABEL = re.compile(rf"(?:合并|母公司)(?:{STATEMENT.pattern})
 METRICS_EVIDENCE = re.compile(r"归属于(?:上市公司|母公司)(?:股东|所有者)")
 SCOPE_KEYWORD = re.compile(r"母公司|合并")
 HEADER_YEAR = re.compile(r"((?:19|20)\d{2})(?:年(?:度|\d{1,2}月(?:\d{1,2}日)?)?|[-/.]\d{1,2}[-/.]\d{1,2})?")
+PERIOD_QUALIFIER = re.compile(r"[（(](?:经审计|未经审计|已重述|经重述|重述后|调整前|调整后)[)）]$")
 PRINTED_YEAR = re.compile(r"(?:19|20)\d{2}年(?:度|\d{1,2}月\d{1,2}日)?")
 RELATIVE_PERIOD = {"期末余额", "期初余额", "期末数", "期初数", "年末余额", "年初余额", "本期金额",
                    "上期金额", "本年金额", "上年金额", "本期发生额", "上期发生额", "本期数", "上期数"}
@@ -250,27 +271,32 @@ def extract_page(page, report):
 
 
 def raw_pages(report, out, limit=None, *, cached_only=False):
-    """Validate the source even when reusing immutable extraction records."""
-    from pypdf import PdfReader
-
-    path = verified_pdf(report)
-    reader = PdfReader(path, strict=True)
-    if reader.is_encrypted or len(reader.pages) != report["pages"]:
-        raise ValueError(f"{report_id(report)} PDF page count or encryption check failed")
+    """Validate cached pages against the registry, or verify the PDF before extraction."""
     folder = out / "raw"
+    numbers = range(1, (limit or report["pages"]) + 1)
     if cached_only:
-        for number in range(1, (limit or report["pages"]) + 1):
+        for number in numbers:
             dest = folder / f"page_{number:04d}.json"
             if not dest.is_file():
                 raise FileNotFoundError(f"Missing cached raw page: {dest}")
-    folder.mkdir(parents=True, exist_ok=True)
+    else:
+        from pypdf import PdfReader
+
+        path = verified_pdf(report)
+        reader = PdfReader(path, strict=True)
+        if reader.is_encrypted or len(reader.pages) != report["pages"]:
+            raise ValueError(f"{report_id(report)} PDF page count or encryption check failed")
+        folder.mkdir(parents=True, exist_ok=True)
+    source_id = f"{report_id(report)}_v3:{report['sha256'][:16]}"
     with ExitStack() as stack:
         pdf = None
-        for number in range(1, (limit or len(reader.pages)) + 1):
+        for number in numbers:
             dest = folder / f"page_{number:04d}.json"
             if dest.exists():
                 raw = json.loads(dest.read_text(encoding="utf-8"))
-                if (raw["schema"], raw["pdf_sha256"], raw["page"]) != (RAW_SCHEMA, report["sha256"], number):
+                actual = (raw["schema"], raw["pdf_sha256"], raw["page"], raw["source_id"], raw["raw_id"])
+                expected = (RAW_SCHEMA, report["sha256"], number, source_id, f"{source_id}:p{number:04d}")
+                if actual != expected:
                     raise ValueError(f"Cached raw page identity mismatch: {dest}")
             else:
                 if cached_only:
@@ -351,6 +377,17 @@ def investee_entity(page, table, title, lead):
     return None, None
 
 
+def roster_rows(rows):
+    matches = []
+    for row in rows[:5]:
+        values = [compact(cell) for cell in row["cells"] if cell and compact(cell)]
+        if (len(values) == 3 and values[0].isdigit() and
+                re.fullmatch(r"[\u4e00-\u9fffA-Za-z][\u4e00-\u9fffA-Za-z0-9·（）()&.\-]{1,24}", values[1]) and
+                ENTITY_NAME.fullmatch(values[2]) and values[1] != values[2]):
+            matches.append(row)
+    return matches if len(matches) >= 3 else []
+
+
 class DocumentOutline:
     def __init__(self):
         self.chapter = self.note = self.metrics = None
@@ -365,7 +402,8 @@ class DocumentOutline:
     def advance(self, page, line, *, inside_table=False):
         value = compact(line["text"])
         label = heading_text(value)
-        if chapter := CHAPTER.fullmatch(value):
+        chapter = CHAPTER.fullmatch(value)
+        if chapter or value == "财务报表及审计报告":
             self.chapter = self.boundary = line_anchor(page, line, "chapter_heading")
             self.note = self.metrics = None
             self.note_numbering = None
@@ -373,7 +411,7 @@ class DocumentOutline:
             self.note_boundary_in_table = False
             self.metrics_default = self.disclosure = self.disclosure_title = None
             self.tax = self.investee_note = self.investee_summary = None
-            self.disclosure_chapter = bool(DISCLOSURE_CHAPTER.match(chapter["title"]))
+            self.disclosure_chapter = bool(chapter and DISCLOSURE_CHAPTER.match(chapter["title"]))
             if self.disclosure_chapter:
                 self.disclosure = self.chapter
         elif match := NOTE_HEADING.fullmatch(value):
@@ -419,7 +457,7 @@ class DocumentOutline:
                 self.investee_summary = line_anchor(page, line, "investee_summary_heading")
             elif label != value:
                 self.investee_summary = None
-        if self.chapter and "财务报告" in self.chapter["text"]:
+        if self.financial_chapter():
             if label == "税项":
                 self.tax = line_anchor(page, line, "tax_note_heading")
             elif self.tax and (NOTE_HEADING.fullmatch(value) or NOTE_PEER_TITLE.fullmatch(label) or
@@ -432,7 +470,7 @@ class DocumentOutline:
                 self.metrics_default = line_anchor(page, line, "metrics_table_heading")
             elif OUTLINE_ITEM.fullmatch(value):
                 self.metrics_default = None
-        if self.chapter and not self.disclosure_chapter and "财务报告" not in self.chapter["text"]:
+        if self.chapter and not self.disclosure_chapter and not self.financial_chapter():
             if DISCLOSURE_SUBSECTION.fullmatch(label) and TITLE_NUMBERING.match(value):
                 self.disclosure = line_anchor(page, line, "disclosure_heading")
                 self.disclosure_title = None
@@ -440,6 +478,10 @@ class DocumentOutline:
                 self.disclosure = self.disclosure_title = None
         if self.disclosure and not inside_table and table_title_line(line):
             self.disclosure_title = line_anchor(page, line, "table_title")
+
+    def financial_chapter(self):
+        return self.chapter and any(label in compact(self.chapter["text"])
+                                    for label in ("财务报告", "财务报表及审计报告"))
 
     def table_scope(self, page, table, lines):
         if self.note and self.note_boundary_in_table and not table["primary"]:
@@ -462,7 +504,7 @@ class DocumentOutline:
             return "合并(章节推定)", "section_default", [self.chapter], None
         return "unknown", "unknown", [], "no_scoped_section" if self.boundary else "before_outline"
 
-    def non_statement_scope(self, page, table, lead):
+    def non_statement_scope(self, page, table, lead, lines):
         row_text = ["".join(compact(cell or "") for cell in row["cells"]) for row in table["rows"]]
         summary = next((line_anchor(page, line, "investee_summary_heading") for line in reversed(lead)
                         if INVESTEE_SUMMARY.search(heading_text(compact(line["text"])))
@@ -481,10 +523,44 @@ class DocumentOutline:
                          for row in row_text)
         financial_title = next((line for line in reversed(lead)
                                 if FINANCIAL_DISCLOSURE_TITLE.fullmatch(heading_text(compact(line["text"])))), None)
+        disclosure_row = next((row for row, text in zip(table["rows"][:5], row_text[:5])
+                               if any(all(label in text for label in columns) for columns in DISCLOSURE_COLUMNS)), None)
+        x0, table_top, x1, table_bottom = table["bbox"]
+        credit_header = [line for line in lines
+                         if table_top - 2 <= line["bbox"][1] <= min(table_bottom, table_top + 65)
+                         and line["bbox"][2] >= x0 and line["bbox"][0] <= x1
+                         and any(label in compact(line["text"]) for label in CREDIT_LOSS_COLUMNS)]
+        credit_text = compact("".join(line["text"] for line in credit_header))
+        credit_anchors = []
+        if all(label in credit_text for label in CREDIT_LOSS_COLUMNS):
+            credit_anchors = [line_anchor(page, line, "policy_table_header") for line in credit_header]
+        share_method = all(label in "".join(row_text[:3]) for label in SHARE_METHOD_LABELS)
+        if share_method:
+            disclosure_row = table["rows"][0]
+        roster = roster_rows(table["rows"]) if not disclosure_row and self.financial_chapter() else []
+        lease_role = None
+        if self.boundary and heading_text(compact(self.boundary["text"])) == "关联方及关联交易":
+            lease_role = next((line for line in reversed(lead)
+                               if heading_text(compact(line["text"])) == "本公司作为承租方"), None)
+            lease_header = "".join(row_text[:5])
+            if not all(label in lease_header for label in ("出租", "租赁", "支付的租金", "使用权")):
+                lease_role = None
         if self.tax and (tax_title or tax_header):
             disclosure = self.tax
-        elif financial_title and self.chapter and "财务报告" in self.chapter["text"]:
+        elif financial_title and self.financial_chapter():
             disclosure = line_anchor(page, financial_title, "disclosure_heading")
+        elif lease_role and table["context"]["scope"] == "unknown":
+            disclosure = line_anchor(page, lease_role, "related_lease_role")
+        elif credit_anchors and self.financial_chapter() and table["context"]["scope"] == "unknown":
+            disclosure = credit_anchors[0]
+        elif roster and table["context"]["scope"] == "unknown":
+            disclosure = {"rule": "company_roster_rows", "source_page": page,
+                          "row_ids": [row["row_id"] for row in roster],
+                          "text": " ".join(cell for cell in roster[0]["cells"] if cell)}
+        elif disclosure_row and self.financial_chapter() and table["context"]["scope"] == "unknown":
+            disclosure = {"rule": "disclosure_column_labels", "source_page": page,
+                          "row_id": disclosure_row["row_id"],
+                          "text": " ".join(cell for cell in disclosure_row["cells"] if cell)}
         else:
             disclosure = self.disclosure
         if not disclosure:
@@ -500,6 +576,10 @@ class DocumentOutline:
         if disclosure is self.disclosure and table["primary"] and title["source_page"] == page:
             self.disclosure_title = title
         evidence = [disclosure] if title == disclosure else [disclosure, title]
+        if disclosure in credit_anchors:
+            evidence.extend(anchor for anchor in credit_anchors[1:] if anchor not in evidence)
+        if disclosure["rule"] == "related_lease_role":
+            evidence.append(self.boundary)
         return {"scope": "不适用", "scope_source": "disclosure_heading", "scope_evidence": evidence,
                 "table_title": title, "numeric_answer_allowed": True}
 
@@ -549,6 +629,7 @@ def header_info(table):
         cells = [compact(cell or "") for cell in row["cells"]]
         for printed_column, cell in enumerate(cells):
             column = printed_column
+            cell = PERIOD_QUALIFIER.sub("", cell)
             year = HEADER_YEAR.fullmatch(cell)
             relative = cell in RELATIVE_PERIOD
             # A lone year in the leading label cell can be a table-wide caption.
@@ -612,7 +693,11 @@ def blockers(lines):
 
 
 def row_label(row):
-    for cell in row["cells"][:2]:
+    cells = row["cells"][:2]
+    if len(cells) == 2 and re.fullmatch(r"[一-龥]", compact(cells[0] or "")) and re.match(
+            r"[、.．一-龥]", compact(cells[1] or "")):
+        return compact(cells[0] + cells[1])
+    for cell in cells:
         if cell and re.search(r"[\u4e00-\u9fff]", cell):
             return compact(cell)
     return ""
@@ -662,11 +747,13 @@ ITEM_ORDER = {
         汇率变动对现金及现金等价物的影响|现金及现金等价物净增加额|期初现金及现金等价物余额|期末现金及现金等价物余额
     """,
     "利润表": """
-        营业总收入/营业收入|营业总成本/营业成本|税金及附加|销售费用|管理费用|研发费用|财务费用|
+        营业总收入|营业收入|利息收入|已赚保费|手续费及佣金收入|营业总成本|营业成本|利息支出|手续费及佣金支出|
+        退保金|赔付支出净额|提取保险责任准备金净额|保单红利支出|分保费用|税金及附加|销售费用|管理费用|研发费用|财务费用|
         其他收益|投资收益|对联营企业和合营企业的投资收益|以摊余成本计量的金融资产终止确认收益|
         汇兑收益|净敞口套期收益|公允价值变动收益|信用减值损失|资产减值损失|资产处置收益|
         营业利润|营业外收入|营业外支出|利润总额|所得税费用|净利润|持续经营净利润|终止经营净利润|
-        其他综合收益的税后净额|不能重分类进损益的其他综合收益|将重分类进损益的其他综合收益|
+        其他综合收益的税后净额|归属于母公司所有者的其他综合收益的税后净额/归属母公司所有者的其他综合收益的税后净额|
+        不能重分类进损益的其他综合收益|将重分类进损益的其他综合收益|
         外币财务报表折算差额|归属于少数股东的其他综合收益的税后净额|综合收益总额|
         归属于母公司所有者的综合收益总额|归属于少数股东的综合收益总额|每股收益|基本每股收益|稀释每股收益
     """,
@@ -689,12 +776,26 @@ def item_rank(rows, ranks):
             yield ranks[label], row
 
 
+def profit_row_ranks(rows):
+    ranks = ITEM_RANKS["利润表"]
+    for row in rows:
+        label = ITEM_QUALIFIER.sub("", ITEM_PREFIX.sub("", row_label(row))).rstrip("：:")
+        matches = {rank for item, rank in ranks.items() if label == item or
+                   (len(label) >= 12 and item.startswith(label))}
+        if len(matches) == 1:
+            yield matches.pop(), row
+
+
 def row_sequence_evidence(previous, table, statement):
     ranks = ITEM_RANKS.get(statement, {})
-    tail = list(item_rank(previous["rows"], ranks))
+    if statement == "利润表":
+        tail = list(profit_row_ranks(previous["rows"]))
+        head = list(profit_row_ranks(table["rows"][:8]))[:2]
+    else:
+        tail = list(item_rank(previous["rows"], ranks))
+        head = list(item_rank(table["rows"][:8], ranks))[:2]
     # Skip ignorable header/qualifier rows, then require two ordered item
     # anchors close to the page break. Skipped optional items are permitted.
-    head = list(item_rank(table["rows"][:8], ranks))[:2]
     if not tail or len(head) != 2 or not tail[-1][0] < head[0][0] < head[1][0]:
         return None
     prior = tail[-1][1]
@@ -712,7 +813,7 @@ def aligned_period_columns(previous, table):
         label = row_label(row)
         if not label:
             continue
-        label_column = next(i for i, cell in enumerate(row["cells"][:2]) if compact(cell or "") == label)
+        label_column = 1 if len(row["cells"]) > 1 and label != compact(row["cells"][0] or "") else 0
         for column, cell in enumerate(row["cells"][label_column + 1:], label_column + 1):
             if column not in note_columns and is_amount(cell):
                 columns.add(column)
@@ -830,10 +931,98 @@ def logical_table_top(table):
                default=table["bbox"][1])
 
 
+def pending_statement(page, lines, tables):
+    """A heading after the last body table may introduce the next page."""
+    for index in range(len(lines) - 1, -1, -1):
+        line = lines[index]
+        match = TITLE.fullmatch(compact(line["text"]))
+        if not match or title_scope(match) == "unknown" or match["continued"]:
+            continue
+        lead = lines[index + 1:]
+        headers = [t for t in tables if not t["primary"] and
+                   (t["period_columns"] or (match["type"] == "所有者权益变动表" and t["column_count"] >= 10))
+                   and t["bbox"][1] > line["bbox"][3]]
+        header = headers[0] if len(headers) == 1 else None
+        if blockers([l for l in lead if not header or not contains(header["bbox"], l["bbox"])]):
+            return None
+        return page, line, match, lead, header
+    return None
+
+
+def opens_statement(table, statement, header):
+    if table["first_body"] == len(table["rows"]):
+        return False
+    items = list(item_rank(table["rows"][:12], ITEM_RANKS.get(statement, {})))
+    if len(items) < 2:
+        return False
+    previous = list(item_rank(header["rows"], ITEM_RANKS[statement])) if header else []
+    return items[0][0] in (0, 1) and (not previous or previous[-1][0] < items[0][0])
+
+
+def equity_grid_evidence(previous, table, *, same_page, height, lead):
+    """Follow a ruled equity grid or a printed comparative equity header."""
+    if any(t.get("method") != "pdfplumber_lines" for t in (previous, table)):
+        return None
+    if same_page:
+        labels = compact("".join(line["text"] for line in lead))
+        header = compact("".join(cell or "" for row in table["rows"][:6] for cell in row["cells"]))
+        if not re.search(r"上期金额|上年金额", labels) or not re.search(r"20\d{2}年度", labels + header):
+            return None
+        if "股本" not in header or not re.search(r"权益|未分配利润", header):
+            return None
+    elif previous["bbox"][3] < height * 0.8 or table["bbox"][1] > height * 0.2:
+        return None
+    if max(abs(previous["bbox"][i] - table["bbox"][i]) for i in (0, 2)) > 8:
+        return None
+    if same_page:
+        return {"rule": "equity_comparative_header",
+                "header_line_ids": [line["line_id"] for line in lead
+                                    if compact(line["text"]) in {"上期金额", "上年金额"}]}
+
+    def edges(t):
+        counts = Counter(round(box[i]) for row in t["rows"] for box in row.get("cell_bboxes", [])
+                         if box for i in (0, 2))
+        return sorted(x for x, count in counts.items() if count >= 2)
+
+    old, current = edges(previous), edges(table)
+    matched = [x for x in current if any(abs(x - y) <= 2 for y in old)]
+    if len(matched) < max(8, min(len(old), len(current)) * 0.65):
+        return None
+    return {"rule": "equity_grid_continuation", "matched_column_edges": matched}
+
+
+def is_guarantee_grid(table, title):
+    header = compact(" ".join(cell or "" for row in table["rows"][:3] for cell in row["cells"]))
+    return "担保" in title and all(label in header for label in DISCLOSURE_COLUMNS[0])
+
+
+def continued_guarantee(page, table, previous):
+    if not previous or page != previous[0] + 1:
+        return None
+    prior_page, prior_table, category = previous
+    if (table["column_count"] != prior_table["column_count"] or
+            max(abs(prior_table["bbox"][i] - table["bbox"][i]) for i in (0, 2)) > 4):
+        return None
+    dates = r"20\d{2}(?:年\d{1,2}月\d{1,2}日|[-/.]\d{1,2}[-/.]\d{1,2})"
+    rows = [row for row in table["rows"][:5] if
+            sum(bool(re.fullmatch(dates, compact(c or ""))) for c in row["cells"]) == 2
+            and ENTITY_NAME.fullmatch(compact(row["cells"][0] or ""))
+            and compact(row["cells"][-1] or "") in {"是", "否"}]
+    if len(rows) < 2:
+        return None
+    return {**category, "scope_evidence": [*category["scope_evidence"][:2],
+            {"rule": "adjacent_guarantee_rows", "source_page": prior_page, "page": page,
+             "source_table_id": prior_table["table_id"], "row_ids": [row["row_id"] for row in rows]}]}
+
+
 def resolve_segments(pages):
     """Yield pages with table contexts, keeping only the immediately prior table."""
     segments = []
     prior = None
+    pending = None
+    last_body = None
+    previous_guarantee = None
+    equity_template = None
     section_unit = None
     outline = DocumentOutline()
     for raw, cleaned in pages:
@@ -864,10 +1053,19 @@ def resolve_segments(pages):
             table["context"] = context
             if not table["primary"]:
                 continue
-            if category := outline.non_statement_scope(page, table, table_lead(table, lines, top, earliest)):
+            lead = table_lead(table, lines, top, earliest)
+            category = outline.non_statement_scope(page, table, lead, lines)
+            if not category and context["scope"] == "unknown" and earliest == -1 and not blockers(lead):
+                category = continued_guarantee(page, table, previous_guarantee)
+            previous_guarantee = None
+            if category:
                 context.pop("scope_unknown_reason", None)
                 context.pop("outline_heading", None)
                 context.update(category, anchors=list(category["scope_evidence"]))
+                title_text = compact(category.get("table_title", {}).get("text", ""))
+                if is_guarantee_grid(table, title_text) or any(
+                        anchor["rule"] == "adjacent_guarantee_rows" for anchor in category["scope_evidence"]):
+                    previous_guarantee = (page, table, category)
             before = [line for line in lines if line["bbox"][3] <= top + 1.5]
             # Geometric recovery may place the printed title inside its frame.
             for line in lines:
@@ -878,9 +1076,22 @@ def resolve_segments(pages):
             local = [line for line in before if line["bbox"][1] > earliest]
             titled = [(line, TITLE.fullmatch(compact(line["text"]))) for line in local]
             title = next(((line, match) for line, match in reversed(titled) if match), None)
+            title_page = page
+            opening_header = None
+            title_lead = local
+            if not title and pending and page == pending[0] + 1 and earliest == -1 and not blockers(before):
+                title_page, line, match, earlier_lead, opening_header = pending
+                if (opens_statement(table, match["type"], opening_header) or
+                        (match["type"] == "所有者权益变动表" and opening_header and
+                         equity_grid_evidence(opening_header, table, same_page=False,
+                                              height=raw.get("height", 842), lead=local))):
+                    title = line, match
+                    title_lead = earlier_lead + local
+                else:
+                    title_page, opening_header = page, None
             new = None
             evidence = []
-            unit_lines = [(line, printed_unit(line)) for line in local]
+            unit_lines = [(line, printed_unit(line)) for line in title_lead]
             for line, unit in unit_lines:
                 if unit and "报表" in compact(line["text"]) and "单位为" in compact(line["text"]):
                     section_unit = {**line_anchor(page, line, "financial_section_unit"), "value": unit}
@@ -890,31 +1101,42 @@ def resolve_segments(pages):
                                     for line in before):
                 section_unit = None
             units = [(line, unit) for line, unit in unit_lines if unit and
-                     (not title or line["bbox"][1] >= title[0]["bbox"][1])]
+                     (not title or title_page != page or line["bbox"][1] >= title[0]["bbox"][1])]
             unit_anchor = None
             if units:
                 line, unit = units[-1]
-                unit_anchor = {**line_anchor(page, line, "printed_unit"), "value": unit}
+                source_page = page if line in local else title_page
+                unit_anchor = {**line_anchor(source_page, line, "printed_unit"), "value": unit}
             explicit_unit = unit_anchor["value"] if unit_anchor else None
             context["unit"] = explicit_unit
 
             if title:
                 line, match = title
-                intervening = [l for l in blockers(before) if l["bbox"][1] > line["bbox"][1]]
+                intervening = [l for l in blockers(local) if l["bbox"][1] > line["bbox"][1]]
                 if not intervening:
                     statement = match["type"]
                     if statement.startswith("股东权益"):
                         statement = "所有者权益变动表"
                     scope = title_scope(match)
-                    evidence = [line_anchor(page, line, "explicit_statement_title")]
+                    evidence = [line_anchor(title_page, line, "explicit_statement_title")]
+                    if title_page != page:
+                        evidence.append({"rule": "adjacent_page_statement_opening", "source_page": title_page,
+                                         "page": page, "table_id": table["table_id"]})
+                        if opening_header and opening_header["period_columns"]:
+                            columns = aligned_period_columns(opening_header, table)
+                            if columns and all(amount_columns(table["rows"], period["bbox"]) == {column}
+                                               for column, period in zip(columns, opening_header["period_columns"])):
+                                carry_sequence_periods(table, opening_header, title_page, columns)
                     if statement == "资产负债表":
-                        paired = active or prior
+                        paired = active or prior or last_body
                         paired_periods = ()
-                        if (scope == "母公司" and paired and paired[0] == page and
+                        if (scope == "母公司" and paired and paired[0] == title_page and
                                 (paired[2]["statement_type"], paired[2]["scope"]) == ("资产负债表", "合并")):
                             paired_periods = paired[1]["period_columns"]
-                        bind_balance_date(table, page, [l for l in local if l["bbox"][1] > line["bbox"][1]],
-                                          paired_periods)
+                        date_lines = [l for l in local if title_page != page or l["bbox"][1] > line["bbox"][1]]
+                        bind_balance_date(table, page, date_lines, paired_periods)
+                        if title_page != page and not any(p.get("date_evidence") for p in table["period_columns"]):
+                            bind_balance_date(table, title_page, earlier_lead)
                     if not unit_anchor:
                         unit_anchor = section_unit
                     new = {"segment_id": f"{raw['source_id']}:s{len(segments) + 1:03d}",
@@ -927,6 +1149,22 @@ def resolve_segments(pages):
                            "evidence": evidence + ([unit_anchor] if unit_anchor else []),
                            "tables": []}
                     segments.append(new)
+                    if statement == "所有者权益变动表":
+                        equity_template = (page, table)
+            elif ((previous := active or prior) and
+                  previous[2]["statement_type"] == "所有者权益变动表" and
+                  previous[2]["scope"] != "unknown" and not blockers(local) and
+                  (previous[0] == page or (previous[0] == page - 1 and earliest == -1)) and
+                  (grid := equity_grid_evidence(equity_template[1] if previous[0] == page else previous[1],
+                                                 table, same_page=previous[0] == page,
+                                                 height=raw.get("height", 842), lead=local))):
+                old, prev_table, new = previous
+                if old == page:
+                    template_page, template = equity_template
+                    grid.update(header_reference_page=template_page, header_reference_table_id=template["table_id"])
+                evidence = [{**grid, "source_page": old, "page": page,
+                             "source_table_id": prev_table["table_id"], "table_id": table["table_id"]}]
+                new["evidence"].extend(evidence)
             elif prior:
                 old, prev_table, prev_segment = prior
                 blocked_by = blockers(before)
@@ -994,10 +1232,12 @@ def resolve_segments(pages):
             earliest = table["bbox"][3]
             active = None
             if new:
+                previous_guarantee = None
                 new["end_page"] = page
                 new["tables"].append({"page": page, "table_id": table["table_id"],
                                       "period_columns": table["period_columns"]})
-                scope_evidence = [new["evidence"][0], *evidence] if new["start_page"] != page else evidence
+                title_evidence = new["evidence"][0]
+                scope_evidence = evidence if title_evidence in evidence else [title_evidence, *evidence]
                 context.pop("scope_unknown_reason", None)
                 context.pop("outline_heading", None)
                 for field in ("table_title", "entity", "entity_unknown"):
@@ -1013,8 +1253,10 @@ def resolve_segments(pages):
             elif unit_anchor:
                 context["anchors"].append(unit_anchor)
         trailing_lines = [line for line in lines if line["bbox"][1] > earliest + 2]
+        pending = pending_statement(page, trailing_lines, cleaned["tables"])
         has_later_heading = any(TITLE.fullmatch(compact(line["text"])) or
                                 SECTION.fullmatch(compact(line["text"])) for line in trailing_lines)
+        last_body = active
         prior = None if has_later_heading else active
         for line, inside_table in outline_lines[next_line:]:
             outline.advance(page, line, inside_table=inside_table)
@@ -1362,6 +1604,7 @@ def main():
     cli.add_argument("--out", type=Path, default=DEFAULT_OUT)
     cli.add_argument("--pages", type=int, help="Process the first N physical pages of each input")
     cli.add_argument("--baseline", type=Path, help="Previous pilot metrics keyed by report ID")
+    cli.add_argument("--batch-baseline", type=Path, help="Previous full-batch QC metrics for QC_BATCH.md")
     cli.add_argument("--cached-only", action="store_true", help="Require all raw pages to be cached")
     args = cli.parse_args()
     reports = registry()
@@ -1369,19 +1612,25 @@ def main():
     if any(identifier not in reports for identifier in ids):
         cli.error(f"unknown report id(s): {', '.join(i for i in ids if i not in reports)}")
     baseline = json.loads(args.baseline.read_text(encoding="utf-8")) if args.baseline else {}
+    batch_baseline = json.loads(args.batch_baseline.read_text(encoding="utf-8")) if args.batch_baseline else None
+    if batch_baseline is not None and (set(ids) != set(reports) or set(batch_baseline) != set(ids) or args.pages):
+        cli.error("--batch-baseline requires the full registry and a matching baseline")
     results = []
     for identifier in ids:
         result = parse_report(reports[identifier], args.out, args.pages, baseline.get(identifier),
                               cached_only=args.cached_only)
         results.append(result)
         print(f"{identifier}: {result['pages_processed']} pages, {result['runtime_seconds']:.2f}s", flush=True)
-    write_pilot(args.out / "QC_PILOT.md", results)
+    if batch_baseline is not None:
+        write_batch(args.out / "QC_BATCH.md", batch_baseline, results)
+    else:
+        write_pilot(args.out / "QC_PILOT.md", results)
 
 
 if __package__:
-    from .qc import report_qc, round2_snapshot, summarize_page, write_pilot
+    from .qc import report_qc, round2_snapshot, summarize_page, write_batch, write_pilot
 else:
-    from qc import report_qc, round2_snapshot, summarize_page, write_pilot
+    from qc import report_qc, round2_snapshot, summarize_page, write_batch, write_pilot
 
 
 if __name__ == "__main__":

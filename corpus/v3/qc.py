@@ -105,8 +105,10 @@ def summarize_page(raw, cleaned):
                                       for repair in row["repairs"])
             if not context["numeric_answer_allowed"] or not patterns:
                 continue
-            labels = [PREFIX.sub("", re.sub(r"\s+", "", value or "")).strip(":：")
-                      for value in row["cells"][:2]]
+            labels = [re.sub(r"\s+", "", value or "") for value in row["cells"][:2]]
+            if len(labels) == 2 and re.fullmatch(r"[一-龥]", labels[0]):
+                labels.append("".join(labels))
+            labels = [PREFIX.sub("", label).strip(":：") for label in labels]
             role = next((key for key, pattern in patterns.items()
                          if any(re.fullmatch(pattern, label) for label in labels)), None)
             if role is None:
@@ -157,7 +159,10 @@ def identities(report, cells, segments, rejections, unbound):
     for statement, patterns in (("资产负债表", BALANCE), ("现金流量表", CASH)):
         for scope in SCOPES:
             groups = identity_groups(segments, statement, scope)
-            reference_pages = {t["page"] for group in groups for s in group for t in s["tables"]}
+            reference_pages = {p for group in groups for segment in group for p in
+                               [segment["evidence"][0]["source_page"], *(t["page"] for t in segment["tables"])]}
+            period_labels = sorted({period["label"] for group in groups for s in group
+                                    for period in s["period_columns"]})
             for year in (report["report_year"], report["report_year"] - 1):
                 selected = [c for c in cells if (c["statement_type"], c["scope"], c["data_year"])
                             == (statement, scope, year)]
@@ -169,7 +174,7 @@ def identities(report, cells, segments, rejections, unbound):
                     if all(len(matches) == 1 for matches in by_role.values()):
                         complete.append(({role: matches[0] for role, matches in by_role.items()}, group_ids))
                 record = {"statement_type": statement, "scope": scope, "data_year": year,
-                          "status": "not-found", "page_refs": sorted(reference_pages),
+                          "status": "not_found", "page_refs": sorted(reference_pages),
                           "candidates": selected}
                 if len(complete) != 1:
                     segment_ids = {s["segment_id"] for group in groups for s in group}
@@ -178,9 +183,11 @@ def identities(report, cells, segments, rejections, unbound):
                     record["continuation_rejections"] = [r for r in rejections if r["source_table_id"] in table_ids]
                     record["page_refs"] = sorted(reference_pages | {r["page"] for r in record["continuation_rejections"]})
                     role_counts = {role: sum(c["role"] == role for c in selected) for role in patterns}
-                    record["reason"] = (f"可用报表段组 {len(complete)} 个，项目候选数 {role_counts}，"
+                    record["reason"] = ("未识别到对应口径的报表段" if not groups else
+                                        f"可用报表段组 {len(complete)} 个，项目候选数 {role_counts}，"
                                         f"未绑定年份的项目 {len(record['unbound_period_rows'])} 行，"
-                                        f"未接续的相邻表 {len(record['continuation_rejections'])} 张")
+                                        f"未接续的相邻表 {len(record['continuation_rejections'])} 张，"
+                                        f"已识别表头 {'、'.join(period_labels) or '无'}")
                 else:
                     refs, group_ids = complete[0]
                     values = {role: Decimal(ref["value"]) for role, ref in refs.items()}
@@ -207,7 +214,7 @@ def report_qc(report, pages, segments, chunks, duration):
     for page in pages:
         issues.update(page["issues"])
     continuations = [a for segment in segments for a in segment["evidence"]
-                     if a["rule"].startswith("adjacent_page_") or a["rule"] == "row_sequence"]
+                     if a["rule"].startswith(("adjacent_page_", "equity_")) or a["rule"] == "row_sequence"]
     scopes, scope_sources, unknown_split = Counter(), Counter(), Counter()
     unknown_pages = []
     for page in pages:
@@ -260,6 +267,97 @@ def unknown_reason(reason):
     return f"{UNKNOWN_REASONS[reason['code']]}（{heading}）"
 
 
+def batch_unknown(reports):
+    return sum(reason["count"] for report in reports for page in report["unknown_scope_pages"]
+               for reason in page["reasons"] if reason["code"] != "fragment_without_scope")
+
+
+def write_batch(path, before, reports):
+    if set(before) != {r["report_id"] for r in reports}:
+        raise ValueError("The batch and baseline must cover the same reports")
+    statuses = ("pass", "fail", "not_found")
+
+    def tally(checks):
+        return "/".join(str(checks.get(status, 0)) for status in statuses)
+
+    def rate(unknown, table):
+        return unknown / table if table else 0
+
+    def unknown_cell(unknown, table):
+        return f"{unknown:,}（{rate(unknown, table):.2%}）"
+
+    lines = ["# TraceNum v3 第四轮年报 QC", "",
+             "共 36 份登记年报，使用已缓存的原始页。页码均为 PDF 物理页。",
+             "未知率以全部表格块为分母，分子为未知口径块扣除标记 `fragment_without_scope` 的块。目标为逐份 ≤8%，整体 ≤6%。",
+             "核心报表段为资产负债表、利润表、现金流量表各自的合并及母公司口径。恒等式检查每份固定八项。",
+             "旧版 QC 中的 `not-found` 与本轮的 `not_found` 在下表按同一状态计数。",
+             "", "## 每份年报改动前后", "",
+             "| 年报 | 公司 | 已处理/登记页数 | 文本块 | 表格块 | 未知块（占比） | 恒等式通过/失败/未找到 | 核心段 |",
+             "|---|---|---:|---:|---:|---:|---:|---:|"]
+    over_target, issues, missing = [], [], []
+    overall_checks, old_checks = Counter(), Counter()
+    totals, old_totals = Counter(), Counter()
+    for report in sorted(reports, key=lambda r: r["report_id"]):
+        identifier = report["report_id"]
+        old = before[identifier]
+        chunks, old_chunks = report["chunk_counts"], old["chunk_counts"]
+        checks = Counter(check["status"] for check in report["identity_checks"])
+        old_count = Counter({status.replace("-", "_"): count for status, count in old["identity"].items()})
+        overall_checks.update(checks)
+        old_checks.update(old_count)
+        totals.update(chunks)
+        old_totals.update(old_chunks)
+        unknown = batch_unknown([report])
+        table = chunks["table"]
+        old_unknown = unknown_cell(old["unknown_by_reason"], old_chunks["table"])
+        core = len(SCOPES) * len(REQUIRED)
+        old_core = core - len(old["missing_required_segments"])
+        new_core = core - len(report["missing_required_segments"])
+        lines.append(f"| {identifier} | {report['company']} | {report['pages_processed']}/{report['pages_registry']} | "
+                     f"{old_chunks['text']:,} → {chunks['text']:,} | {old_chunks['table']:,} → {table:,} | "
+                     f"{old_unknown} → {unknown_cell(unknown, table)} | {tally(old_count)} → {tally(checks)} | "
+                     f"{old_core} → {new_core} |")
+        link = f"[{identifier} {report['company']}]({identifier}_v3/qc.json)"
+        if rate(unknown, table) > 0.08:
+            over_target.extend(["", f"### {link} · {unknown_cell(unknown, table)}", ""])
+            for page in sorted(report["unknown_scope_pages"], key=lambda p: p["page"]):
+                reasons = [f"{unknown_reason(reason)} {reason['count']} 块" for reason in page["reasons"]
+                           if reason["code"] != "fragment_without_scope"]
+                if reasons:
+                    over_target.append(f"- 第 {page['page']} 页，{'、'.join(reasons)}。")
+        for check in report["identity_checks"]:
+            if check["status"] == "pass":
+                continue
+            refs = "、".join(map(str, check["page_refs"])) or "无"
+            reason = check.get("reason") or f"左边 {check['left']}，右边 {check['right']}，差额 {check['difference']}"
+            issues.append(f"| {link} | {check['statement_type']} / {check['scope']} | {check['data_year']} | "
+                          f"`{check['status']}` | {refs} | {reason} |")
+        for segment in report["missing_required_segments"]:
+            missing.append(f"- {link}，{segment['scope']}{segment['statement_type']}。")
+    old_unknown = sum(r["unknown_by_reason"] for r in before.values())
+    unknown = batch_unknown(reports)
+    lines.extend(["", f"合计 {sum(r['pages_processed'] for r in reports):,} 页，"
+                  f"文本块 {old_totals['text']:,} → {totals['text']:,}，表格块 {old_totals['table']:,} → {totals['table']:,}，"
+                  f"未知 {unknown_cell(old_unknown, old_totals['table'])} → {unknown_cell(unknown, totals['table'])}，"
+                  f"恒等式 {tally(old_checks)} → {tally(overall_checks)}。"
+                  f"整体未知率{'达标' if rate(unknown, totals['table']) <= .06 else '未达标'}。", "",
+                  "## 核心报表段", ""])
+    lines.extend(missing or ["36/36 份均识别出全部六个核心报表段。"])
+    lines.extend(["", "## 未通过或未找到的恒等式", "",
+                  "| 年报 | 报表 / 口径 | 年份 | 状态 | 物理页 | 原因 |",
+                  "|---|---|---:|---|---|---|", *issues,
+                  "", "## 未知率超过 8% 的年报", *over_target])
+    if not over_target:
+        lines.extend(["", "无。"])
+    lines.extend(["", "## 文件", "",
+                  "- `corpus/v3/parse.py`　缓存回放、章节边界、报表标题与续表识别。",
+                  "- `corpus/v3/qc.py`　固定恒等式检查和批量 QC。",
+                  "- `tests/test_corpus_v3.py`　真实缓存回归、比亚迪第 137 页及切块确定性。",
+                  "- `batch4_baseline.json`　改动前逐份统计。各年报子目录提供 `qc.json`、`segments.json`、"
+                  "`chunks.jsonl`、`trace.jsonl`、`issues.jsonl` 和清洗页。"])
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_pilot(path, reports):
     path = Path(path).resolve()
     root = Path(__file__).resolve().parents[2]
@@ -268,7 +366,7 @@ def write_pilot(path, reports):
              "页码均为 PDF 物理页。表格及未知口径计数包含保留的几何候选和原始碎片。",
              "恒等式按印刷表头及资产负债表日期绑定年份。相邻无标题续页可用报表项目行序及金额列对齐绑定。"
              "明确印有「续」的相邻报表段仍按标题、口径、单位和表头核对。",
-             "缺失、冲突或无法定位的项目记为 `not-found`。这些断点的判定证据见各年报的 `issues.jsonl`。",
+             "缺失、冲突或无法定位的项目记为 `not_found`。这些断点的判定证据见各年报的 `qc.json`。",
              "资产恒等式要求精确相等。现金恒等式容差为参与运算的最粗印刷精度的一个最小单位。", "",
              "| 年报 | 运行秒数 | 已处理/登记页数 | 空文本页 | 表格 | 未知口径表 | 文本块/表格块 | 金额修复 | 校验通过/失败/未找到 |",
              "|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
@@ -281,7 +379,7 @@ def write_pilot(path, reports):
         lines.append(f"| {identifier} {r['company']} | {runtime} | {r['pages_processed']}/{r['pages_registry']} | "
                      f"{len(r['text_empty_pages'])} | {r['tables_found']} | {r['unknown_scope_tables']} | "
                      f"{r['chunk_counts']['text']}/{r['chunk_counts']['table']} | {r['amount_repairs']} | "
-                     f"{checks['pass']}/{checks['fail']}/{checks['not-found']} |")
+                     f"{checks['pass']}/{checks['fail']}/{checks['not_found']} |")
     lines.extend(["", "## 第二轮至第三轮口径变化", "",
                   "「合并」计数包含沿用第二轮标记的管理层讨论与分析章节推定。"
                   "「不适用」块以表题为引用依据，续表可回溯原题。"
@@ -333,6 +431,9 @@ def write_pilot(path, reports):
                          for t in regression["tables"])
         lines.extend(["", "### 已接受的续页", ""])
         for a in r["accepted_continuations"]:
+            if a["rule"] in {"adjacent_page_statement_opening", "equity_grid_continuation", "equity_comparative_header"}:
+                lines.append(f"- {a['source_page']} → {a['page']}，`{a['rule']}`，表 ID `{a['table_id']}`。")
+                continue
             lines.append(f"- {a['source_page']} → {a['page']}，`{a['rule']}`，{a['column_count']} 列，"
                          f"单位 {a['previous_unit'] or '未识别'} → {a['printed_unit'] or '未重印'}，"
                          f"表头 {a['source_header_signature']} → {a['header_signature']}，"

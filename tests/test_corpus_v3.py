@@ -1,12 +1,14 @@
 import json
 from shutil import copyfile, rmtree
 import unittest
+from unittest.mock import patch
 from uuid import uuid4
 
 from corpus.v3.parse import (
-    DEFAULT_OUT, ROOT, clean_cell, clean_page, parse_report, pdf_path,
+    DEFAULT_OUT, ROOT, clean_cell, clean_page, parse_report,
     raw_pages, registry, resolve_segments,
 )
+from corpus.v3.qc import identities
 
 
 def page(number, prefix=(), header=("项目", "2025年", "2024年"),
@@ -199,19 +201,26 @@ class SegmentTests(unittest.TestCase):
         self.assertEqual(evidence["rule"], "same_cell_glyph_numeric_wrap")
         self.assertEqual(clean_cell("1,2\n34.56", bbox, chars[:-1])[0], "1,2\n34.56")
 
+    def test_missing_inputs_keep_all_eight_qc_checks(self):
+        checks = list(identities({"report_year": 2025}, [], [], [], []))
+        self.assertEqual(len(checks), 8)
+        self.assertEqual(len({(c["statement_type"], c["scope"], c["data_year"]) for c in checks}), 8)
+        self.assertTrue(all(c["status"] == "not_found" and c["reason"] for c in checks))
+
 
 class PdfTests(unittest.TestCase):
     def report(self, identifier):
         report = registry()[identifier]
-        if not pdf_path(report).is_file():
-            self.skipTest(f"Local PDF missing: {identifier}")
+        if not (DEFAULT_OUT / f"{identifier}_v3" / "raw").is_dir():
+            self.skipTest(f"Cached raw pages missing: {identifier}")
         return report
 
     def test_byd_2025_physical_page_137(self):
         report = self.report("002594_2025")
         numbers = {130, 136, 137}
-        raw = [page for page in raw_pages(report, DEFAULT_OUT / "002594_2025_v3", max(numbers), cached_only=True)
-               if page["page"] in numbers]
+        with patch("corpus.v3.parse.verified_pdf", side_effect=AssertionError("cached run opened PDF")):
+            raw = [page for page in raw_pages(report, DEFAULT_OUT / "002594_2025_v3", max(numbers), cached_only=True)
+                   if page["page"] in numbers]
         resolved = list(resolve_segments((page, clean_page(page)) for page in raw))
         prior = [t["context"] for t in resolved[0][1]["tables"] if t["primary"]]
         self.assertTrue(any(c["scope"] == "合并" and c["statement_type"] == "现金流量表" for c in prior))
@@ -220,6 +229,74 @@ class PdfTests(unittest.TestCase):
         expected = [c for c in all_contexts if (c["scope"], c["statement_type"]) == ("母公司", "现金流量表")]
         self.assertTrue(expected, "Page 137 must contain the extracted company cash-flow statement")
         self.assertIn("公司现金流量表", expected[0]["scope_evidence"][0]["text"])
+
+    def cached_segments(self, identifier, *numbers):
+        folder = DEFAULT_OUT / f"{identifier}_v3" / "raw"
+        paths = [folder / f"page_{p:04d}.json" for p in numbers]
+        if not all(path.is_file() for path in paths):
+            self.skipTest(f"Cached raw pages missing: {identifier}")
+        raw = (json.loads(path.read_bytes()) for path in paths)
+        return list(resolve_segments((p, clean_page(p)) for p in raw))
+
+    def test_statement_title_and_body_on_different_pages(self):
+        cases = (
+            ("002812_2025", 96, "1、合并资产负债表", "合并", "资产负债表", (2025, 2024)),
+            ("301358_2025", 93, "2、母公司资产负债表", "母公司", "资产负债表", ()),
+            ("002709_2023", 88, "3、合并利润表", "合并", "利润表", (2023, 2022)),
+            ("688005_2023", 122, "母公司现金流量表", "母公司", "现金流量表", (2023, 2022)),
+            ("688005_2025", 119, "合并资产负债表", "合并", "资产负债表", (2025, 2024)),
+            ("002812_2024", 108, "6、母公司现金流量表", "母公司", "现金流量表", (2024, 2023)),
+        )
+        for identifier, source, title, scope, statement, years in cases:
+            with self.subTest(identifier=identifier, source=source):
+                _, _, segments = self.cached_segments(identifier, source, source + 1)[-1]
+                opening, = [s for s in segments if s["start_page"] == source + 1]
+                self.assertEqual((opening["scope"], opening["statement_type"]), (scope, statement))
+                self.assertEqual(opening["evidence"][0]["source_page"], source)
+                self.assertEqual(opening["evidence"][0]["text"], title)
+                if years:
+                    self.assertEqual(tuple(p["data_year"] for p in opening["period_columns"]), years)
+
+    def test_equity_grid_continues_into_comparative_table(self):
+        pages = self.cached_segments("002709_2023", 94, 95, 96, 97)
+        _, _, segments = pages[-1]
+        self.assertEqual([(s["scope"], s["start_page"], s["end_page"]) for s in segments],
+                         [("合并", 94, 96), ("母公司", 96, 97)])
+        self.assertTrue(any(e["rule"] == "equity_grid_continuation" for e in segments[0]["evidence"]))
+
+    def test_audit_cover_ends_bond_scope_and_keeps_reviewed_periods(self):
+        pages = self.cached_segments("601633_2025", 130, 136, 137, 142, 143, 144, 145)
+        _, contents, _ = pages[2]
+        self.assertTrue(all(t["context"]["scope"] != "不适用" for t in contents["tables"]))
+        _, _, segments = pages[-1]
+        self.assertEqual([(s["scope"], s["explicit_title_continued"]) for s in segments],
+                         [("合并", False), ("合并", True), ("母公司", False), ("母公司", True)])
+        self.assertTrue(all([p["data_year"] for p in s["period_columns"]] == [2025, 2024] for s in segments))
+
+    def test_multiline_credit_policy_header(self):
+        _, cleaned, _ = self.cached_segments("688005_2024", 121, 150)[-1]
+        table, = [t for t in cleaned["tables"] if t["primary"]]
+        context = table["context"]
+        self.assertEqual(context["scope"], "不适用")
+        self.assertTrue(any("预期信用损失率" in e.get("text", "") for e in context["scope_evidence"]))
+
+    def test_guarantee_continues_without_printed_amounts(self):
+        pages = self.cached_segments("002812_2025", 94, *range(194, 199))
+        _, cleaned, _ = pages[-1]
+        table, = [t for t in cleaned["tables"] if t["primary"]]
+        context = table["context"]
+        self.assertEqual(context["scope"], "不适用")
+        self.assertEqual(context["scope_evidence"][-1]["rule"], "adjacent_guarantee_rows")
+        self.assertEqual(context["scope_evidence"][-1]["source_page"], 197)
+
+    def test_company_roster_and_related_lease_disclosures(self):
+        pages = self.cached_segments("002709_2025", 76, 94, 95, 128, *range(168, 186))
+        for number, rule in ((95, "company_roster_rows"), (185, "related_lease_role")):
+            with self.subTest(number=number):
+                _, cleaned, _ = next(p for p in pages if p[0]["page"] == number)
+                contexts = [table["context"] for table in cleaned["tables"] if table["primary"]]
+                self.assertTrue(all(c["scope"] == "不适用" for c in contexts))
+                self.assertTrue(any(e["rule"] == rule for c in contexts for e in c["scope_evidence"]))
 
     def test_chunks_are_byte_identical_on_rerun(self):
         report = self.report("002594_2023")
