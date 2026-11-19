@@ -97,22 +97,38 @@ QUESTION_BY_TEXT = {(q["company"], text_key(q["question"])): q for q in QUESTION
 # Single-flight reranker cache: identical (query, docs) pairs across S1/S2/S3
 # produce identical scores, so computing them once changes no result.
 # --------------------------------------------------------------------------- #
-CACHE_DIR = Path(__file__).resolve().parent / "cache" / "rerank"
+CACHE_ROOT = Path(os.environ.get("TRACENUM_CACHE_DIR") or Path(__file__).resolve().parent / "cache")
 
 
 class CachedReranker:
-    """Memory + disk cache keyed by the exact (query, chunk) pairs."""
+    """Memory + disk cache keyed by the exact (query, chunk) pairs.
 
-    def __init__(self, inner):
-        self.inner = inner
+    Each provider gets its own cache folder so hosted scores never mix with the
+    paper's local CrossEncoder scores ("rerank" stays the local folder).
+    """
+
+    def __init__(self, inner, label="local:BAAI/bge-reranker-v2-m3"):
+        self.inner, self.label = inner, label
+        self.hosted = not label.startswith("local:")
+        self.cache_dir = CACHE_ROOT / ("rerank" if not self.hosted else "rerank-" + re.sub(r"\W+", "_", label))
         self.cache, self.locks, self.guard = {}, {}, threading.Lock()
-        CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
 
     def _disk(self, key):
-        path = CACHE_DIR / f"{key}.json"
-        if path.is_file():
-            return json.loads(path.read_text(encoding="utf-8"))
-        return None
+        path = self.cache_dir / f"{key}.json"
+        try:
+            return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
+        except (OSError, ValueError):
+            return None  # unreadable or half-written entry: score again
+
+    def _store(self, key, scores):
+        # Atomic and best-effort: a cache that cannot be written must not fail the answer.
+        try:
+            tmp = self.cache_dir / f".{key}.{threading.get_ident()}.tmp"
+            tmp.write_text(json.dumps([float(s) for s in scores]), encoding="utf-8")
+            os.replace(tmp, self.cache_dir / f"{key}.json")
+        except OSError as exc:
+            print(f"[rerank cache] not written: {exc}", flush=True)
 
     def predict(self, pairs, *args, **kwargs):
         import numpy as np
@@ -127,6 +143,15 @@ class CachedReranker:
             stored = self._disk(key)
             if stored is not None:
                 scores = np.asarray(stored, dtype=np.float32)
+            elif self.hosted:
+                # One request scores every candidate of this query (see backend/rerank.py).
+                sink = getattr(_sink, "emit", None)
+                if sink:
+                    sink({"type": "progress", "node": "retrieve", "done": 0, "total": len(pairs)})
+                scores = self.inner.predict(pairs)
+                if sink:
+                    sink({"type": "progress", "node": "retrieve", "done": len(pairs), "total": len(pairs)})
+                self._store(key, scores)
             else:
                 # Score one pair per forward pass. In a padded batch every pair is
                 # padded to the longest chunk (up to ~3.5k tokens); the attention
@@ -141,7 +166,7 @@ class CachedReranker:
                     if sink:
                         sink({"type": "progress", "node": "retrieve", "done": index + 1, "total": len(pairs)})
                 scores = np.asarray(parts, dtype=np.float32)
-                (CACHE_DIR / f"{key}.json").write_text(json.dumps([float(s) for s in scores]), encoding="utf-8")
+                self._store(key, scores)
             with self.guard:
                 self.cache[key] = scores
             return scores
@@ -193,6 +218,18 @@ def _install_logger():
     class StreamingRunLogger(RunLogger):
         _tracenum = True
 
+        def emit(self, name, state, **row):
+            # Every model call is logged with its usage; forward it so the server can
+            # settle the real cost (billing) and expose the serving fingerprint.
+            result = super().emit(name, state, **row)
+            sink = getattr(_sink, "emit", None)
+            if name == "calls" and sink:
+                sink({"type": "usage", "prompt_tokens": row.get("prompt_tokens"),
+                      "completion_tokens": row.get("completion_tokens"), "status": row.get("status"),
+                      "blocked": bool(row.get("blocked")),
+                      "system_fingerprint": row.get("system_fingerprint"), "model": row.get("response_model")})
+            return result
+
         def wrap(self, function, node):
             observed = super().wrap(function, node)
 
@@ -226,10 +263,11 @@ class Pipeline:
                 return
             load_env()
             import torch
-            torch.set_num_threads(os.cpu_count() or 6)
+            # On a small server, oversubscribed BLAS threads cost memory and time.
+            torch.set_num_threads(int(os.environ.get("TRACENUM_TORCH_THREADS") or os.cpu_count() or 6))
             from langchain_huggingface import HuggingFaceEmbeddings
             from langchain_chroma import Chroma
-            from sentence_transformers import CrossEncoder
+            from rerank import build_reranker
             from src.deepseek_client import DeepSeekChatOpenAI
 
             notebook = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
@@ -242,7 +280,9 @@ class Pipeline:
 
             embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-base-zh-v1.5", model_kwargs={"device": "cpu"},
                                                encode_kwargs={"normalize_embeddings": True})
-            reranker = CachedReranker(CrossEncoder("BAAI/bge-reranker-v2-m3", device="cpu"))
+            inner, label = build_reranker()
+            reranker = CachedReranker(inner, label)
+            self.reranker_label = label
             stores = {r["company"]: Chroma(collection_name=r["collection_name"],
                                            persist_directory=str(V2 / r["vector_db_path"]),
                                            embedding_function=embeddings) for r in MANIFEST}
@@ -250,7 +290,8 @@ class Pipeline:
             if not key:
                 raise RuntimeError("DEEPSEEK_API_KEY is not configured")
             llm = DeepSeekChatOpenAI(model=FREEZE["model"]["alias"], api_key=key, base_url="https://api.deepseek.com",
-                                     temperature=FREEZE["model"]["temperature"], max_retries=0)
+                                     temperature=FREEZE["model"]["temperature"], max_retries=0,
+                                     timeout=float(os.environ.get("DEEPSEEK_TIMEOUT_SECONDS", "180")))
             namespace.update(vectorstore=None, reranker=reranker, llm=llm, corpus_stores=stores)
             _install_logger()
             LOG_ROOT.mkdir(parents=True, exist_ok=True)

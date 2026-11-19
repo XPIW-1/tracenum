@@ -1,0 +1,37 @@
+# Production stack on the Hong Kong server. Run from the folder that holds:
+#   runtime/        build context from deploy/package_runtime.py (live backend)
+#   sites/portfolio Astro build of the personal homepage
+#   sites/tracenum  Vite build of the TraceNum web app (works without the backend)
+#   Caddyfile, .env (secrets; chmod 600; never committed)
+#
+#   docker compose up -d --build
+#   docker compose stop api      # turn live questions off; the public sites keep working
+services:
+  caddy:
+    image: caddy:2.11.4  # official image; tag confirmed in the image source repo (2026-06)
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./sites:/srv:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    mem_limit: 128m
+
+  api:
+    build: ./runtime
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - api_data:/data
+    # Not published: only Caddy reaches it over the compose network.
+    expose: ["8765"]
+    mem_limit: 1400m
+    memswap_limit: 2400m
+
+volumes:
+  caddy_data:
+  caddy_config:
+  api_data:

@@ -1,0 +1,22 @@
+[
+  {
+    "code": "BYD",
+    "company": "比亚迪",
+    "corpus_id": "BYD_2025_v1",
+    "name": "比亚迪股份有限公司",
+    "pages": 268,
+    "source_url": "https://disc.static.szse.cn/download/disc/disk03/finalpage/2026-03-28/f5cdbdbf-b138-4e83-8c6d-5a7eecb9e670.PDF",
+    "ticker": "002594.SZ",
+    "year": 2025
+  },
+  {
+    "code": "WSI",
+    "company": "威胜信息",
+    "corpus_id": "WSI_2025_v1",
+    "name": "威胜信息技术股份有限公司",
+    "pages": 262,
+    "source_url": "https://big5.sse.com.cn/site/cht/www.sse.com.cn/disclosure/listedinfo/announcement/c/new/2026-02-28/688100_20260228_GJOU.pdf",
+    "ticker": "688100.SH",
+    "year": 2025
+  }
+]

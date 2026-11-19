@@ -6,3 +6,8 @@ backend/recordings/
 backend/*.log
 __pycache__/
 .env
+build/
+.build-verify-*/
+backend/data/
+web/public/.data-staging/
+web/public/.data-previous/

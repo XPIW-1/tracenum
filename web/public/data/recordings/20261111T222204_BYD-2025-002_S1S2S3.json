@@ -1,0 +1,2151 @@
+{
+  "company": "BYD",
+  "duration": 123.422,
+  "events": [
+    {
+      "event": {
+        "budget": 39000,
+        "company": "BYD",
+        "paper": {
+          "question_id": "BYD-2025-002",
+          "question_type": "基础财务事实",
+          "results": {
+            "S1": {
+              "correct": false,
+              "errors": [
+                "E09",
+                "E10"
+              ],
+              "latency": 48.897,
+              "reason": "错误拒答：Gold 为 0.4 个百分点；年报中有具体数据，因此判断应作答而拒答。",
+              "rounds": 1,
+              "stop": "达到轮次上限",
+              "tokens": 3299
+            },
+            "S2": {
+              "correct": true,
+              "errors": [],
+              "latency": 100.061,
+              "reason": "五项全通过：0.40 个百分点；四费与营收均为合并口径千元、两年期间正确、结果以百分点表示、计算式与舍入一致。",
+              "rounds": 2,
+              "stop": "固定轮次完成",
+              "tokens": 9425
+            },
+            "S3": {
+              "correct": true,
+              "errors": [],
+              "latency": 154.207,
+              "reason": "五项全通过：0.40 个百分点；四费与营收均为合并口径千元、两年期间正确、结果以百分点表示、计算式与舍入一致。",
+              "rounds": 3,
+              "stop": "达到轮次上限",
+              "tokens": 16571
+            }
+          }
+        },
+        "question": "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）",
+        "question_id": "BYD-2025-002",
+        "strategies": [
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "type": "meta"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S1",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S2",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "strategy": "S3",
+        "type": "start"
+      },
+      "t": 0.0
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 0.312
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 0.344
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 0.359
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          134,
+          212,
+          213
+        ],
+        "latency": 0.43,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）",
+        "round": 1,
+        "selected_pages": [
+          134,
+          212,
+          134,
+          213,
+          213
+        ],
+        "strategy": "S1",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.75
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 0.75
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          134,
+          212,
+          213
+        ],
+        "latency": 0.45,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）",
+        "round": 1,
+        "selected_pages": [
+          134,
+          212,
+          134,
+          213,
+          213
+        ],
+        "strategy": "S3",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.812
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 0.812
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          134,
+          212,
+          213
+        ],
+        "latency": 0.48,
+        "model_calls": 0,
+        "new_evidence": 5,
+        "node": "retrieve",
+        "query": "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）",
+        "round": 1,
+        "selected_pages": [
+          134,
+          212,
+          134,
+          213,
+          213
+        ],
+        "strategy": "S2",
+        "total_tokens": 0,
+        "type": "node"
+      },
+      "t": 0.828
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 0.828
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据。\n\n原因：合并口径下，销售费用合计、管理费用合计、财务费用合计分别可见于[第212页][第213页]，但**研发费用金额**及**合并口径营业收入**未在原文片段中给出，无法计算“四费总和占营业收入比重”的同比变动，因此不能形成完整等式并得出增加百分点。",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 5.29,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S1",
+        "total_tokens": 2799,
+        "type": "node"
+      },
+      "t": 6.031
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 6.031
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.02,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[134, 212, 213]。请针对原问题中的关键指标做一次不同的检索",
+          "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S1",
+        "total_tokens": 2799,
+        "type": "node"
+      },
+      "t": 6.047
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S1",
+        "type": "node_start"
+      },
+      "t": 6.047
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "达到轮次上限",
+        "strategy": "S1",
+        "total_tokens": 2799,
+        "type": "node"
+      },
+      "t": 6.047
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "年报中未找到相关数据。\n\n原因：合并口径下，销售费用合计、管理费用合计、财务费用合计分别可见于[第212页][第213页]，但**研发费用金额**及**合并口径营业收入**未在原文片段中给出，无法计算“四费总和占营业收入比重”的同比变动，因此不能形成完整等式并得出增加百分点。",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            212,
+            213
+          ],
+          "company": "BYD",
+          "elapsed": 6.1,
+          "evidence": [
+            {
+              "page": 134,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页134】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n本片原始行序：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n|  |  |  |  |\n| 营业收入 | 4 | 1,525,075 | 4,280,965 |\n| 减：营业成本 | 4 | 1,238,668 | 3,758,305 |\n| 税金及附加 |  | 32,296 | 19,190 |\n| 销售费用 |  | 25,396 | 21,948 |\n| 管理费用 |  | 1,232,099 | 502,130 |\n| 研发费用 |  | 260,851 | 231,599 |",
+              "type": "table"
+            },
+            {
+              "page": 212,
+              "text": "比亚迪股份有限公司2025年年度报告全文\n七、合并财务报表主要项目注释（续）\n47、销售费用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：2025,2024\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 广告展览费 | 8,791,474 | 7,847,450 |\n| 职工薪酬 | 7,718,854 | 7,436,708 |\n| 折旧及摊销 | 3,919,053 | 3,600,415 |\n| 物料消耗 | 835,565 | 1,242,761 |\n| 办公费用 | 805,808 | 816,451 |\n| 差旅费 | 567,690 | 595,326 |\n| 股份支付 | 85,953 | 38,345 |\n| 其他 | 3,460,171 | 2,507,861 |\n|  |  |  |\n| 合计 | 26,184,568 | 24,085,317 |\n|  |  |  |\n| 理费用 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 职工薪酬 | 12,980,453 | 12,627,537 |\n| 折旧及摊销 | 4,219,458 | 3,161,948 |\n| 物料消耗 | 979,943 | 1,291,159 |\n| 股份支付 | 248,378 | 121,769 |\n| 其他 | 1,771,712 | 1,442,248 |\n| 其中：审计费# | 6,830 | 6,350 |\n|  |  |  |\n| 合计 | 20,199,944 | 18,644,661 |\n|  |  |  |\n| 发费用 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n",
+              "type": "text"
+            },
+            {
+              "page": 134,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页134】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n本片原始行序：\n| 财务费用 |  | (600,541 ) | (447,093 |\n| 其中：利息费用 |  | 468,287 | 157,293 |\n| 利息收入 |  | 927,332 | 641,445 |\n| 加：其他收益 |  | 5,388 | 43,238 |\n| 投资收益 | 5 | 4,610,058 | 14,308,810 |\n| 其中：对联营企业和合营企业的投资收益 |  | 729,094 | 1,271,765 |\n| 以摊余成本计量的金融资产终止确认损失 |  | - | - |\n| 公允价值变动收益 |  | 255,628 | 177,820 |\n| 信用减值损失 |  | (34,286 ) | 45,811 |\n| 资产减值损失 |  | (3 ) | (638,262 |",
+              "type": "table"
+            },
+            {
+              "page": 213,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页213】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n|  | 2025年 | 2024年 |\n|  |  |  |\n本片原始行序：\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 利息支出 | 2,551,657 | 2,093,781 |\n| 减：利息收入 | 2,436,953 | 2,483,756 |\n| 汇兑(收益) / 损失 | (1,033,771 ) | 1,531,645 |\n| 其他 | 269,717 | 74,536 |\n|  |  |  |\n| 合计 | (649,350 ) | 1,216,206 |\n|  |  |  |\n| 他收益 |  |  |",
+              "type": "table"
+            },
+            {
+              "page": 213,
+              "text": "比亚迪股份有限公司2025年年度报告全文\n七、合并财务报表主要项目注释（续）\n50、财务费用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：2025,2024\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 利息支出 | 2,551,657 | 2,093,781 |\n| 减：利息收入 | 2,436,953 | 2,483,756 |\n| 汇兑(收益) / 损失 | (1,033,771 ) | 1,531,645 |\n| 其他 | 269,717 | 74,536 |\n|  |  |  |\n| 合计 | (649,350 ) | 1,216,206 |\n|  |  |  |\n| 他收益 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 与日常活动相关的政府补助 | 12,468,373 | 10,406,200 |\n| 其他 | 1,331,927 | 3,645,450 |\n|  |  |  |\n| 合计 | 13,800,300 | 14,051,650 |\n|  |  |  |\n| 资收益 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 按权益法核算的长期股权投资收益 | 1,007,213 | 1,468,954 |\n| 处置交易性金融资产或负债的投资收益 | 1,313,554 | 380,019 |\n| 投资理财产品与债权投资产生的投资收益 | 1,096,941 | 271,779 |\n| 处置长期股权投资产生的投资收益 | 105,059 | 108,138 |\n| 仍持有的其他权益工具投资的股利收入 | 125,081 | 63,867 |\n",
+              "type": "text"
+            }
+          ],
+          "evidence_status": "evidence_insufficient",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": true,
+            "retrieval_complete": false,
+            "time_match": false
+          },
+          "generated_rounds": 1,
+          "missing": [
+            "答案未找到数据。已检索页：[134, 212, 213]。请针对原问题中的关键指标做一次不同的检索",
+            "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+            "计算核验未通过：unsupported_calculation"
+          ],
+          "model_calls": 1,
+          "numbers": [],
+          "queries": [
+            "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）"
+          ],
+          "refused": true,
+          "rounds": 1,
+          "stop_reason": "达到轮次上限",
+          "suggested_pages": [
+            134,
+            212,
+            213
+          ],
+          "termination_status": "max_round_reached",
+          "total_tokens": 2799,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S1",
+        "type": "final"
+      },
+      "t": 6.062
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据。",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 8.95,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S2",
+        "total_tokens": 3340,
+        "type": "node"
+      },
+      "t": 9.781
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 9.781
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.02,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[134, 212, 213]。请针对原问题中的关键指标做一次不同的检索",
+          "答案未标注来源页码",
+          "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S2",
+        "total_tokens": 3340,
+        "type": "node"
+      },
+      "t": 9.797
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 9.797
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "继续检索",
+        "strategy": "S2",
+        "total_tokens": 3340,
+        "type": "node"
+      },
+      "t": 9.797
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 1,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 9.797
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 3.11,
+        "model_calls": 2,
+        "node": "requery",
+        "query": "公司2025年合并利润表及财务报表附注中销售费用、管理费用、研发费用、财务费用与营业收入2024年同比增减及占比变动百分点",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 4012,
+        "type": "node"
+      },
+      "t": 12.906
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 12.906
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 14.344
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 15.875
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 17.297
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 18.64
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 19.89
+    },
+    {
+      "event": {
+        "answer": "年报中未找到相关数据（原文未提供完整的合并口径营业收入及合并口径研发费用数据，无法计算该比重变动）。[第212页][第213页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 1,
+        "latency": 19.39,
+        "model_calls": 1,
+        "node": "generate",
+        "round": 1,
+        "strategy": "S3",
+        "total_tokens": 4854,
+        "type": "node"
+      },
+      "t": 20.203
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 20.203
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.01,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "答案未找到数据。已检索页：[134, 212, 213]。请针对原问题中的关键指标做一次不同的检索",
+          "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 1,
+        "node": "check",
+        "round": 1,
+        "strategy": "S3",
+        "total_tokens": 4854,
+        "type": "node"
+      },
+      "t": 20.219
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 20.219
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 1,
+        "node": "decide",
+        "round": 1,
+        "stop_reason": "继续检索",
+        "strategy": "S3",
+        "total_tokens": 4854,
+        "type": "node"
+      },
+      "t": 20.219
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 1,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 20.219
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 21.719
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 23.015
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 3.38,
+        "model_calls": 2,
+        "node": "requery",
+        "query": "2025年年度报告 合并利润表 财务报表附注 营业收入 销售费用 管理费用 研发费用 财务费用 2024年同期数据 合计占营业收入比重 增加百分点",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 5613,
+        "type": "node"
+      },
+      "t": 23.609
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 23.609
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 25.812
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 26.64
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 28.531
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 29.078
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 31.703
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 31.984
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 34.015
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 34.484
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 36.672
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 37.328
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 39.875
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 40.265
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 42.5
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 42.703
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 45.453
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 45.937
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 48.281
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 49.078
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 50.156
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 52.375
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 53.062
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 55.719
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 56.172
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 58.89
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 59.39
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S2",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 62.172
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 62.172
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          32,
+          126,
+          134,
+          212,
+          213
+        ],
+        "latency": 49.28,
+        "model_calls": 2,
+        "new_evidence": 4,
+        "node": "retrieve",
+        "query": "公司2025年合并利润表及财务报表附注中销售费用、管理费用、研发费用、财务费用与营业收入2024年同比增减及占比变动百分点",
+        "round": 2,
+        "selected_pages": [
+          134,
+          126,
+          126,
+          32,
+          134
+        ],
+        "strategy": "S2",
+        "total_tokens": 4012,
+        "type": "node"
+      },
+      "t": 62.203
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 62.203
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 64.25
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 66.344
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 68.531
+    },
+    {
+      "event": {
+        "answer": "2025年四项费用合计：  \n26,184,568 + 20,199,944 + 57,978,105 + (-649,350) = 103,713,267（千元）  \n占营业收入比重：103,713,267 ÷ 803,964,958 × 100% = 12.9002%\n\n2024年四项费用合计：  \n24,085,317 + 18,644,661 + 53,194,745 + 1,216,206 = 97,140,929（千元）  \n占营业收入比重：97,140,929 ÷ 777,102,455 × 100% = 12.5004%\n\n比重变化：12.9002% - 12.5004% = 0.3998 个百分点，保留两位小数为 **0.40个百分点**。\n\n数据来源：[第126页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 2,
+        "latency": 6.75,
+        "model_calls": 3,
+        "node": "generate",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 8813,
+        "type": "node"
+      },
+      "t": 68.937
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 68.953
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.03,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 3,
+        "node": "check",
+        "round": 2,
+        "strategy": "S2",
+        "total_tokens": 8813,
+        "type": "node"
+      },
+      "t": 68.969
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 2,
+        "strategy": "S2",
+        "type": "node_start"
+      },
+      "t": 68.984
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 3,
+        "node": "decide",
+        "round": 2,
+        "stop_reason": "固定轮次完成",
+        "strategy": "S2",
+        "total_tokens": 8813,
+        "type": "node"
+      },
+      "t": 68.984
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "2025年四项费用合计：  \n26,184,568 + 20,199,944 + 57,978,105 + (-649,350) = 103,713,267（千元）  \n占营业收入比重：103,713,267 ÷ 803,964,958 × 100% = 12.9002%\n\n2024年四项费用合计：  \n24,085,317 + 18,644,661 + 53,194,745 + 1,216,206 = 97,140,929（千元）  \n占营业收入比重：97,140,929 ÷ 777,102,455 × 100% = 12.5004%\n\n比重变化：12.9002% - 12.5004% = 0.3998 个百分点，保留两位小数为 **0.40个百分点**。\n\n数据来源：[第126页]",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            126
+          ],
+          "company": "BYD",
+          "elapsed": 69.0,
+          "evidence": [
+            {
+              "page": 134,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页134】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n本片原始行序：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n|  |  |  |  |\n| 营业收入 | 4 | 1,525,075 | 4,280,965 |\n| 减：营业成本 | 4 | 1,238,668 | 3,758,305 |\n| 税金及附加 |  | 32,296 | 19,190 |\n| 销售费用 |  | 25,396 | 21,948 |\n| 管理费用 |  | 1,232,099 | 502,130 |\n| 研发费用 |  | 260,851 | 231,599 |",
+              "type": "table"
+            },
+            {
+              "page": 212,
+              "text": "比亚迪股份有限公司2025年年度报告全文\n七、合并财务报表主要项目注释（续）\n47、销售费用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：2025,2024\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 广告展览费 | 8,791,474 | 7,847,450 |\n| 职工薪酬 | 7,718,854 | 7,436,708 |\n| 折旧及摊销 | 3,919,053 | 3,600,415 |\n| 物料消耗 | 835,565 | 1,242,761 |\n| 办公费用 | 805,808 | 816,451 |\n| 差旅费 | 567,690 | 595,326 |\n| 股份支付 | 85,953 | 38,345 |\n| 其他 | 3,460,171 | 2,507,861 |\n|  |  |  |\n| 合计 | 26,184,568 | 24,085,317 |\n|  |  |  |\n| 理费用 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 职工薪酬 | 12,980,453 | 12,627,537 |\n| 折旧及摊销 | 4,219,458 | 3,161,948 |\n| 物料消耗 | 979,943 | 1,291,159 |\n| 股份支付 | 248,378 | 121,769 |\n| 其他 | 1,771,712 | 1,442,248 |\n| 其中：审计费# | 6,830 | 6,350 |\n|  |  |  |\n| 合计 | 20,199,944 | 18,644,661 |\n|  |  |  |\n| 发费用 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n",
+              "type": "text"
+            },
+            {
+              "page": 134,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页134】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n本片原始行序：\n| 财务费用 |  | (600,541 ) | (447,093 |\n| 其中：利息费用 |  | 468,287 | 157,293 |\n| 利息收入 |  | 927,332 | 641,445 |\n| 加：其他收益 |  | 5,388 | 43,238 |\n| 投资收益 | 5 | 4,610,058 | 14,308,810 |\n| 其中：对联营企业和合营企业的投资收益 |  | 729,094 | 1,271,765 |\n| 以摊余成本计量的金融资产终止确认损失 |  | - | - |\n| 公允价值变动收益 |  | 255,628 | 177,820 |\n| 信用减值损失 |  | (34,286 ) | 45,811 |\n| 资产减值损失 |  | (3 ) | (638,262 |",
+              "type": "table"
+            },
+            {
+              "page": 213,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页213】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n|  | 2025年 | 2024年 |\n|  |  |  |\n本片原始行序：\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 利息支出 | 2,551,657 | 2,093,781 |\n| 减：利息收入 | 2,436,953 | 2,483,756 |\n| 汇兑(收益) / 损失 | (1,033,771 ) | 1,531,645 |\n| 其他 | 269,717 | 74,536 |\n|  |  |  |\n| 合计 | (649,350 ) | 1,216,206 |\n|  |  |  |\n| 他收益 |  |  |",
+              "type": "table"
+            },
+            {
+              "page": 213,
+              "text": "比亚迪股份有限公司2025年年度报告全文\n七、合并财务报表主要项目注释（续）\n50、财务费用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：2025,2024\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 利息支出 | 2,551,657 | 2,093,781 |\n| 减：利息收入 | 2,436,953 | 2,483,756 |\n| 汇兑(收益) / 损失 | (1,033,771 ) | 1,531,645 |\n| 其他 | 269,717 | 74,536 |\n|  |  |  |\n| 合计 | (649,350 ) | 1,216,206 |\n|  |  |  |\n| 他收益 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 与日常活动相关的政府补助 | 12,468,373 | 10,406,200 |\n| 其他 | 1,331,927 | 3,645,450 |\n|  |  |  |\n| 合计 | 13,800,300 | 14,051,650 |\n|  |  |  |\n| 资收益 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 按权益法核算的长期股权投资收益 | 1,007,213 | 1,468,954 |\n| 处置交易性金融资产或负债的投资收益 | 1,313,554 | 380,019 |\n| 投资理财产品与债权投资产生的投资收益 | 1,096,941 | 271,779 |\n| 处置长期股权投资产生的投资收益 | 105,059 | 108,138 |\n| 仍持有的其他权益工具投资的股利收入 | 125,081 | 63,867 |\n",
+              "type": "text"
+            },
+            {
+              "page": 126,
+              "text": "【候选表格；比亚迪；2025年年报；PDF物理页126】\n报表类型：合并利润表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n|  | 附注 | 七 | 2025年 | 2024年 |\n|  |  |  |  | （经重述） |\n本片原始行序：\n|  | 附注 | 七 | 2025年 | 2024年 |\n|  |  |  |  | （经重述） |\n|  |  |  |  |  |\n| 一、 | 营业收入 | 45 | 803,964,958 | 777,102,455 |\n|  | 减：营业成本 | 45 | 661,305,161 | 626,046,616 |\n|  | 税金及附加 | 46 | 13,580,544 | 14,752,402 |\n|  | 销售费用 | 47 | 26,184,568 | 24,085,317 |\n|  | 管理费用 | 48 | 20,199,944 | 18,644,661 |\n|  | 研发费用 | 49 | 57,978,105 | 53,194,745 |\n|  | 财务费用 | 50 | (649,350 ) | 1,216,206 |",
+              "type": "table"
+            },
+            {
+              "page": 126,
+              "text": "比亚迪股份有限公司2025年年度报告全文\n2、合并利润表\n【结构恢复表格】\n报表类型：合并利润表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n|  | 附注 | 七 | 2025年 | 2024年 |\n|  |  |  |  | （经重述） |\n|  |  |  |  |  |\n| 一、 | 营业收入 | 45 | 803,964,958 | 777,102,455 |\n|  | 减：营业成本 | 45 | 661,305,161 | 626,046,616 |\n|  | 税金及附加 | 46 | 13,580,544 | 14,752,402 |\n|  | 销售费用 | 47 | 26,184,568 | 24,085,317 |\n|  | 管理费用 | 48 | 20,199,944 | 18,644,661 |\n|  | 研发费用 | 49 | 57,978,105 | 53,194,745 |\n|  | 财务费用 | 50 | (649,350 ) | 1,216,206 |\n|  | 其中：利息费用 | 50 | 2,551,657 | 2,093,781 |\n|  | 利息收入 | 50 | 2,436,953 | 2,483,756 |\n|  | 加：其他收益 | 51 | 13,800,300 | 14,051,650 |\n|  | 投资收益 | 52 | 2,856,608 | 2,291,475 |\n|  | 其中：对联营企业和合营企业的投资收益 |  | 1,007,213 | 1,468,954 |\n|  | 以摊余成本计量的金融资产终止确认损 |  |  |  |\n|  | 失 |  | (797,013 ) | (7,411 |\n|  | 公允价值变动收益 | 53 | 364,238 | 531,933 |\n",
+              "type": "text"
+            },
+            {
+              "page": 32,
+              "text": "【候选表格；比亚迪；2025年年报；PDF物理页32】\n报表类型：待核验；财务口径：待核验；单位：元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n|  |  |  |  | 2025年 |  |  | 2024年 |  |  | 同比增减 |  |  | 重大变动说明 |  |\n|  | 销售费用 |  | 26,184,568,000.00 |  |  | 24,085,317,000.00 |  |  | 8.72% |  |  | 主要是广告展览费增加所致 |  |  |\n本片原始行序：\n|  |  |  |  | 2025年 |  |  | 2024年 |  |  | 同比增减 |  |  | 重大变动说明 |  |\n|  | 销售费用 |  | 26,184,568,000.00 |  |  | 24,085,317,000.00 |  |  | 8.72% |  |  | 主要是广告展览费增加所致 |  |  |\n| 管理费用 |  |  | 20,199,944,000.00 |  |  | 18,644,661,000.00 |  |  | 8.34% |  |  | 主要是职工薪酬和折旧及摊销增加所致 |  |  |\n| 财务费用 |  |  | -649,350,000.00 |  |  | 1,216,206,000.00 |  |  | -153.39% |  |  | 主要是本期为汇兑收益，上年同期为汇兑损失所致 |  |  |\n| 研发费用 |  |  | 57,978,105,000.00 |  |  | 53,194,745,000.00 |  |  | 8.99% |  |  | 主要是折旧及摊销、检测费、物料消耗增加所致 |  |  |",
+              "type": "table"
+            },
+            {
+              "page": 134,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页134】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n本片原始行序：\n| 资产处置收益 |  | 721 | 200 |\n|  |  |  |  |\n| 营业利润 |  | 4,173,812 | 14,132,503 |\n| 加：营业外收入 |  | 29,342 | 19,733 |\n| 减：营业外支出 |  | 35,928 | 39,074 |\n|  |  |  |  |\n| 利润总额 |  | 4,167,226 | 14,113,162 |\n| 减：所得税费用 |  | (38,786 ) | (58,794 |\n|  |  |  |  |\n| 净利润 |  | 4,206,012 | 14,171,956 |",
+              "type": "table"
+            }
+          ],
+          "evidence_status": "evidence_insufficient",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": true,
+            "retrieval_complete": false,
+            "time_match": false
+          },
+          "generated_rounds": 2,
+          "missing": [
+            "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+            "计算核验未通过：unsupported_calculation"
+          ],
+          "model_calls": 3,
+          "numbers": [
+            {
+              "label": "销售费用",
+              "line": "销售费用  47  26,184,568  24,085,317",
+              "pages": [
+                126,
+                212
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "26,184,568"
+            },
+            {
+              "label": "管理费用",
+              "line": "管理费用  48  20,199,944  18,644,661",
+              "pages": [
+                126,
+                212
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "20,199,944"
+            },
+            {
+              "label": "研发费用",
+              "line": "研发费用  49  57,978,105  53,194,745",
+              "pages": [
+                126
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "57,978,105"
+            },
+            {
+              "label": "财务费用",
+              "line": "财务费用  50  (649,350 )  1,216,206",
+              "pages": [
+                126,
+                213
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "-649,350"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "103,713,267"
+            },
+            {
+              "label": "营业收入",
+              "line": "一、  营业收入  45  803,964,958  777,102,455",
+              "pages": [
+                126
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "803,964,958"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "100%"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "12.9002%"
+            },
+            {
+              "label": "销售费用",
+              "line": "销售费用  47  26,184,568  24,085,317",
+              "pages": [
+                126,
+                212
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "24,085,317"
+            },
+            {
+              "label": "管理费用",
+              "line": "管理费用  48  20,199,944  18,644,661",
+              "pages": [
+                126,
+                212
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "18,644,661"
+            },
+            {
+              "label": "研发费用",
+              "line": "研发费用  49  57,978,105  53,194,745",
+              "pages": [
+                126
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "53,194,745"
+            },
+            {
+              "label": "财务费用",
+              "line": "财务费用  50  (649,350 )  1,216,206",
+              "pages": [
+                126,
+                213
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "1,216,206"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "97,140,929"
+            },
+            {
+              "label": "营业收入",
+              "line": "一、  营业收入  45  803,964,958  777,102,455",
+              "pages": [
+                126
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "777,102,455"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "12.5004%"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "0.3998"
+            }
+          ],
+          "queries": [
+            "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）",
+            "公司2025年合并利润表及财务报表附注中销售费用、管理费用、研发费用、财务费用与营业收入2024年同比增减及占比变动百分点"
+          ],
+          "refused": false,
+          "rounds": 2,
+          "stop_reason": "固定轮次完成",
+          "suggested_pages": [
+            134,
+            126,
+            32
+          ],
+          "termination_status": "fixed_round_complete",
+          "total_tokens": 8813,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S2",
+        "type": "final"
+      },
+      "t": 68.984
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 70.0
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 72.031
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 73.984
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          126,
+          127,
+          134,
+          212,
+          213
+        ],
+        "latency": 50.38,
+        "model_calls": 2,
+        "new_evidence": 4,
+        "node": "retrieve",
+        "query": "2025年年度报告 合并利润表 财务报表附注 营业收入 销售费用 管理费用 研发费用 财务费用 2024年同期数据 合计占营业收入比重 增加百分点",
+        "round": 2,
+        "selected_pages": [
+          127,
+          127,
+          127,
+          126,
+          134
+        ],
+        "strategy": "S3",
+        "total_tokens": 5613,
+        "type": "node"
+      },
+      "t": 73.984
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 73.984
+    },
+    {
+      "event": {
+        "answer": "根据合并利润表数据[第126页]：\n\n2025年四项费用合计  \n= 26,184,568 + 20,199,944 + 57,978,105 +（-649,350）  \n= 103,713,267 千元\n\n2025年占营业收入比重  \n= 103,713,267 ÷ 803,964,958 × 100%  \n= 12.9002%\n\n2024年四项费用合计  \n= 24,085,317 + 18,644,661 + 53,194,745 + 1,216,206  \n= 97,140,929 千元\n\n2024年占营业收入比重  \n= 97,140,929 ÷ 777,102,455 × 100%  \n= 12.5004%\n\n比重增加  \n= 12.9002% - 12.5004%  \n= 0.3998 个百分点  \n≈ **0.40个百分点**\n\n答案：**0.40个百分点** [第126页]",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 2,
+        "latency": 9.89,
+        "model_calls": 3,
+        "node": "generate",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 10748,
+        "type": "node"
+      },
+      "t": 83.875
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 83.875
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.01,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 3,
+        "node": "check",
+        "round": 2,
+        "strategy": "S3",
+        "total_tokens": 10748,
+        "type": "node"
+      },
+      "t": 83.89
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 83.89
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 3,
+        "node": "decide",
+        "round": 2,
+        "stop_reason": "继续检索",
+        "strategy": "S3",
+        "total_tokens": 10748,
+        "type": "node"
+      },
+      "t": 83.89
+    },
+    {
+      "event": {
+        "node": "requery",
+        "round": 2,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 83.906
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "latency": 4.0,
+        "model_calls": 4,
+        "node": "requery",
+        "query": "2025年年度报告 主要会计数据和财务指标 合并口径 营业收入 2025年度 2024年度 金额 单位 千元 营业收入构成",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 11810,
+        "type": "node"
+      },
+      "t": 87.89
+    },
+    {
+      "event": {
+        "node": "retrieve",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 87.89
+    },
+    {
+      "event": {
+        "done": 1,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 89.39
+    },
+    {
+      "event": {
+        "done": 2,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 90.64
+    },
+    {
+      "event": {
+        "done": 3,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 91.937
+    },
+    {
+      "event": {
+        "done": 4,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 93.109
+    },
+    {
+      "event": {
+        "done": 5,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 94.406
+    },
+    {
+      "event": {
+        "done": 6,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 95.89
+    },
+    {
+      "event": {
+        "done": 7,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 96.984
+    },
+    {
+      "event": {
+        "done": 8,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 98.156
+    },
+    {
+      "event": {
+        "done": 9,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 99.453
+    },
+    {
+      "event": {
+        "done": 10,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 100.609
+    },
+    {
+      "event": {
+        "done": 11,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 101.875
+    },
+    {
+      "event": {
+        "done": 12,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 103.25
+    },
+    {
+      "event": {
+        "done": 13,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 104.703
+    },
+    {
+      "event": {
+        "done": 14,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 105.672
+    },
+    {
+      "event": {
+        "done": 15,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 106.844
+    },
+    {
+      "event": {
+        "done": 16,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 108.062
+    },
+    {
+      "event": {
+        "done": 17,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 109.484
+    },
+    {
+      "event": {
+        "done": 18,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 110.719
+    },
+    {
+      "event": {
+        "done": 19,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 111.859
+    },
+    {
+      "event": {
+        "done": 20,
+        "node": "retrieve",
+        "strategy": "S3",
+        "total": 20,
+        "type": "progress"
+      },
+      "t": 113.031
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "candidate_count": 20,
+        "evidence_pages": [
+          126,
+          127,
+          134,
+          140,
+          168,
+          177,
+          212,
+          213
+        ],
+        "latency": 25.14,
+        "model_calls": 4,
+        "new_evidence": 4,
+        "node": "retrieve",
+        "query": "2025年年度报告 主要会计数据和财务指标 合并口径 营业收入 2025年度 2024年度 金额 单位 千元 营业收入构成",
+        "round": 3,
+        "selected_pages": [
+          140,
+          177,
+          126,
+          140,
+          168
+        ],
+        "strategy": "S3",
+        "total_tokens": 11810,
+        "type": "node"
+      },
+      "t": 113.047
+    },
+    {
+      "event": {
+        "node": "generate",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 113.047
+    },
+    {
+      "event": {
+        "answer": "经核对原始操作数、单位和公式，上一版计算无误，无需修正。关键点是：财务费用原文为 **-649,350千元**，计算四项费用合计时应按负数计入，不能取绝对值。[第126页]\n\n计算如下：\n\n**2025年四项费用合计**  \n= 26,184,568 + 20,199,944 + 57,978,105 + (-649,350)  \n= **103,713,267千元**\n\n**2025年占营业收入比重**  \n= 103,713,267 ÷ 803,964,958 × 100%  \n= **12.9002%**\n\n**2024年四项费用合计**  \n= 24,085,317 + 18,644,661 + 53,194,745 + 1,216,206  \n= **97,140,929千元**\n\n**2024年占营业收入比重**  \n= 97,140,929 ÷ 777,102,455 × 100%  \n= **12.5004%**\n\n**比重增加**  \n= 12.9002% - 12.5004%  \n= **0.3998个百分点**  \n≈ **0.40个百分点**\n\n因此，2025年合并口径下销售费用、管理费用、研发费用、财务费用总和占营业收入的比重较上年增加 **0.40个百分点**。[第126页]\n\n外部核验反馈未给出已核验操作数或具体错误项，无法据其推翻上述按年报原文完成的计算。",
+        "budget": 39000,
+        "budget_stop": false,
+        "generated_rounds": 3,
+        "latency": 10.36,
+        "model_calls": 5,
+        "node": "generate",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 18122,
+        "type": "node"
+      },
+      "t": 123.406
+    },
+    {
+      "event": {
+        "node": "check",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 123.406
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.02,
+        "metric_audit": {
+          "applicable": false,
+          "passed": true,
+          "reason": "not_applicable",
+          "rows": []
+        },
+        "missing": [
+          "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+          "计算核验未通过：unsupported_calculation"
+        ],
+        "model_calls": 5,
+        "node": "check",
+        "round": 3,
+        "strategy": "S3",
+        "total_tokens": 18122,
+        "type": "node"
+      },
+      "t": 123.422
+    },
+    {
+      "event": {
+        "node": "decide",
+        "round": 3,
+        "strategy": "S3",
+        "type": "node_start"
+      },
+      "t": 123.422
+    },
+    {
+      "event": {
+        "budget": 39000,
+        "budget_stop": false,
+        "feedback": {
+          "calculation_ok": false,
+          "metric_match": true,
+          "retrieval_complete": false,
+          "time_match": false
+        },
+        "latency": 0.0,
+        "model_calls": 5,
+        "node": "decide",
+        "round": 3,
+        "stop_reason": "达到轮次上限",
+        "strategy": "S3",
+        "total_tokens": 18122,
+        "type": "node"
+      },
+      "t": 123.422
+    },
+    {
+      "event": {
+        "result": {
+          "answer": "经核对原始操作数、单位和公式，上一版计算无误，无需修正。关键点是：财务费用原文为 **-649,350千元**，计算四项费用合计时应按负数计入，不能取绝对值。[第126页]\n\n计算如下：\n\n**2025年四项费用合计**  \n= 26,184,568 + 20,199,944 + 57,978,105 + (-649,350)  \n= **103,713,267千元**\n\n**2025年占营业收入比重**  \n= 103,713,267 ÷ 803,964,958 × 100%  \n= **12.9002%**\n\n**2024年四项费用合计**  \n= 24,085,317 + 18,644,661 + 53,194,745 + 1,216,206  \n= **97,140,929千元**\n\n**2024年占营业收入比重**  \n= 97,140,929 ÷ 777,102,455 × 100%  \n= **12.5004%**\n\n**比重增加**  \n= 12.9002% - 12.5004%  \n= **0.3998个百分点**  \n≈ **0.40个百分点**\n\n因此，2025年合并口径下销售费用、管理费用、研发费用、财务费用总和占营业收入的比重较上年增加 **0.40个百分点**。[第126页]\n\n外部核验反馈未给出已核验操作数或具体错误项，无法据其推翻上述按年报原文完成的计算。",
+          "budget": 39000,
+          "budget_stop": false,
+          "cited_pages": [
+            126
+          ],
+          "company": "BYD",
+          "elapsed": 123.4,
+          "evidence": [
+            {
+              "page": 134,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页134】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n本片原始行序：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n|  |  |  |  |\n| 营业收入 | 4 | 1,525,075 | 4,280,965 |\n| 减：营业成本 | 4 | 1,238,668 | 3,758,305 |\n| 税金及附加 |  | 32,296 | 19,190 |\n| 销售费用 |  | 25,396 | 21,948 |\n| 管理费用 |  | 1,232,099 | 502,130 |\n| 研发费用 |  | 260,851 | 231,599 |",
+              "type": "table"
+            },
+            {
+              "page": 212,
+              "text": "比亚迪股份有限公司2025年年度报告全文\n七、合并财务报表主要项目注释（续）\n47、销售费用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：2025,2024\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 广告展览费 | 8,791,474 | 7,847,450 |\n| 职工薪酬 | 7,718,854 | 7,436,708 |\n| 折旧及摊销 | 3,919,053 | 3,600,415 |\n| 物料消耗 | 835,565 | 1,242,761 |\n| 办公费用 | 805,808 | 816,451 |\n| 差旅费 | 567,690 | 595,326 |\n| 股份支付 | 85,953 | 38,345 |\n| 其他 | 3,460,171 | 2,507,861 |\n|  |  |  |\n| 合计 | 26,184,568 | 24,085,317 |\n|  |  |  |\n| 理费用 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 职工薪酬 | 12,980,453 | 12,627,537 |\n| 折旧及摊销 | 4,219,458 | 3,161,948 |\n| 物料消耗 | 979,943 | 1,291,159 |\n| 股份支付 | 248,378 | 121,769 |\n| 其他 | 1,771,712 | 1,442,248 |\n| 其中：审计费# | 6,830 | 6,350 |\n|  |  |  |\n| 合计 | 20,199,944 | 18,644,661 |\n|  |  |  |\n| 发费用 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n",
+              "type": "text"
+            },
+            {
+              "page": 134,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页134】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 6、公司利润表 |  |  |  |\n|  |  |  |  |\n|  | 附注十九 | 2025年 | 2024年 |\n本片原始行序：\n| 财务费用 |  | (600,541 ) | (447,093 |\n| 其中：利息费用 |  | 468,287 | 157,293 |\n| 利息收入 |  | 927,332 | 641,445 |\n| 加：其他收益 |  | 5,388 | 43,238 |\n| 投资收益 | 5 | 4,610,058 | 14,308,810 |\n| 其中：对联营企业和合营企业的投资收益 |  | 729,094 | 1,271,765 |\n| 以摊余成本计量的金融资产终止确认损失 |  | - | - |\n| 公允价值变动收益 |  | 255,628 | 177,820 |\n| 信用减值损失 |  | (34,286 ) | 45,811 |\n| 资产减值损失 |  | (3 ) | (638,262 |",
+              "type": "table"
+            },
+            {
+              "page": 213,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页213】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n|  | 2025年 | 2024年 |\n|  |  |  |\n本片原始行序：\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 利息支出 | 2,551,657 | 2,093,781 |\n| 减：利息收入 | 2,436,953 | 2,483,756 |\n| 汇兑(收益) / 损失 | (1,033,771 ) | 1,531,645 |\n| 其他 | 269,717 | 74,536 |\n|  |  |  |\n| 合计 | (649,350 ) | 1,216,206 |\n|  |  |  |\n| 他收益 |  |  |",
+              "type": "table"
+            },
+            {
+              "page": 213,
+              "text": "比亚迪股份有限公司2025年年度报告全文\n七、合并财务报表主要项目注释（续）\n50、财务费用\n【结构恢复表格】\n报表类型：待核验；财务口径：待核验；单位：待核验；实际表头年份：2025,2024\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 利息支出 | 2,551,657 | 2,093,781 |\n| 减：利息收入 | 2,436,953 | 2,483,756 |\n| 汇兑(收益) / 损失 | (1,033,771 ) | 1,531,645 |\n| 其他 | 269,717 | 74,536 |\n|  |  |  |\n| 合计 | (649,350 ) | 1,216,206 |\n|  |  |  |\n| 他收益 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 与日常活动相关的政府补助 | 12,468,373 | 10,406,200 |\n| 其他 | 1,331,927 | 3,645,450 |\n|  |  |  |\n| 合计 | 13,800,300 | 14,051,650 |\n|  |  |  |\n| 资收益 |  |  |\n|  |  |  |\n|  | 2025年 | 2024年 |\n|  |  |  |\n| 按权益法核算的长期股权投资收益 | 1,007,213 | 1,468,954 |\n| 处置交易性金融资产或负债的投资收益 | 1,313,554 | 380,019 |\n| 投资理财产品与债权投资产生的投资收益 | 1,096,941 | 271,779 |\n| 处置长期股权投资产生的投资收益 | 105,059 | 108,138 |\n| 仍持有的其他权益工具投资的股利收入 | 125,081 | 63,867 |\n",
+              "type": "text"
+            },
+            {
+              "page": 127,
+              "text": "【续表上下文；继承自第126页】表名：合并利润表；口径：合并；单位：千元；年份：2025；前页表头：|  | 附注 | 七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页127】\n报表类型：合并利润表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 附注七 | 2025年 | 2024年 |\n|  |  | （经重述） |\n本片原始行序：\n| 将重分类进损益的其他综合收益 |  |  |\n| 应收款项融资公允价值变动 | 14,609 | (12,095 |\n| 外币报表折算差额 | 529,278 | 481,496 |\n|  |  |  |\n|  | 543,887 | 469,401 |\n|  |  |  |\n| 归属于少数股东的其他综合收益的税后净额 42 | (18,075) | 6,445 |\n|  |  |  |\n| 综合收益总额 | 35,553,909 | 42,431,338 |\n|  |  |  |",
+              "type": "table"
+            },
+            {
+              "page": 127,
+              "text": "【续表上下文；继承自第126页】表名：合并利润表；口径：合并；单位：千元；年份：2025；前页表头：|  | 附注 | 七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页127】\n报表类型：合并利润表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 附注七 | 2025年 | 2024年 |\n|  |  | （经重述） |\n本片原始行序：\n| 其中： |  |  |\n| 归属于母公司股东的综合收益总额 | 34,430,248 | 41,091,299 |\n| 归属于少数股东的综合收益总额 | 1,123,661 | 1,340,039 |",
+              "type": "table"
+            },
+            {
+              "page": 127,
+              "text": "【续表上下文；继承自第126页】表名：合并利润表；口径：合并；单位：千元；年份：2025；前页表头：|  | 附注 | 七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页127】\n报表类型：合并利润表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 附注七 | 2025年 | 2024年 |\n|  |  | （经重述） |\n本片原始行序：\n| 附注七 | 2025年 | 2024年 |\n|  |  | （经重述） |\n|  |  |  |\n| 其他综合收益 | 1,793,151 | 843,398 |\n|  |  |  |\n| 不能重分类进损益的其他综合收益 |  |  |\n| 其他权益工具投资公允价值变动 | 1,628,614 | 408,375 |\n| 所得税影响 | (361,275) | (40,823 |\n|  |  |  |\n|  | 1,267,339 | 367,552 |",
+              "type": "table"
+            },
+            {
+              "page": 126,
+              "text": "【候选表格；比亚迪；2025年年报；PDF物理页126】\n报表类型：合并利润表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n|  | 附注 | 七 | 2025年 | 2024年 |\n|  |  |  |  | （经重述） |\n本片原始行序：\n|  | 附注 | 七 | 2025年 | 2024年 |\n|  |  |  |  | （经重述） |\n|  |  |  |  |  |\n| 一、 | 营业收入 | 45 | 803,964,958 | 777,102,455 |\n|  | 减：营业成本 | 45 | 661,305,161 | 626,046,616 |\n|  | 税金及附加 | 46 | 13,580,544 | 14,752,402 |\n|  | 销售费用 | 47 | 26,184,568 | 24,085,317 |\n|  | 管理费用 | 48 | 20,199,944 | 18,644,661 |\n|  | 研发费用 | 49 | 57,978,105 | 53,194,745 |\n|  | 财务费用 | 50 | (649,350 ) | 1,216,206 |",
+              "type": "table"
+            },
+            {
+              "page": 140,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页140】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 五、重要会计政策及会计估计 |  |\n|  |  |\n本片原始行序：\n| 2025年度的经营成果和现金流量。 |  |\n|  |  |\n| 2、会计期间 |  |\n|  |  |\n| 本集团会计年度采用公历年度，即每年自1月1日起至12月31日止。 |  |\n|  |  |\n| 3、记账本位币 |  |\n|  |  |\n| 本公司记账本位币和编制本财务报表所采用的货币均为人民币，除有特别说明外，均以人民币千元为单位表示。 |  |\n|  |  |",
+              "type": "table"
+            },
+            {
+              "page": 177,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页177】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 七、合并财务报表主要项目注释（续） |  |  |  |  |  |\n|  |  |  |  |  |  |\n本片原始行序：\n|  |  |  |  |  |  |\n| 合计 | 30,723,475 |  | 1 | 7,729,184 |  |\n|  |  |  |  |  |  |\n| 注 1：2017 年本集团向第三方开发商整体购入已完成开发的房产 | （亚迪三村） | 以及 2025 年 | 新 | 增已完成开 | 发的房产 |\n|  |  |  |  |  |  |\n| （亚迪四村）。本年部分完成交付，确认营业收入金额为人民币82,79 | 4千元（2024 | 年：人民币8 | 9 | ,721千元）。 |  |",
+              "type": "table"
+            },
+            {
+              "page": 140,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页140】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 五、重要会计政策及会计估计 |  |\n|  |  |\n本片原始行序：\n| 本集团下属子公司、合营企业及联营企业，根据其经营所处的主要经济环境自行决定其记账本位币，编制本财务 | 报 |\n|  |  |\n| 表时折算为人民币。 |  |\n|  |  |\n| 4、财务报表披露遵循的重要性标准确定方法和选择依据 |  |\n|  |  |\n|  | 重要性标准 |\n|  |  |\n| 应收款项坏账准备收回或转回金额重要的 单项收回或转回金额占各类应收款项坏账准备总额的10%以上且金 | 额大于3亿 |\n|  |  |",
+              "type": "table"
+            },
+            {
+              "page": 168,
+              "text": "【续表上下文；继承自第130页】表名：合并现金流量表；口径：合并；单位：千元；年份：2025,2024；前页表头：|  | 附注七 | 2025年 | 2024年 |\n【候选表格；比亚迪；2025年年报；PDF物理页168】\n报表类型：合并现金流量表；财务口径：合并；单位：千元；实际表头年份：2025,2024\n表头/表首原行（重复供定位）：\n| 七、合并财务报表主要项目注释（续） |  |  |  |  |\n|  |  |  |  |  |\n本片原始行序：\n|  |  |  |  |  |\n| 于2025年度，无坏账准备收回或转回金额重要 | 的款项 | ，无重要的应收 | 账款核销款项 | 。 |\n|  |  |  |  |  |\n| （4） 按欠款方归集的年末余额前五名的应收 | 账款 | 和合同资产情 | 况 |  |\n|  |  |  |  |  |\n| 于2025年12月31日，应收账款和合同资产合 | 计金额 | 前五名共计人民 | 币7,010,339 | 千元，占应收账款和合同资产期 |\n|  |  |  |  |  |\n| 末余额合计数的16.26%，应收账款和合同资产合计金 | 额前 | 五名的资产减值准 | 备期末余额 | 共计人民币46,961千元。 |",
+              "type": "table"
+            }
+          ],
+          "evidence_status": "evidence_insufficient",
+          "feedback": {
+            "calculation_ok": false,
+            "metric_match": true,
+            "retrieval_complete": false,
+            "time_match": false
+          },
+          "generated_rounds": 3,
+          "missing": [
+            "缺失或未核验事实：{'fact_id': 'revenue:2025', 'metric': 'revenue', 'year': 2025, 'scope': '合并'}；状态=UNKNOWN。须取得明确期间、单位与来源，不得猜测年份。",
+            "计算核验未通过：unsupported_calculation"
+          ],
+          "model_calls": 5,
+          "numbers": [
+            {
+              "label": "财务费用",
+              "line": "财务费用  50  (649,350 )  1,216,206",
+              "pages": [
+                126,
+                213
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "-649,350"
+            },
+            {
+              "label": "销售费用",
+              "line": "销售费用  47  26,184,568  24,085,317",
+              "pages": [
+                126,
+                212
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "26,184,568"
+            },
+            {
+              "label": "管理费用",
+              "line": "管理费用  48  20,199,944  18,644,661",
+              "pages": [
+                126,
+                212
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "20,199,944"
+            },
+            {
+              "label": "研发费用",
+              "line": "研发费用  49  57,978,105  53,194,745",
+              "pages": [
+                126
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "57,978,105"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "103,713,267"
+            },
+            {
+              "label": "营业收入",
+              "line": "一、  营业收入  45  803,964,958  777,102,455",
+              "pages": [
+                126
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "803,964,958"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "100%"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "12.9002%"
+            },
+            {
+              "label": "销售费用",
+              "line": "销售费用  47  26,184,568  24,085,317",
+              "pages": [
+                126,
+                212
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "24,085,317"
+            },
+            {
+              "label": "管理费用",
+              "line": "管理费用  48  20,199,944  18,644,661",
+              "pages": [
+                126,
+                212
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "18,644,661"
+            },
+            {
+              "label": "研发费用",
+              "line": "研发费用  49  57,978,105  53,194,745",
+              "pages": [
+                126
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "53,194,745"
+            },
+            {
+              "label": "财务费用",
+              "line": "财务费用  50  (649,350 )  1,216,206",
+              "pages": [
+                126,
+                213
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "1,216,206"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "97,140,929"
+            },
+            {
+              "label": "营业收入",
+              "line": "一、  营业收入  45  803,964,958  777,102,455",
+              "pages": [
+                126
+              ],
+              "status": "matched",
+              "unit": "千元",
+              "value": "777,102,455"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "12.5004%"
+            },
+            {
+              "pages": [],
+              "status": "derived",
+              "value": "0.3998"
+            }
+          ],
+          "queries": [
+            "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）",
+            "2025年年度报告 合并利润表 财务报表附注 营业收入 销售费用 管理费用 研发费用 财务费用 2024年同期数据 合计占营业收入比重 增加百分点",
+            "2025年年度报告 主要会计数据和财务指标 合并口径 营业收入 2025年度 2024年度 金额 单位 千元 营业收入构成"
+          ],
+          "refused": false,
+          "rounds": 3,
+          "stop_reason": "达到轮次上限",
+          "suggested_pages": [
+            140,
+            177,
+            126
+          ],
+          "termination_status": "max_round_reached",
+          "total_tokens": 18122,
+          "verification_status": "UNSUPPORTED"
+        },
+        "strategy": "S3",
+        "type": "final"
+      },
+      "t": 123.422
+    },
+    {
+      "event": {
+        "type": "done"
+      },
+      "t": 123.422
+    }
+  ],
+  "id": "20261111T222204_BYD-2025-002_S1S2S3",
+  "question": "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）",
+  "question_id": "BYD-2025-002",
+  "recorded_at": "2026-11-11T22:22:04+08:00",
+  "strategies": [
+    "S1",
+    "S2",
+    "S3"
+  ],
+  "summary": {
+    "S1": {
+      "answer": "年报中未找到相关数据。\n\n原因：合并口径下，销售费用合计、管理费用合计、财务费用合计分别可见于[第212页][第213页]，但**研发费用金额**及**合并口径营业收入**未在原文片段中给出，无法计算“四费总和占营业收入比重”的同比变动，因此不能形成完整等式并得出增加百分点。",
+      "elapsed": 6.1,
+      "refused": true,
+      "rounds": 1,
+      "stop_reason": "达到轮次上限",
+      "tokens": 2799
+    },
+    "S2": {
+      "answer": "2025年四项费用合计：  \n26,184,568 + 20,199,944 + 57,978,105 + (-649,350) = 103,713,267（千元）  \n占营业收入比重：103,713,267 ÷ 803,964,958 × 100% = 12.9002%\n\n2024年四项费用合计：  \n24,085,317 + 18,644,661 + 53,194,745 + 1,216,206 = 97,140,929（千元）  \n占营业收入比重：97,140,929 ",
+      "elapsed": 69.0,
+      "refused": false,
+      "rounds": 2,
+      "stop_reason": "固定轮次完成",
+      "tokens": 8813
+    },
+    "S3": {
+      "answer": "经核对原始操作数、单位和公式，上一版计算无误，无需修正。关键点是：财务费用原文为 **-649,350千元**，计算四项费用合计时应按负数计入，不能取绝对值。[第126页]\n\n计算如下：\n\n**2025年四项费用合计**  \n= 26,184,568 + 20,199,944 + 57,978,105 + (-649,350)  \n= **103,713,267千元**\n\n**2025年占营业收入比重**  \n= 103,713,267 ÷ 803,964,958 × 100",
+      "elapsed": 123.4,
+      "refused": false,
+      "rounds": 3,
+      "stop_reason": "达到轮次上限",
+      "tokens": 18122
+    }
+  }
+}

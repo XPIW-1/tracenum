@@ -1,0 +1,814 @@
+[
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "营业收入",
+    "question": "分产品看，2025年，在公司的所有业务中，营业收入中占比最高的业务哪一项？",
+    "question_id": "BYD-2025-001",
+    "question_type": "基础财务事实",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 59.783,
+        "reason": "四项核对通过：汽车、汽车相关产品及其他产品，占比 80.68%，与 Gold 一致。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 3041
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 133.534,
+        "reason": "四项核对通过：占比最高的业务为“汽车、汽车相关产品及其他产品”，与 Gold 一致。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 12107
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 200.02,
+        "reason": "四项核对通过：汽车、汽车相关产品及其他产品，占比 80.65%/80.68%，结论与 Gold 一致。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 21163
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "销售费用、管理费用、研发费用、财务费用、营业收入",
+    "question": "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（使用数字表示结果，保留两位小数）",
+    "question_id": "BYD-2025-002",
+    "question_type": "基础财务事实",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E09",
+          "E10"
+        ],
+        "latency": 48.897,
+        "reason": "错误拒答：Gold 为 0.4 个百分点；年报中有具体数据，因此判断应作答而拒答。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 3299
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 100.061,
+        "reason": "五项全通过：0.40 个百分点；四费与营收均为合并口径千元、两年期间正确、结果以百分点表示、计算式与舍入一致。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 9425
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 154.207,
+        "reason": "五项全通过：0.40 个百分点；四费与营收均为合并口径千元、两年期间正确、结果以百分点表示、计算式与舍入一致。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 16571
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "投资活动产生的现金流量净额",
+    "question": "2025年，在合并口径下，公司投资活动产生的现金流量净额相较2024年变动了多少（以千元为单位作答）？这一变动的原因是什么？",
+    "question_id": "BYD-2025-003",
+    "question_type": "基础财务事实",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E01",
+          "E04",
+          "E06"
+        ],
+        "latency": 58.263,
+        "reason": "数值错误：取 −16,260,144/−4,848,197 千元，与 Gold −197,463,109/−129,082,282 千元严重不符，变动额 −11,411,947 千元亦错；原因未找到。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 4228
+      },
+      "S2": {
+        "correct": false,
+        "errors": [
+          "E01",
+          "E04",
+          "E06"
+        ],
+        "latency": 119.679,
+        "reason": "数值错误：同前，取 −16,260,144/−4,848,197 千元，Gold 为 −197,463,109/−129,082,282 千元；且称原文无原因解释。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 10578
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 186.963,
+        "reason": "五项全通过：-68,380,827 千元，与 Gold 一致；但“原因”给的是表内流入/流出推导，与 Gold（购建长期资产支出增加）表述不同。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 21499
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "净利润、所得税费用、利息费用（利息支出）、固定资产折旧、使用权资产折旧 、投资性房地产折旧、无形资产摊销、长期待摊费用摊销",
+    "question": "请分别计算2025年与2024年企业在合并口径下的EBITDA，并告诉我其中更高的那个EBITDA数值（以千元为单位输出结果，只输出更大的那个EBITDA数值）。",
+    "question_id": "BYD-2025-004",
+    "question_type": "相似指标与财务口径",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E09",
+          "E10"
+        ],
+        "latency": 50.325,
+        "reason": "错误拒答：Gold有确定答案 122,830,490 千元，拒答不成立。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 3460
+      },
+      "S2": {
+        "correct": false,
+        "errors": [
+          "E09",
+          "E10"
+        ],
+        "latency": 102.383,
+        "reason": "错误拒答：Gold有确定答案 122,830,490 千元，拒答不成立。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 8358
+      },
+      "S3": {
+        "correct": false,
+        "errors": [
+          "E09",
+          "E10"
+        ],
+        "latency": 214.088,
+        "reason": "错误拒答：Gold有确定答案 122,830,490 千元，拒答不成立。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 28514
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "现金分红金额、归属于上市公司股东的扣除非经常性损益的净利润",
+    "question": "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+    "question_id": "BYD-2025-005",
+    "question_type": "相似指标与财务口径",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 45.193,
+        "reason": "错误拒答：Gold 为 11.08%；扣非归母 29,445,703,000 元在 11 页，答案误判为未披露。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 2726
+      },
+      "S2": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 98.011,
+        "reason": "错误拒答：Gold 为 11.08%；扣非归母 29,445,703,000 元在 11 页，答案误判为未披露。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 8499
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 164.842,
+        "reason": "五项全通过：11.08%；分子为现金分红 3,263,956,728 元、分母为扣非归母 29,445,703,000 元，口径与单位（%）正确。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 15672
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "固定资产原价期末余额、固定资产累计折旧期末余额",
+    "question": "2025年末，公司的固定资产账面净值相较2024年的变化率是多少？（结果用百分数表示，保留两位小数）",
+    "question_id": "BYD-2025-006",
+    "question_type": "相似指标与财务口径",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E09",
+          "E10"
+        ],
+        "latency": 59.468,
+        "reason": "错误拒答：Gold 为 11.61%，需由原值−折旧计算；答案称片段不含该数据，未作答。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 2744
+      },
+      "S2": {
+        "correct": false,
+        "errors": [
+          "E01",
+          "E04",
+          "E06"
+        ],
+        "latency": 116.765,
+        "reason": "数值错误：得 13.59%，Gold 为 11.61%；答案取第 185 页“账面价值”262,287,302/230,903,820，与 Gold 的“原值−折旧”口径不同。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 10693
+      },
+      "S3": {
+        "correct": false,
+        "errors": [
+          "E09",
+          "E10"
+        ],
+        "latency": 153.965,
+        "reason": "错误拒答：Gold 为 11.61%，需由原值−折旧计算；答案称片段不含该数据，未作答。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 15172
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "经营活动产生的现金流量净额（分季度）",
+    "question": "截至2025年第三季度，公司经营活动产生的现金流量净额是多少？（结果用千元表示）",
+    "question_id": "BYD-2025-007",
+    "question_type": "相似指标与财务口径",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 41.87,
+        "reason": "错误拒答：Gold 为 40,845,498 千元（三季经营现金流加总）；答案称无法取得。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 2567
+      },
+      "S2": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 76.823,
+        "reason": "错误拒答：Gold 为 40,845,498 千元（三季经营现金流加总）；答案称无法取得。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 5984
+      },
+      "S3": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 136.679,
+        "reason": "错误拒答：Gold 为 40,845,498 千元（三季经营现金流加总）；答案称无法取得。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 11082
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "刀片电池",
+    "question": "2025年公司首发的新一代「Haohan」储能系统搭载了全球最大2,710Ah 储能专用电池，这种电池的材料是什么？",
+    "question_id": "BYD-2025-008",
+    "question_type": "多证据/计算",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 380.58,
+        "reason": "错误拒答：Gold 为“磷酸铁锂”，且证据页含该表述；答案称原文未说明材料，拒答不成立。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 5097
+      },
+      "S2": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 703.977,
+        "reason": "错误拒答：Gold 为“磷酸铁锂”，且证据页含该表述；答案称原文未说明材料，拒答不成立。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 13298
+      },
+      "S3": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 1867.9,
+        "reason": "错误拒答：Gold 为“磷酸铁锂”，且证据页含该表述；答案称原文未说明材料，拒答不成立。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 20568
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "BYD",
+    "metric": "持股比例；其他增减变动（股）；股份增减变动的原因",
+    "question": "公司创始人在2025年度末的持股比例是多少（结果用百分数表示，保留两位小数），创始人期末所持有的股数较期初是否存在变化，变化的原因是什么？",
+    "question_id": "BYD-2025-009",
+    "question_type": "跨页/分散证据",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 89.04,
+        "reason": "错误拒答：Gold 为 17.06%（或 16.9%），证据页 241 已披露王传福持股；答案称无法计算。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 3330
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 192.327,
+        "reason": "持股比例17.06%正确；变化原因未答出。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 12712
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 184.211,
+        "reason": "持股比例17.06%正确；但“较期初变化及原因”部分未答出，但关键证据已列出。",
+        "rounds": 2,
+        "stop": "核验范围外",
+        "tokens": 10986
+      }
+    }
+  },
+  {
+    "boundary": true,
+    "company": "BYD",
+    "metric": "",
+    "question": "2026年第一季度本公司实现的收入是多少人民币？（结果用元表示，保留两位小数）",
+    "question_id": "BYD-2025-010",
+    "question_type": "语料边界/拒答",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 53.525,
+        "reason": "边界题正确拒答：明确称“年报中未找到相关数据”，符合Gold边界题接受措辞且未编造2026一季度金额。",
+        "rounds": 1,
+        "stop": "语料边界外",
+        "tokens": 2717
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 53.397,
+        "reason": "边界题正确拒答：明确称“年报中未找到相关数据”，符合Gold边界题接受措辞且未编造2026一季度金额。",
+        "rounds": 1,
+        "stop": "语料边界外",
+        "tokens": 2832
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 53.765,
+        "reason": "边界题正确拒答：明确称“年报中未找到相关数据”，符合Gold边界题接受措辞且未编造2026一季度金额。",
+        "rounds": 1,
+        "stop": "语料边界外",
+        "tokens": 2637
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "营业收入",
+    "question": "分产品看，2025年，在公司的所有业务中，营业收入中占比最高的业务哪一项？",
+    "question_id": "WSI-2025-001",
+    "question_type": "基础财务事实",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 52.98,
+        "reason": "四项核对通过：通信网关占比最高，与 Gold 一致；占比 34.77% 计算正确。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 3881
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 104.305,
+        "reason": "四项核对通过：通信网关占比最高，与 Gold 一致；占比 34.77% 计算正确。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 9087
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 235.677,
+        "reason": "四项核对通过：通信网关占比最高，与 Gold 一致；占比 34.77% 计算正确。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 22902
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "销售费用、管理费用、研发费用、财务费用、营业收入",
+    "question": "2025年，在合并口径下，公司销售费用、管理费用、研发费用、财务费用的总和占营业收入的比重较上年增加了多少个百分点？（结果输出数字，保留两位小数）",
+    "question_id": "WSI-2025-002",
+    "question_type": "基础财务事实",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 87.529,
+        "reason": "五项全通过：-0.40 个百分点；两年四费与营收均合并口径、期间正确、负号保留、单位百分点。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 5160
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 154.451,
+        "reason": "五项全通过：13.9473%−14.3439%=−0.3967，保留两位为 −0.40，与 Gold 一致；口径与单位正确。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 16533
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 193.921,
+        "reason": "五项全通过：13.9473%−14.3439%=−0.3966，保留两位为 −0.40，与 Gold 一致；口径与单位正确。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 23400
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "投资活动产生的现金流量净额",
+    "question": "2025年，在合并口径下，公司投资活动产生的现金流量净额相较2024年变动了多少（以千元为单位作答）？这一变动的原因是什么？",
+    "question_id": "WSI-2025-003",
+    "question_type": "基础财务事实",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 81.702,
+        "reason": "五项全通过：-227,221.73 千元＋Gold 同一原因，口径/期间/单位/计算一致。",
+        "rounds": 1,
+        "stop": "核验范围外",
+        "tokens": 2735
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 134.004,
+        "reason": "五项全通过：-227,221.73 千元并给出 Gold 同一原因（购买固定资产等长期资产支出增加）；口径、期间、单位、计算一致。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 8522
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 82.756,
+        "reason": "五项全通过：-227,221.73 千元＋Gold 同一原因，口径/期间/单位/计算一致。",
+        "rounds": 1,
+        "stop": "核验范围外",
+        "tokens": 3147
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "净利润、所得税费用、利息费用（利息支出）、固定资产折旧、油气资产折耗、生产性生物资产折旧、使用权资产摊销、无形资产摊销、长期待摊费用摊销",
+    "question": "请分别计算2025年与2024年企业在合并口径下的EBITDA，并告诉我其中更高的那个EBITDA数值（以千元为单位输出结果，只输出更大的那个EBITDA数值）。",
+    "question_id": "WSI-2025-004",
+    "question_type": "相似指标与财务口径",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E09",
+          "E10"
+        ],
+        "latency": 82.49,
+        "reason": "错误拒答：Gold 为 819,439.48 千元，仅用 136 页利润表也足以取得净利润与所得税，拒答不成立。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 2976
+      },
+      "S2": {
+        "correct": false,
+        "errors": [
+          "E09",
+          "E10"
+        ],
+        "latency": 146.374,
+        "reason": "错误拒答：Gold 为 819,439.48 千元，仅用 136 页利润表也足以取得净利润与所得税，拒答不成立。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 7823
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 201.736,
+        "reason": "五项核对全通过：EBITDA=819,439.48 千元，口径（合并）、期间（2025）、单位（千元）、计算式与操作数均与 Gold 一致。",
+        "rounds": 3,
+        "stop": "核验范围外",
+        "tokens": 17861
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "现金分红金额、归属于上市公司股东的扣除非经常性损益的净利润",
+    "question": "2025年公司分配的现金股利总额占当年扣非归母净利润的比重是多少？（结果用百分数表示，保留两位小数）",
+    "question_id": "WSI-2025-005",
+    "question_type": "相似指标与财务口径",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 43.69,
+        "reason": "错误拒答：Gold 为 41.48%，扣非归母净利润 646,404,185.34 元在语料中；答案称未披露并仅引 78 页（分红金额）。以数据缺失为由拒答。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 2546
+      },
+      "S2": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 109.313,
+        "reason": "错误拒答：Gold 为 41.48%，扣非归母 646,404,185.34 元可检索；答案以分母缺失为由拒答。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 7396
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 148.5,
+        "reason": "五项全通过：41.48%；268,099,563.05÷646,404,185.34=41.4755%→41.48%，口径（扣非归母）正确。",
+        "rounds": 3,
+        "stop": "达到轮次上限",
+        "tokens": 14187
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "固定资产原价期末余额、固定资产累计折旧期末余额",
+    "question": "2025年末，公司的固定资产账面净值是多少？（结果以千元为单位，保留两位小数）",
+    "question_id": "WSI-2025-006",
+    "question_type": "相似指标与财务口径",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 54.815,
+        "reason": "五项全通过：476,386.63 千元；证据页直接列示固定资产期末余额 476,386,630.81 元，÷1000 与舍入正确。",
+        "rounds": 1,
+        "stop": "核验范围外",
+        "tokens": 2714
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 112.542,
+        "reason": "五项全通过：476,386.63 千元；证据页直接列示固定资产期末余额 476,386,630.81 元，÷1000 与舍入正确。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 7400
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 53.337,
+        "reason": "五项全通过：476,386.63 千元；证据页直接列示固定资产期末余额 476,386,630.81 元，÷1000 与舍入正确。",
+        "rounds": 1,
+        "stop": "核验范围外",
+        "tokens": 2588
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "经营活动产生的现金流量净额（分季度）",
+    "question": "截至2025年第三季度，公司经营活动产生的现金流量净额是多少？（结果用千元表示）",
+    "question_id": "WSI-2025-007",
+    "question_type": "相似指标与财务口径",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 41.447,
+        "reason": "五项全通过：400,538.69 千元；三个季度经营现金流加总后 ÷1000，期间（前三季度）与单位正确。",
+        "rounds": 1,
+        "stop": "核验范围外",
+        "tokens": 2815
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 92.021,
+        "reason": "五项全通过：400,538.69 千元；三个季度经营现金流加总后 ÷1000，期间（前三季度）与单位正确。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 8501
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 43.922,
+        "reason": "五项全通过：400,538.69 千元；三个季度经营现金流加总后 ÷1000，期间（前三季度）与单位正确。",
+        "rounds": 1,
+        "stop": "核验范围外",
+        "tokens": 3190
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "所得税税率（%）",
+    "question": "2025年10月，公司的境外投资者前往某个海外子公司进行实际调研，请问该子公司的所得税税率是多少？（结果用百分数表达）",
+    "question_id": "WSI-2025-008",
+    "question_type": "跨页/分散证据",
+    "results": {
+      "S1": {
+        "correct": false,
+        "errors": [
+          "E07",
+          "E10"
+        ],
+        "latency": 89.695,
+        "reason": "错误拒答：Gold 为 22%，172 页税率表已列“威胜信息印尼公司 22%”；答案称未绑定子公司，与原文不符。",
+        "rounds": 1,
+        "stop": "达到轮次上限",
+        "tokens": 1919
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 147.04,
+        "reason": "四项核对通过：印尼子公司所得税税率 22%，与 Gold 22.00 一致；本题不需计算。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 7291
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 193.332,
+        "reason": "四项核对通过：22%，与 Gold 22.00 一致，引用 172 页税率表。",
+        "rounds": 3,
+        "stop": "核验范围外",
+        "tokens": 10670
+      }
+    }
+  },
+  {
+    "boundary": false,
+    "company": "WSI",
+    "metric": "净利润",
+    "question": "2025年，公司采用集中竞价交易方式已实际回购的公司股份金额占公司净利润的比例是多少？（用百分数表示，结果保留两位小数）",
+    "question_id": "WSI-2025-009",
+    "question_type": "多证据/计算",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 42.425,
+        "reason": "五项全通过：22.51%，与 Gold 一致。",
+        "rounds": 1,
+        "stop": "核验范围外",
+        "tokens": 2491
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 93.842,
+        "reason": "五项全通过：22.51%，与 Gold 一致。",
+        "rounds": 2,
+        "stop": "固定轮次完成",
+        "tokens": 7658
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 44.811,
+        "reason": "五项全通过：22.51%；149,956,178.45÷666,266,924.52=22.51%，与 Gold 一致。",
+        "rounds": 1,
+        "stop": "核验范围外",
+        "tokens": 3073
+      }
+    }
+  },
+  {
+    "boundary": true,
+    "company": "WSI",
+    "metric": "",
+    "question": "2026年第一季度本公司实现的收入是多少人民币？（结果用元表示，保留两位小数）",
+    "question_id": "WSI-2025-010",
+    "question_type": "语料边界/拒答",
+    "results": {
+      "S1": {
+        "correct": true,
+        "errors": [],
+        "latency": 40.43,
+        "reason": "边界题正确拒答：明确称“年报中未找到相关数据”，符合Gold边界题接受措辞且未编造2026一季度金额。",
+        "rounds": 1,
+        "stop": "语料边界外",
+        "tokens": 2347
+      },
+      "S2": {
+        "correct": true,
+        "errors": [],
+        "latency": 40.038,
+        "reason": "边界题正确拒答：明确称“年报中未找到相关数据”，符合Gold边界题接受措辞且未编造2026一季度金额。",
+        "rounds": 1,
+        "stop": "语料边界外",
+        "tokens": 2213
+      },
+      "S3": {
+        "correct": true,
+        "errors": [],
+        "latency": 40.829,
+        "reason": "边界题正确拒答：明确称“年报中未找到相关数据”，符合Gold边界题接受措辞且未编造2026一季度金额。",
+        "rounds": 1,
+        "stop": "语料边界外",
+        "tokens": 2362
+      }
+    }
+  }
+]

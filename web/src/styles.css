@@ -100,6 +100,7 @@ button { cursor: pointer; }
 .status-dot i { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
 .status-dot.ready i { background: var(--tick); }
 .status-dot.error i { background: var(--red); }
+.status-dot.static i { background: var(--ink-3); }
 .draft-button {
   display: inline-flex; align-items: center; gap: 8px;
   border: 1px solid var(--rule); background: var(--paper); border-radius: var(--r-sm);
@@ -157,6 +158,8 @@ button { cursor: pointer; }
 }
 .example:hover span { text-decoration: underline; text-underline-offset: 3px; }
 .example small { color: var(--ink-3); flex: none; font-size: 12px; }
+.featured-questions { display: grid; gap: 8px; }
+.featured-questions .example { border: 1px solid var(--rule); border-radius: var(--r-md); padding: 10px 12px; }
 
 /* ---------- trace ---------- */
 .question-echo { font-family: var(--serif); font-size: 21px; line-height: 1.5; margin: 0 0 6px; }
@@ -368,3 +371,7 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+.featured-questions .example { flex-wrap: wrap; }
+.featured-questions .example span { flex: 1 1 0; min-width: 0; }
+.example small.featured-note { flex: 1 0 100%; margin-top: 2px; color: var(--amber); line-height: 1.5; }

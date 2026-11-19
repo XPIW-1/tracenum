@@ -1,0 +1,62 @@
+{
+ "ran_at": "2026-11-19T10:25:18+08:00",
+ "reranker": "local:BAAI/bge-reranker-v2-m3",
+ "fingerprints": [
+  "bc19ba97cbe016479903222bb1578db6"
+ ],
+ "hits": 4,
+ "total": 5,
+ "rows": [
+  {
+   "question_id": "BYD-2025-002",
+   "hit_gold": true,
+   "refused": false,
+   "cited_pages": [
+    126
+   ],
+   "rounds": 3,
+   "tokens": 17271
+  },
+  {
+   "question_id": "WSI-2025-007",
+   "hit_gold": true,
+   "refused": false,
+   "cited_pages": [
+    11
+   ],
+   "rounds": 1,
+   "tokens": 2736
+  },
+  {
+   "question_id": "BYD-2025-010",
+   "hit_gold": true,
+   "refused": true,
+   "cited_pages": [],
+   "rounds": 1,
+   "tokens": 2493
+  },
+  {
+   "question_id": "WSI-2025-008",
+   "hit_gold": false,
+   "refused": true,
+   "cited_pages": [
+    64,
+    172
+   ],
+   "rounds": 3,
+   "tokens": 8539
+  },
+  {
+   "question_id": "WSI-2025-005",
+   "hit_gold": true,
+   "refused": false,
+   "cited_pages": [
+    2,
+    10,
+    78
+   ],
+   "rounds": 3,
+   "tokens": 19181
+  }
+ ]
+}

@@ -1,17 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Play, Square, History, Star } from 'lucide-react'
-import { streamAsk, streamReplay, featureRecording, getJSON, emptyRun, reduceRun, STRATEGY_INFO } from '../api.js'
+import { streamAsk, streamReplay, featureRecording, getRecordings, emptyRun, reduceRun, STRATEGY_INFO } from '../api.js'
 import { RoundTrace, useElapsed } from './Lookup.jsx'
 import AnswerText from './AnswerText.jsx'
 
 const STRATEGIES = ['S1', 'S2', 'S3']
-// Ordered by how reliably live runs reproduce the paper (prewarm rehearsals, 2026-11-11):
-// WSI-2025-005  S1 ✗ in 3/3 runs, S3 ✓ in 2/3 (corrects itself in round 3)
-// BYD-2025-002  S1 ✗ / S2 ✓ / S3 ✓, same as the paper
-// WSI-2025-008  S3 ✓ (22%, cross-page), S1 ✗
-// WSI-2025-007  all ✓; S3 stops after round 1 with a third of S2's tokens
-// BYD-2025-010  boundary question (2026 data is not in the 2025 report)
-const FEATURED = ['WSI-2025-005', 'BYD-2025-002', 'WSI-2025-008', 'WSI-2025-007', 'BYD-2025-010']
 const SPEEDS = [1, 4, 8]
 
 function formatTime(iso) {
@@ -19,8 +12,11 @@ function formatTime(iso) {
   return `${d.getMonth() + 1} 月 ${d.getDate()} 日 ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-export default function Lab({ corpus, questions, openPdf, budget }) {
-  const featured = useMemo(() => FEATURED.map((id) => questions.find((q) => q.question_id === id)).filter(Boolean), [questions])
+export default function Lab({ mode, featured, corpus, questions, openPdf, budget }) {
+  const options = useMemo(() => featured.map(({ question_id }) => questions.find((q) => q.question_id === question_id)).filter(Boolean), [featured, questions])
+  // Live three-strategy runs exist only on the local workbench (TRACENUM_DEV); production
+  // live sessions run S3 alone, so the lab there is replay-only.
+  const isLive = mode === 'live' && import.meta.env.DEV
   const [picked, setPicked] = useState(null)
   const [runs, setRuns] = useState(null)
   const [meta, setMeta] = useState(null)
@@ -28,36 +24,52 @@ export default function Lab({ corpus, questions, openPdf, budget }) {
   const [tapes, setTapes] = useState([])
   const [tapeId, setTapeId] = useState(null)
   const [speed, setSpeed] = useState(4)
-  const [mode, setMode] = useState(null) // 'live' | 'replay'
+  const [runKind, setRunKind] = useState(null)
   const abortRef = useRef(null)
   const startedAt = runs?.S1?.startedAt
   const running = runs && STRATEGIES.some((s) => runs[s].status === 'running' || runs[s].status === 'waiting')
   const elapsed = useElapsed(running, startedAt)
 
-  async function loadTapes(qid, keep) {
-    try {
-      const list = await getJSON(`/api/recordings?question_id=${encodeURIComponent(qid)}`)
-      const full = list.filter((t) => STRATEGIES.every((s) => t.strategies.includes(s)))
-      setTapes(full)
-      if (!keep) setTapeId((full.find((t) => t.featured) || full[0])?.id ?? null)
-    } catch { setTapes([]) }
-  }
-
   useEffect(() => {
     if (!picked) return
-    abortRef.current?.abort()
-    setRuns(null); setMeta(null); setMode(null); setError(null)
-    loadTapes(picked.question_id)
+    let active = true
+    getRecordings(picked.question_id).then((list) => {
+      if (!active) return
+      const full = list.filter((t) => STRATEGIES.every((s) => t.strategies.includes(s)))
+      setTapes(full)
+      setTapeId((full.find((t) => t.featured) || full[0])?.id ?? null)
+    }).catch((err) => { if (active) setError(`运行记录未能加载：${err.message}`) })
+    return () => { active = false; abortRef.current?.abort() }
   }, [picked])
 
+  function pick(question) {
+    if (question === picked) return
+    abortRef.current?.abort()
+    setPicked(question)
+    setRuns(null)
+    setMeta(null)
+    setRunKind(null)
+    setError(null)
+    setTapes([])
+    setTapeId(null)
+  }
+
+  function markStopped(message) {
+    setRuns((previous) => previous && Object.fromEntries(STRATEGIES.map((s) => {
+      const run = previous[s]
+      return [s, run.status === 'done' || run.status === 'error' ? run : { ...run, status: 'error', active: null, error: message }]
+    })))
+  }
+
   async function start(kind) {
-    if (!picked) return
+    if (!picked || (kind === 'live' ? !isLive : !tapeId)) return
     abortRef.current?.abort()
     const controller = new AbortController()
     abortRef.current = controller
     let current = Object.fromEntries(STRATEGIES.map((s) => [s, emptyRun(s)]))
-    setRuns(current); setMeta(null); setError(null); setMode(kind)
+    setRuns(current); setMeta(null); setError(null); setRunKind(kind)
     const onEvent = (event) => {
+      if (controller.signal.aborted) return
       if (event.type === 'meta') setMeta(event)
       else if (event.strategy) {
         current = { ...current, [event.strategy]: reduceRun(current[event.strategy], event) }
@@ -66,34 +78,36 @@ export default function Lab({ corpus, questions, openPdf, budget }) {
     }
     try {
       if (kind === 'replay') await streamReplay(tapeId, speed, onEvent, controller.signal)
-      else {
-        await streamAsk({ company: picked.company, question: picked.question, strategies: STRATEGIES }, onEvent, controller.signal)
-        loadTapes(picked.question_id, true)
-      }
+      else await streamAsk({ company: picked.company, question: picked.question, strategies: STRATEGIES }, onEvent, controller.signal)
     } catch (err) {
-      if (err.name !== 'AbortError') setError(`没有连上后端：${err.message}`)
+      if (controller.signal.aborted) return
+      markStopped(null)
+      setError(kind === 'replay' ? `回放未能加载：${err.message}` : `没有连上后端：${err.message}`)
     }
   }
 
   async function makeDefault(id) {
-    try { await featureRecording(id); loadTapes(picked.question_id, true) } catch (err) { setError(err.message) }
+    try {
+      await featureRecording(id)
+      setTapes((previous) => previous.map((recording) => ({ ...recording, featured: recording.id === id })))
+    } catch (err) { setError(err.message) }
   }
 
   const paper = meta?.paper?.results || picked?.results || {}
   const info = picked && corpus.find((c) => c.code === picked.company)
   const tape = tapes.find((t) => t.id === tapeId)
-  const replayInfo = mode === 'replay' ? meta?.replay : null
+  const replayInfo = runKind === 'replay' ? meta?.replay : null
 
   return (
     <div className="page">
       <h1 className="page-title">三策略实验台</h1>
       <p className="page-lead">
-        论文比较了三种检索策略：单轮、固定两轮、自适应最多三轮。这里用同一道题同时运行三者，每一栏都能看到逐轮检索、规则核验、停止原因和预算消耗，并与论文中那次运行的盲评结果对照。
+        论文比较了三种检索策略：单轮、固定两轮、自适应最多三轮。{isLive ? '这里用同一道题同时运行三者' : '这里可回放同一道题的三种策略'}，每一栏都能看到逐轮检索、规则核验、停止原因和预算消耗，并与论文中那次运行的盲评结果对照。
       </p>
 
       <div className="lab-picker" role="group" aria-label="选择题目" style={{ margin: 0 }}>
-        {featured.map((q) => (
-          <button key={q.question_id} type="button" className="chip" aria-pressed={picked?.question_id === q.question_id} onClick={() => setPicked(q)}>
+        {options.map((q) => (
+          <button key={q.question_id} type="button" className="chip" aria-pressed={picked?.question_id === q.question_id} onClick={() => pick(q)}>
             {q.question_id} · {q.question_type}
           </button>
         ))}
@@ -105,15 +119,15 @@ export default function Lab({ corpus, questions, openPdf, budget }) {
           <div className="question-meta">
             <span>{info?.company} {info?.year} 年报</span>
             <span>论文盲评：{STRATEGIES.map((s) => paper[s] && <span key={s} style={{ marginRight: 8 }}>{s} <span className={paper[s].correct ? 'mark-ok' : 'mark-bad'}>{paper[s].correct ? '✓ 正确' : '✗ 错误'}</span></span>)}</span>
-            {running && <span className="num">{mode === 'replay' ? '回放中' : '已用时'} {elapsed.toFixed(0)} 秒</span>}
+            {running && <span className="num">{runKind === 'replay' ? '回放中' : '已用时'} {elapsed.toFixed(0)} 秒</span>}
           </div>
 
           <div className="lab-controls">
             {running
-              ? <button className="btn ghost" type="button" onClick={() => abortRef.current?.abort()}><Square size={14} />停止</button>
+              ? <button className="btn ghost" type="button" onClick={() => { abortRef.current?.abort(); markStopped('已停止。') }}><Square size={14} />停止</button>
               : <>
                 {tape && <button className="btn" type="button" onClick={() => start('replay')}><History size={14} />回放运行记录</button>}
-                <button className={tape ? 'btn ghost' : 'btn'} type="button" onClick={() => start('live')}><Play size={14} />实时运行三种策略</button>
+                {isLive && <button className={tape ? 'btn ghost' : 'btn'} type="button" onClick={() => start('live')}><Play size={14} />实时运行三种策略</button>}
                 {tape && (
                   <label className="speed">回放速度
                     <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))}>
@@ -141,7 +155,7 @@ export default function Lab({ corpus, questions, openPdf, budget }) {
                     </label>
                     {t.featured
                       ? <span className="tape-default"><Star size={12} /> 演示默认</span>
-                      : <button type="button" className="btn ghost small" onClick={() => makeDefault(t.id)}>设为演示默认</button>}
+                      : import.meta.env.DEV && isLive && <button type="button" className="btn ghost small" onClick={() => makeDefault(t.id)}>设为演示默认</button>}
                     <p className="tape-answer">S3：{t.summary.S3?.answer}</p>
                   </li>
                 ))}
@@ -155,18 +169,18 @@ export default function Lab({ corpus, questions, openPdf, budget }) {
       {replayInfo && (
         <div className="replay-banner" role="status">
           <History size={16} />
-          <span>正在回放 <b>{formatTime(replayInfo.recorded_at)}</b> 的一次实时运行记录，{replayInfo.speed} 倍速；原始用时 {Math.round(replayInfo.duration)} 秒。事件顺序和结果与当时完全一致。</span>
+          <span>{running ? '正在回放' : '回放记录'} <b>{formatTime(replayInfo.recorded_at)}</b> 的一次实时运行，{replayInfo.speed} 倍速；原始用时 {Math.round(replayInfo.duration)} 秒。事件顺序和结果与当时完全一致。</span>
         </div>
       )}
 
       <div className="lab-grid" style={{ marginTop: 18 }}>
         {STRATEGIES.map((s) => (
-          <Lane key={s} strategy={s} run={runs?.[s]} paper={paper[s]} budget={meta?.budget ?? budget} replay={mode === 'replay'}
-            onPage={(page) => openPdf({ company: picked.company, page, values: [] })} />
+          <Lane key={s} strategy={s} run={runs?.[s]} paper={paper[s]} budget={meta?.budget ?? budget} replay={runKind === 'replay'}
+            onPage={(page, values = []) => openPdf({ company: picked.company, page, values })} />
         ))}
       </div>
       <p className="lab-note">
-        每次实时运行都会自动保存为运行记录，可以原样回放。大模型的输出有随机性，同一道题再跑一次，轮次和答案都可能不同；论文结论基于 20 道题、每格一次运行的盲评，属于描述性比较。预算上限与论文一致：每题每组 39,000 tokens。
+        {isLive ? '实时运行结束后会保存符合条件的记录。大模型的输出有随机性，同一道题再跑一次，轮次和答案都可能不同。' : '每道精选题提供一次真实运行的录制。'}论文结论基于 20 道题、每格一次运行的盲评，属于描述性比较。预算上限与论文一致：每题每组 39,000 tokens。
       </p>
     </div>
   )
@@ -192,7 +206,9 @@ function Lane({ strategy, run, paper, budget, onPage, replay }) {
       </div>
       {result && (
         <div className="lane-answer">
-          <AnswerText text={result.answer || '（无答案）'} numbers={result.numbers} onPage={onPage} onFigure={(n) => onPage(n.pages[0])} />
+          <AnswerText text={result.answer || '（无答案）'} numbers={result.numbers}
+            onPage={(page) => onPage(page, (result.numbers || []).filter((n) => n.pages.includes(page)).map((n) => n.value))}
+            onFigure={(n) => onPage(n.pages[0], [n.value])} />
         </div>
       )}
       <footer className="lane-foot">

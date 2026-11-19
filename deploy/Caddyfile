@@ -1,0 +1,56 @@
+# {$DOMAIN} is the personal domain (set in .env). Certificates are issued automatically.
+(security) {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		X-Frame-Options "SAMEORIGIN"
+		-Server
+	}
+}
+
+{$DOMAIN}, www.{$DOMAIN} {
+	import security
+	@www host www.{$DOMAIN}
+	redir @www https://{$DOMAIN}{uri} permanent
+	# Private résumé page and file are served by the API after the access cookie is checked.
+	handle /private/* {
+		reverse_proxy api:8765
+	}
+	handle /api/* {
+		request_body {
+			max_size 16KB
+		}
+		reverse_proxy api:8765
+	}
+	handle {
+		root * /srv/portfolio
+		try_files {path} {path}/ /index.html
+		file_server
+	}
+}
+
+tracenum.{$DOMAIN} {
+	import security
+	encode zstd gzip
+	# Private files live only behind the API on the root domain; never served here.
+	handle /private/* {
+		respond 404
+	}
+	handle /api/* {
+		request_body {
+			max_size 16KB
+		}
+		# Server-sent events: never buffer.
+		reverse_proxy api:8765 {
+			flush_interval -1
+		}
+	}
+	handle {
+		root * /srv/tracenum
+		try_files {path} /index.html
+		file_server
+	}
+	@pdf path /data/pdf/*
+	header @pdf Cache-Control "public, max-age=604800"
+}

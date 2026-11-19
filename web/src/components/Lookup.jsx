@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowUp, Plus, Check, Square } from 'lucide-react'
-import { streamAsk, emptyRun, reduceRun, NODE_LABEL } from '../api.js'
+import { replayStrategy, streamAsk, emptyRun, reduceRun, NODE_LABEL } from '../api.js'
 import AnswerText, { normNum, TickMark } from './AnswerText.jsx'
+import { FEATURED_NOTES } from '../site.js'
 
 // Exact question_type values from the frozen question set.
 const TYPE_ORDER = ['基础财务事实', '相似指标与财务口径', '多证据/计算', '跨页/分散证据', '语料边界/拒答']
@@ -9,6 +10,9 @@ const FREE_EXAMPLES = {
   BYD: ['2025年合并口径下的营业收入是多少？', '2025年研发投入金额是多少，占营业收入的比例是多少？'],
   WSI: ['2025年归属于上市公司股东的净利润是多少？', '2025年经营活动产生的现金流量净额是多少？'],
 }
+const SHANGHAI_TIME = new Intl.DateTimeFormat('sv-SE', {
+  timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit',
+})
 
 export function useElapsed(running, startedAt) {
   const [now, setNow] = useState(Date.now())
@@ -99,13 +103,32 @@ function snippetFor(result, value, page) {
   return ''
 }
 
-export default function Lookup({ corpus, company, setCompany, questions, openPdf, addDraft, draftIds, openMethod, status }) {
+export default function Lookup({ mode, featured, corpus, company, setCompany, questions, openPdf, addDraft, draftIds, openMethod, status }) {
   const [input, setInput] = useState('')
   const [run, setRun] = useState(null)
   const [meta, setMeta] = useState(null)
   const [error, setError] = useState(null)
+  const [recordedAt, setRecordedAt] = useState(null)
   const abortRef = useRef(null)
   const elapsed = useElapsed(run?.status === 'running', run?.startedAt)
+  const isStatic = mode === 'static'
+  const isLive = mode === 'live'
+
+  useEffect(() => () => abortRef.current?.abort(), [])
+  // The company can also change from outside (opening a draft row of another company):
+  // an answer must never be shown against another company's PDF or written to the draft
+  // under the wrong name, so drop it.
+  const runCompanyRef = useRef(null)
+  useEffect(() => {
+    if (runCompanyRef.current && runCompanyRef.current !== company) {
+      abortRef.current?.abort()
+      runCompanyRef.current = null
+      setRun(null)
+      setMeta(null)
+      setError(null)
+      setRecordedAt(null)
+    }
+  }, [company])
 
   const examples = useMemo(() => {
     const own = questions.filter((q) => q.company === company)
@@ -113,8 +136,9 @@ export default function Lookup({ corpus, company, setCompany, questions, openPdf
     return groups
   }, [questions, company])
 
-  async function ask(text) {
-    const q = (text ?? input).trim()
+  async function ask(text, recording) {
+    if (!recording && !isLive) return  // featured replays work in both modes
+    const q = (recording?.question ?? text ?? input).trim()
     if (!q) return
     abortRef.current?.abort()
     const controller = new AbortController()
@@ -122,28 +146,45 @@ export default function Lookup({ corpus, company, setCompany, questions, openPdf
     setInput(q)
     setError(null)
     setMeta(null)
+    setRecordedAt(recording?.recorded_at ?? null)
+    runCompanyRef.current = company
     let current = emptyRun('S3')
     setRun(current)
-    try {
-      await streamAsk({ company, question: q, strategies: ['S3'] }, (event) => {
-        if (event.type === 'meta') setMeta(event)
-        else if (event.strategy === 'S3') {
-          current = reduceRun(current, event)
-          setRun(current)
-          if (event.type === 'final' && event.result.cited_pages?.length) {
-            const first = event.result.numbers?.find((n) => n.status === 'matched')
-            openPdf(first ? { company, page: first.pages[0], values: [first.value] } : { company, page: event.result.cited_pages[0], values: [] })
-          }
+    const onEvent = (event) => {
+      if (controller.signal.aborted) return
+      if (event.type === 'meta') setMeta(event)
+      else if (event.strategy === 'S3') {
+        current = reduceRun(current, event)
+        setRun(current)
+        if (event.type === 'final' && event.result.cited_pages?.length) {
+          const first = event.result.numbers?.find((n) => n.status === 'matched')
+          openPdf(first ? { company, page: first.pages[0], values: [first.value] } : { company, page: event.result.cited_pages[0], values: [] })
         }
-      }, controller.signal)
+      }
+    }
+    try {
+      if (recording) await replayStrategy(recording.recording_id, 'S3', 20, onEvent, controller.signal)
+      else await streamAsk({ company, question: q, strategies: ['S3'] }, onEvent, controller.signal)
     } catch (err) {
-      if (err.name !== 'AbortError') setError(`没有连上后端：${err.message}。请确认 tracenum/backend 的服务在 8765 端口运行。`)
+      if (controller.signal.aborted) return
+      setError(recording ? `回放未能加载：${err.message}` : err.status ? err.message : '暂时连不上实时服务，请稍后再试；精选题可以直接查看。')
+      setRun((r) => r && { ...r, status: 'error', active: null })
     }
   }
 
   function stop() {
     abortRef.current?.abort()
-    setRun((r) => r && { ...r, status: 'error', error: '已停止。' })
+    setRun((r) => r && { ...r, status: 'error', active: null, error: '已停止。' })
+  }
+
+  function chooseCompany(code) {
+    abortRef.current?.abort()
+    setCompany(code)
+    if (isStatic) setInput('')
+    setRun(null)
+    setMeta(null)
+    setError(null)
+    setRecordedAt(null)
   }
 
   const result = run?.result
@@ -165,12 +206,12 @@ export default function Lookup({ corpus, company, setCompany, questions, openPdf
       {!run && (
         <div className="intro">
           <h1>年报里的每个数，都带着出处</h1>
-          <p>选一份年报，像问同事一样提问。溯数会检索原文、核对口径，答案里的数字都能点开，直接看到年报原页。</p>
+          <p>{isStatic ? '选一份年报和一道精选问题，查看已录制的查数结果。点开答案里的数字，即可查看年报原页。' : '选一份年报，像问同事一样提问。溯数会检索原文、核对口径，答案里的数字都能点开，直接看到年报原页。'}</p>
         </div>
       )}
       <div className="corpus-switch" role="group" aria-label="选择年报" style={{ marginBottom: 12 }}>
         {corpus.map((c) => (
-          <button key={c.code} type="button" aria-pressed={c.code === company} onClick={() => { setCompany(c.code); setRun(null); setMeta(null) }}>
+          <button key={c.code} type="button" aria-pressed={c.code === company} onClick={() => chooseCompany(c.code)}>
             <span>{c.company} {c.year} 年报</span>
             <small className="num">{c.ticker} · {c.pages} 页</small>
           </button>
@@ -178,18 +219,33 @@ export default function Lookup({ corpus, company, setCompany, questions, openPdf
       </div>
       <form className="ask" onSubmit={(e) => { e.preventDefault(); ask() }}>
         <label htmlFor="q" className="sr-only" style={{ position: 'absolute', left: -9999 }}>问题</label>
-        <textarea id="q" rows={2} value={input} placeholder={`问 ${info?.company ?? ''} ${info?.year ?? ''} 年报里的一个数，例如：${FREE_EXAMPLES[company]?.[0] ?? ''}`}
+        <textarea id="q" rows={2} value={input} disabled={!isLive} aria-describedby="ask-hint"
+          placeholder={isStatic ? '自由提问' : `问 ${info?.company ?? ''} ${info?.year ?? ''} 年报里的一个数，例如：${FREE_EXAMPLES[company]?.[0] ?? ''}`}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask() } }} />
         <div className="ask-bar">
-          <span className="ask-hint">使用论文中表现最好的自适应策略（S3）：每轮核验后判断是否继续，最多检索三轮</span>
-          {run?.status === 'running'
+          <span className="ask-hint" id="ask-hint">{isStatic ? '自由提问仅对专属链接开放，下面是预先运行的真实结果' : '使用论文中表现最好的自适应策略（S3）：每轮核验后判断是否继续，最多检索三轮'}</span>
+          {run?.status === 'running' || run?.status === 'waiting'
             ? <button type="button" className="btn ghost" onClick={stop}><Square size={14} />停止</button>
-            : <button type="submit" className="btn" disabled={!input.trim() || status?.error}><ArrowUp size={15} />查数</button>}
+            : isLive && <button type="submit" className="btn" disabled={!input.trim() || status?.error}><ArrowUp size={15} />查数</button>}
         </div>
       </form>
 
-      {!run && (
+      {mode && (
+        <div className="examples">
+          <h2>精选问题</h2>
+          <div className="featured-questions">
+            {featured.filter((q) => q.company === company).map((q) => (
+              <button className="example" key={q.question_id} type="button" onClick={() => ask(null, q)}>
+                <span>{q.question}</span><small>{q.question_id}</small>
+                {FEATURED_NOTES[q.question_id] && <small className="featured-note">{FEATURED_NOTES[q.question_id]}</small>}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {isLive && !run && (
         <div className="examples">
           <h2>从论文的 20 道正式题里挑一道试试，或者直接提问</h2>
           <div className="example-group">
@@ -218,10 +274,11 @@ export default function Lookup({ corpus, company, setCompany, questions, openPdf
           <p className="question-echo">{meta?.question ?? input}</p>
           <div className="question-meta">
             <span>{info?.company} {info?.year} 年报</span>
+            {recordedAt && <span>预计算结果 · 录制于 {SHANGHAI_TIME.format(new Date(recordedAt))}</span>}
             <span className="num">{run.status === 'running' ? `已用时 ${elapsed.toFixed(0)} 秒` : result?.elapsed ? `用时 ${result.elapsed} 秒` : ''}</span>
             <PaperVerdict paper={meta?.paper} onOpenMethod={openMethod} />
           </div>
-          {run.status === 'running' && run.rounds.length === 0 && !run.active && <p className="question-meta">{status?.ready ? '正在准备检索…' : '检索模型还在加载（启动后约 1 分钟），加载完会自动开始。'}</p>}
+          {run.status === 'running' && run.rounds.length === 0 && !run.active && <p className="question-meta">{recordedAt ? '正在回放…' : status?.ready ? '正在准备检索…' : '检索模型还在加载（启动后约 1 分钟），加载完会自动开始。'}</p>}
           {(run.rounds.length > 0 || run.active) && <RoundTrace run={run} />}
           {run.status === 'error' && <div className="error-box">{run.error}</div>}
           {result && <AnswerSheet result={result} company={company} openPdf={openPdf} add={add} added={(n) => draftIds.has(keyFor(n))} />}
