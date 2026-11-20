@@ -34,7 +34,7 @@ MANIFEST_REL = "v2/config/dataset_manifest_v1.draft.json"
 HF_MODEL = "models--BAAI--bge-base-zh-v1.5"
 HF_CACHE = Path.home() / ".cache" / "huggingface" / "hub"
 BACKEND_FILES = ["pipeline.py", "server.py", "rerank.py", "access.py", "quota.py", "billing.py",
-                 "review_recordings.py"]  # the last one grades the post-deploy smoke test
+                 "review_recordings.py", "expansion.py"]  # the last one grades the post-deploy smoke test
 
 
 def sha(path: Path) -> str:
@@ -100,6 +100,13 @@ def main():
     # answers for grading. Neither is served; the Gold file is checked against the freeze.
     (out / "tracenum" / "scripts").mkdir(parents=True)
     shutil.copy2(REPO / "scripts" / "e2e_featured.py", out / "tracenum" / "scripts" / "e2e_featured.py")
+    shutil.copy2(REPO / "scripts" / "memtest_v3.py", out / "tracenum" / "scripts" / "memtest_v3.py")
+    # v3 corpus: the registry routes (code, report year); the Chroma index itself lives on the
+    # data volume (TRACENUM_V3_DB), uploaded separately, not baked into the image.
+    (out / "tracenum" / "corpus").mkdir(parents=True)
+    shutil.copy2(REPO / "corpus" / "registry.json", out / "tracenum" / "corpus" / "registry.json")
+    (out / "tracenum" / "eval").mkdir(parents=True)
+    shutil.copy2(REPO / "eval" / "numeric_pilot24.json", out / "tracenum" / "eval" / "numeric_pilot24.json")
     (out / "tracenum" / "web" / "public" / "data").mkdir(parents=True)
     shutil.copy2(REPO / "web/public/data/showcase.json", out / "tracenum/web/public/data/showcase.json")
     freeze = json.loads((ROOT / "v2/config/formal_freeze_v1.json").read_text(encoding="utf-8"))

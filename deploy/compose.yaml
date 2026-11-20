@@ -26,6 +26,10 @@ services:
     env_file: .env
     volumes:
       - api_data:/data
+      # v3 corpus index (Chroma), uploaded as build/vector_v3; owned by uid 10001 (chromadb writes on open)
+      - ./vector_v3:/v3db
+    environment:
+      TRACENUM_V3_DB: /v3db
     # Not published: only Caddy reaches it over the compose network.
     expose: ["8765"]
     mem_limit: 1400m
