@@ -15,7 +15,9 @@ import argparse
 import json
 import re
 import sys
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
 from pathlib import Path
 
@@ -71,6 +73,7 @@ def main():
     parser.add_argument("--set", required=True)
     parser.add_argument("--out", required=True)
     parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument("--workers", type=int, default=1, help="questions run concurrently (threads)")
     args = parser.parse_args()
     import expansion as X
     import pipeline as P
@@ -80,8 +83,24 @@ def main():
     if args.limit:
         questions = questions[:args.limit]
     P.PIPELINE.load()
-    results = []
-    for i, q in enumerate(questions, 1):
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    # Resume: questions already graded in --out (by id) are kept and skipped.
+    done = {}
+    if out.is_file():
+        for row in json.loads(out.read_text(encoding="utf-8")):
+            if row.get("verdict") != "error":
+                done[row["id"]] = row
+    lock = threading.Lock()
+    results = dict(done)
+
+    def save():
+        ordered = [results[k] for k in (q.get("id") or f"q{i}" for i, q in enumerate(questions, 1)) if k in results]
+        tmp = out.with_suffix(".tmp")
+        tmp.write_text(json.dumps(ordered, ensure_ascii=False, indent=1), encoding="utf-8")
+        tmp.replace(out)
+
+    def run_one(i, q):
         info = X.route(q["code"], int(q["report_year"]), int(q["data_year"]))
         question = X.build_question(info, q["question"])
         started = time.time()
@@ -95,7 +114,8 @@ def main():
         ok = grade(answer, expected, q.get("tolerance"), q.get("unit"))
         refused = (not error) and not numbers_in(answer)
         pages = cited_pages(answer)
-        row = {"n": i, "question": q["question"], "code": q["code"], "report_year": q["report_year"],
+        row = {"n": i, "id": q.get("id") or f"q{i}", "question": q["question"], "code": q["code"],
+               "report_year": q["report_year"],
                "data_year": q["data_year"], "metric": q.get("metric"), "akshare_check": q.get("akshare_check"),
                "expected_yuan": str(expected), "evidence_page": q.get("evidence_page"),
                "verdict": "error" if error else ("correct" if ok else ("refused" if refused else "wrong")),
@@ -103,13 +123,23 @@ def main():
                "rounds": final.get("retrieval_count"), "tokens": final.get("total_tokens"),
                "stop": final.get("stop_reason"), "seconds": round(time.time() - started, 1),
                "answer": answer[:600], "error": error}
-        results.append(row)
-        print(f"{i:>2} {row['verdict']:<8} {q['code']} {q['report_year']}/{q['data_year']} {q.get('metric')} "
-              f"pages={row['cited_pages']} gold_p={row['evidence_page']} tokens={row['tokens']}", flush=True)
-        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-        Path(args.out).write_text(json.dumps(results, ensure_ascii=False, indent=1), encoding="utf-8")
+        with lock:  # every finished question is on disk immediately
+            results[row["id"]] = row
+            save()
+            print(f"{i:>3} {row['verdict']:<8} {q['code']} {q['report_year']}/{q['data_year']} {q.get('metric')} "
+                  f"pages={row['cited_pages']} gold_p={row['evidence_page']} tokens={row['tokens']} "
+                  f"[{len(results)}/{len(questions)}]", flush=True)
+
+    todo = [(i, q) for i, q in enumerate(questions, 1) if (q.get("id") or f"q{i}") not in done]
+    print(f"{len(done)} already graded, {len(todo)} to run with {args.workers} worker(s)", flush=True)
+    # Threads share the loaded models; the pipeline's event sink and corpus route are per thread.
+    with ThreadPoolExecutor(max_workers=max(1, args.workers)) as pool:
+        for future in [pool.submit(run_one, i, q) for i, q in todo]:
+            future.result()
     from collections import Counter
-    c = Counter(r["verdict"] for r in results)
+    rows = list(results.values())
+    c = Counter(r["verdict"] for r in rows)
+    results = rows
     print(json.dumps({"n": len(results), **c, "accuracy": round(c["correct"] / len(results), 3),
                       "cites_gold_page": sum(r["cites_gold_page"] for r in results),
                       "tokens": sum(r["tokens"] or 0 for r in results)}, ensure_ascii=False))
