@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import threading
 from pathlib import Path
 from uuid import uuid4
 
@@ -57,11 +58,19 @@ def route(code: str, report_year: int, data_year: int | None = None) -> dict:
 
 
 _stores: dict[str, object] = {}
+# chromadb's client/system initialisation is not thread-safe: concurrent first opens of the
+# same persist directory race (KeyError on the path, missing Rust bindings). Serialise opens.
+_open_lock = threading.Lock()
 
 
 def store_for(route_info: dict, embeddings):
     """Open (once) and verify the collection for this annual report."""
     name = route_info["collection_name"]
+    with _open_lock:
+        return _open_store(name, route_info, embeddings)
+
+
+def _open_store(name: str, route_info: dict, embeddings):
     if name not in _stores:
         from langchain_chroma import Chroma
         store = Chroma(collection_name=name, persist_directory=str(DB), embedding_function=embeddings,
