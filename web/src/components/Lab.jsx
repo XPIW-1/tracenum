@@ -176,7 +176,7 @@ export default function Lab({ mode, featured, corpus, questions, openPdf, budget
       <div className="lab-grid" style={{ marginTop: 18 }}>
         {STRATEGIES.map((s) => (
           <Lane key={s} strategy={s} run={runs?.[s]} paper={paper[s]} budget={meta?.budget ?? budget} replay={runKind === 'replay'}
-            onPage={(page, values = []) => openPdf({ company: picked.company, page, values })} />
+            onPage={(page, values = []) => openPdf({ corpusKey: picked.company, page, values })} />
         ))}
       </div>
       <p className="lab-note">
@@ -206,7 +206,7 @@ function Lane({ strategy, run, paper, budget, onPage, replay }) {
       </div>
       {result && (
         <div className="lane-answer">
-          <AnswerText text={result.answer || '（无答案）'} numbers={result.numbers}
+          <AnswerText text={result.answer || '（无答案）'} foldRevision={strategy === 'S3'} numbers={result.numbers}
             onPage={(page) => onPage(page, (result.numbers || []).filter((n) => n.pages.includes(page)).map((n) => n.value))}
             onFigure={(n) => onPage(n.pages[0], [n.value])} />
         </div>

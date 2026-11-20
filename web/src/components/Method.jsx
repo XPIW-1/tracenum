@@ -99,6 +99,12 @@ export default function Method({ mode, questions, goLab }) {
         <button type="button" className="btn ghost" onClick={goLab}>{mode === 'live' && import.meta.env.DEV ? '在实验台上实时运行三种策略' : '在实验台回放三种策略'}</button>
       </section>
       <section className="lab-note">
+        <h2>扩展语料</h2>
+        <p>扩展问答沿用论文的 S3 节点、停止规则和每次运行 39,000 tokens 的预算。年报使用 v3 解析器重新构建语料，并按证券代码和年报年度路由。语料和路由都不属于论文的冻结实验，所以扩展问答的结果不能当作论文结论；下列结果来自独立的扩展语料评测。</p>
+        <p>数值评测仅覆盖主报表核心数字。431 道题答对 430 道，其中 17 道追溯调整题全部答对。</p>
+        <p>项目负责人分两轮对照原始年报签核了 36 页。两轮发现的解析错误均通过通用规则修正，包括按列区分同一张表中的合并和母公司口径。</p>
+      </section>
+      <section className="lab-note">
         <h2>线上服务与论文实验的差异</h2>
         <ul>{LIVE_DIFFERENCES.map((d) => <li key={d}>{d}</li>)}</ul>
         <p>生成模型：DeepSeek（deepseek-flash）· 备案号：{FILING_NUMBER || '待核实'}</p>

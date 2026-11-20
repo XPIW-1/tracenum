@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import threading
 from pathlib import Path
 from uuid import uuid4
@@ -57,6 +58,13 @@ def route(code: str, report_year: int, data_year: int | None = None) -> dict:
             "pdf_sha256": entry["sha256"], "corpus_max_year": int(report_year)}
 
 
+def route_key(key: str, data_year: int | None = None) -> dict:
+    match = re.fullmatch(r"([0-9]{6})_([0-9]{4})", key)
+    if not match:
+        raise RouteError("年报语料键应为‘证券代码_年报年度’，如 002594_2025")
+    return route(match[1], int(match[2]), data_year)
+
+
 _stores: dict[str, object] = {}
 # chromadb's client/system initialisation is not thread-safe: concurrent first opens of the
 # same persist directory race (KeyError on the path, missing Rust bindings). Serialise opens.
@@ -85,7 +93,10 @@ def _open_store(name: str, route_info: dict, embeddings):
 
 
 def build_question(route_info: dict, text: str) -> dict:
-    digest = hashlib.sha256(f"{route_info['corpus_id']}|{text}".encode("utf-8")).hexdigest()[:10]
+    identity = route_info["corpus_id"]
+    if route_info["data_year"] != route_info["report_year"]:
+        identity += f"|{route_info['data_year']}"
+    digest = hashlib.sha256(f"{identity}|{text}".encode("utf-8")).hexdigest()[:10]
     return {"question_id": f"X-{route_info['code']}-{route_info['report_year']}-{digest}", "question": text,
             "company": route_info["company"], "question_year": route_info["data_year"],
             "corpus_max_year": route_info["corpus_max_year"], "split": "expansion"}
@@ -103,8 +114,7 @@ def run_expansion(namespace, route_info: dict, question: dict, strategy: str = "
                                     ANSWER_MIN_OUTPUT_TOKENS, REQUERY_MIN_OUTPUT_TOKENS)
     from src.retrieval import RETRIEVAL_POLICY
     from src.metric_scope import CHECK_POLICY
-    from src.observability import RunLogger
-    from src.pilot_comparison import build_arm_app, COMPARISON_VERSION
+    import src.pilot_comparison as pc
     from src.corpus_routing import validate_question, FORMAL_STORE
     from src.runtime_status import update_status
 
@@ -140,11 +150,11 @@ def run_expansion(namespace, route_info: dict, question: dict, strategy: str = "
         "retrieval_needed": False, "revision_needed": False,
         "requery_failure": {}, "model_draft_answer": "", "refusal_source": "none",
     }
-    logger = RunLogger(log_root or REPO / "backend" / "runs", group=strategy, qid=question["question_id"],
-                       model=getattr(namespace.get("llm"), "model_name", "unknown-model"), dataset="expansion_v3")
+    logger = pc.RunLogger(log_root or REPO / "backend" / "runs", group=strategy, qid=question["question_id"],
+                          model=getattr(namespace.get("llm"), "model_name", "unknown-model"), dataset="expansion_v3")
     token = FORMAL_STORE.set(store)
     try:
-        final = build_arm_app(namespace, strategy, logger=logger).invoke(initial)
+        final = pc.build_arm_app(namespace, strategy, logger=logger).invoke(initial)
     except Exception as exc:
         logger.finish(error=exc)
         raise
@@ -152,6 +162,6 @@ def run_expansion(namespace, route_info: dict, question: dict, strategy: str = "
         FORMAL_STORE.reset(token)
     update_status(final)
     logger.finish(final)
-    final.update(strategy=strategy, question_id=question["question_id"], comparison_version=COMPARISON_VERSION,
+    final.update(strategy=strategy, question_id=question["question_id"], comparison_version=pc.COMPARISON_VERSION,
                  expansion_route=route_info, observation_dir=str(logger.directory))
     return final

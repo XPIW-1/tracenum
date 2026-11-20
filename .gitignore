@@ -11,3 +11,4 @@ build/
 backend/data/
 web/public/.data-staging/
 web/public/.data-previous/
+web/public/reports/

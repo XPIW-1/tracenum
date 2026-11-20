@@ -50,12 +50,12 @@ export function streamReplay(id, speed, onEvent, signal) {
   return playRecording(id, speed, onEvent, signal)
 }
 
-export function replayStrategy(id, strategy, speed, onEvent, signal) {
-  return playRecording(id, speed, onEvent, signal, strategy)
+export function replayStrategy(id, strategy, speed, onEvent, signal, v3 = false) {
+  return playRecording(id, speed, onEvent, signal, strategy, v3)
 }
 
-async function playRecording(id, speed, onEvent, signal, strategy) {
-  const record = await getJSON(`/data/recordings/${encodeURIComponent(id)}.json`, signal)
+async function playRecording(id, speed, onEvent, signal, strategy, v3 = false) {
+  const record = await getJSON(`/data${v3 ? '/v3' : ''}/recordings/${encodeURIComponent(id)}.json`, signal)
   const rate = Number(speed)
   speed = Number.isNaN(rate) ? 4 : Math.min(20, Math.max(1, rate))
   const replay = { id, recorded_at: record.recorded_at, speed, duration: record.duration }
@@ -123,7 +123,7 @@ async function readEvents(request, onEvent) {
 
 const DRAFT_COLUMNS = [
   ['指标', 'metric', 22], ['数值', 'value', 18], ['单位', 'unit', 8], ['口径', 'scope', 12],
-  ['公司', 'company', 10], ['年度', 'year', 8], ['页码', 'page', 8], ['核验状态', 'status', 14],
+  ['公司', 'company', 10], ['年报年度', 'year', 10], ['页码', 'page', 8], ['核验状态', 'status', 14],
   ['原文片段', 'snippet', 60], ['提问', 'question', 48], ['查询时间', 'time', 20],
 ]
 const DRAFT_NOTE = '本底稿由溯数 TraceNum 导出。页码为年报 PDF 物理页；核验状态“原文一致”表示该数值在所引页的原文中逐字出现，“计算得出”表示由原文数值计算而来，需复核计算过程。'

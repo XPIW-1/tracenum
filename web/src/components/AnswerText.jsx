@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import { splitRevision } from '../answerRevision.js'
 
 export const normNum = (v) => String(v).replace(/[,，\s]/g, '').replace(/^[-(（]+|[)）]+$/g, '')
 
@@ -58,7 +59,7 @@ function Inline({ text, numbers, onPage, onFigure }) {
   return <>{parts}</>
 }
 
-export default function AnswerText({ text, numbers = [], onPage, onFigure }) {
+function AnswerBody({ text, numbers = [], onPage, onFigure }) {
   const map = new Map(numbers.map((n) => [normNum(n.value), n]))
   const blocks = []
   const source = (text || '').replace(/\r/g, '')
@@ -95,4 +96,15 @@ export default function AnswerText({ text, numbers = [], onPage, onFigure }) {
       })}
     </div>
   )
+}
+
+export default function AnswerText({ text, foldRevision = false, ...props }) {
+  const { answer, revision } = foldRevision ? splitRevision(text || '') : { answer: text }
+  return <>
+    <AnswerBody text={answer} {...props} />
+    {revision && <details className="revision" key={revision}>
+      <summary>查看修正过程</summary>
+      <AnswerBody text={revision} {...props} />
+    </details>}
+  </>
 }

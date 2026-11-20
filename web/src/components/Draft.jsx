@@ -10,10 +10,10 @@ export default function Draft({ items, setItems, onClose, openPdf, corpus, toast
   }, [onClose])
 
   const update = (id, patch) => setItems(items.map((it) => (it.id === id ? { ...it, ...patch } : it)))
-  const codeOf = (company) => corpus.find((c) => c.company === company)?.code
+  const reportKey = (item) => item.corpusKey ?? corpus.find((c) => c.company === item.company)?.key
 
   async function copyMarkdown() {
-    const head = '| 指标 | 数值 | 单位 | 口径 | 公司 | 年度 | 页码 | 核验状态 |\n|---|---:|---|---|---|---|---:|---|'
+    const head = '| 指标 | 数值 | 单位 | 口径 | 公司 | 年报年度 | 页码 | 核验状态 |\n|---|---:|---|---|---|---|---:|---|'
     const rows = items.map((i) => `| ${i.metric} | ${i.value} | ${i.unit} | ${i.scope} | ${i.company} | ${i.year} | ${i.page ?? ''} | ${i.status} |`)
     await navigator.clipboard.writeText([head, ...rows].join('\n'))
     toast('已复制为 Markdown 表格')
@@ -48,7 +48,7 @@ export default function Draft({ items, setItems, onClose, openPdf, corpus, toast
                 <input aria-label="单位" style={{ width: 70 }} value={it.unit} placeholder="单位" onChange={(e) => update(it.id, { unit: e.target.value })} />
                 <input aria-label="口径" style={{ width: 80 }} value={it.scope} placeholder="口径" onChange={(e) => update(it.id, { scope: e.target.value })} />
                 <span>{it.company} {it.year}</span>
-                {it.page && <button type="button" className="page-link" onClick={() => openPdf({ company: codeOf(it.company), page: it.page, values: [it.value] })}>第{it.page}页</button>}
+                {it.page && <button type="button" className="page-link" disabled={!reportKey(it)} onClick={() => openPdf({ corpusKey: reportKey(it), page: it.page, values: [it.value] })}>第{it.page}页</button>}
                 <span className={it.status === '原文一致' ? 'mark-ok' : ''}>{it.status}</span>
                 <span style={{ flex: 1 }} />
                 <button type="button" className="icon-btn" aria-label="删除这一条" onClick={() => setItems(items.filter((x) => x.id !== it.id))}><Trash2 size={14} /></button>

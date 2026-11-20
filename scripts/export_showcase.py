@@ -10,13 +10,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
+import expansion
 import pipeline as P
 
 RECORDINGS = ROOT / "backend" / "recordings"
 OUTPUT = ROOT / "web" / "public" / "data"
 SUMMARY_FIELDS = ("id", "recorded_at", "company", "question_id", "question", "strategies", "duration", "summary")
 EVENT_FIELDS = {
-    "meta": "question question_id paper strategies budget company",
+    "meta": "question question_id paper strategies budget company report_year data_year",
     "start": "strategy",
     "node_start": "strategy node round",
     "progress": "strategy node round done total",
@@ -47,11 +48,13 @@ def without_trace(value):
     return value
 
 
-def public_recording(question_id, recording_id):
+def public_recording(recording_id, *, question_id=None, corpus_key=None):
     if not re.fullmatch(r"[A-Za-z0-9_-]+", recording_id):
         raise ValueError(f"Invalid recording id: {recording_id!r}")
     record = read_json(RECORDINGS / f"{recording_id}.json")
-    if record["id"] != recording_id or record["question_id"] != question_id:
+    if (record["id"] != recording_id
+            or (question_id is not None and record["question_id"] != question_id)
+            or (corpus_key is not None and record["company"] != corpus_key)):
         raise ValueError(f"Featured recording identity mismatch: {recording_id}")
 
     events = []
@@ -68,6 +71,54 @@ def public_recording(question_id, recording_id):
         events.append({"t": item["t"], "event": without_trace({k: v for k, v in event.items() if k in allowed})})
 
     return {field: record[field] for field in SUMMARY_FIELDS} | {"events": events}
+
+
+def write_featured(out, records):
+    records.sort(key=lambda record: record["id"], reverse=True)
+    showcase = {
+        # Use the most recent source timestamp so identical inputs yield identical output.
+        "generated_at": max((record["recorded_at"] for record in records), key=datetime.fromisoformat,
+                            default=None),
+        "featured": [
+            {
+                "question_id": record["question_id"],
+                "company": record["company"],
+                "question": record["question"],
+                "recording_id": record["id"],
+                "recorded_at": record["recorded_at"],
+            }
+            for record in records
+        ],
+        "model": P.FREEZE["model"]["alias"],
+        "note": "精选问题来自已录制的真实运行，可离线回放。",
+    }
+    write_json(out / "showcase.json", showcase)
+    write_json(out / "recordings" / "index.json", [
+        {field: record[field] for field in SUMMARY_FIELDS} | {"featured": True}
+        for record in records
+    ])
+    for record in records:
+        write_json(out / "recordings" / f"{record['id']}.json", record)
+
+
+def export_v3(out):
+    corpora = []
+    # Registry order follows the industry chain (整车 → 电池 → 材料 → 锂 → 电驱); years ascending.
+    for (code, year), info in expansion.REPORTS.items():
+        key = f"{code}_{year}"
+        corpora.append({"key": key, "code": code, "company": info["company"], "report_year": year,
+                        "pages": info["pages"], "pdf_url": f"/reports/{key}.pdf"})
+    try:
+        featured = read_json(RECORDINGS / "featured_v3.json")
+    except FileNotFoundError:
+        featured = {}
+    records = []
+    for key, rid in featured.items():
+        expansion.route_key(key)
+        records.append(public_recording(rid, corpus_key=key))
+    write_json(out / "corpora.json", corpora)
+    write_featured(out, records)
+    return len(corpora), len(records)
 
 
 def main():
@@ -95,27 +146,8 @@ def main():
         }
         for q in P.QUESTIONS
     ]
-
     featured = read_json(RECORDINGS / "featured.json")
-    records = [public_recording(qid, rid) for qid, rid in featured.items()]
-    records.sort(key=lambda record: record["id"], reverse=True)
-    showcase = {
-        # Use the most recent source timestamp so identical inputs yield identical output.
-        "generated_at": max((record["recorded_at"] for record in records), key=datetime.fromisoformat,
-                            default=None),
-        "featured": [
-            {
-                "question_id": record["question_id"],
-                "company": record["company"],
-                "question": record["question"],
-                "recording_id": record["id"],
-                "recorded_at": record["recorded_at"],
-            }
-            for record in records
-        ],
-        "model": P.FREEZE["model"]["alias"],
-        "note": "精选问题来自已录制的真实运行，可离线回放。",
-    }
+    records = [public_recording(rid, question_id=qid) for qid, rid in featured.items()]
 
     pdfs = {}
     for code, info in P.CORPORA.items():
@@ -127,13 +159,8 @@ def main():
 
     write_json(out / "corpora.json", corpora)
     write_json(out / "questions.json", questions)
-    write_json(out / "showcase.json", showcase)
-    write_json(out / "recordings" / "index.json", [
-        {field: record[field] for field in SUMMARY_FIELDS} | {"featured": True}
-        for record in records
-    ])
-    for record in records:
-        write_json(out / "recordings" / f"{record['id']}.json", record)
+    write_featured(out, records)
+    v3_corpora, v3_records = export_v3(out / "v3")
     (out / "pdf").mkdir(parents=True, exist_ok=True)
     for code, data in pdfs.items():
         (out / "pdf" / f"{code}.pdf").write_bytes(data)
@@ -144,7 +171,8 @@ def main():
     out.rename(OUTPUT)
     shutil.rmtree(previous, ignore_errors=True)
     print(f"Showcase exported: {len(corpora)} corpora, {len(questions)} questions, "
-          f"{len(records)} featured recordings, {len(pdfs)} SHA-256-verified PDFs.")
+          f"{len(records)} featured recordings, {len(pdfs)} SHA-256-verified PDFs; "
+          f"v3: {v3_corpora} corpora, {v3_records} featured recordings.")
 
 
 if __name__ == "__main__":

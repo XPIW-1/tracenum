@@ -9,6 +9,8 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 TMP = tempfile.mkdtemp()
 os.environ.update({"LIVE_ENABLED": "1", "TRACENUM_DATA_DIR": TMP, "ACCESS_PEPPER": "p" * 40,
@@ -54,6 +56,8 @@ class ApiLiveTest(unittest.TestCase):
         r = self.ask(c)
         self.assertEqual(r.status_code, 403)
         self.assertEqual(r.json()["reason"], "no_access")
+        r = c.post("/api/ask", json={"corpus": "002594_2025", "question": "营业收入是多少？"})
+        self.assertEqual((r.status_code, r.json()["reason"]), (403, "no_access"))
         for path in ("/api/recordings", "/api/questions", "/api/corpora", "/api/pdf/BYD", "/api/replay/x"):
             self.assertEqual(c.get(path).status_code, 404, path)
         self.assertEqual(c.post("/api/recordings/x/feature").status_code, 404)
@@ -92,6 +96,60 @@ class ApiLiveTest(unittest.TestCase):
     def ledger_rows(self):
         with server.QUOTA.lock, access.closing(server.QUOTA._connect()) as db:
             return db.execute("SELECT COUNT(*) FROM ledger").fetchone()[0]
+
+    def test_v3_bad_routes_never_reserve(self):
+        c = self.client()
+        c.post("/api/access/session", json={"code": self.code})
+        with patch.object(server.QUOTA, "reserve") as reserve:
+            for fields in ({"corpus": "BYD"}, {"corpus": "000000_2025"},
+                           {"corpus": "002594_2025", "data_year": 2023},
+                           {"corpus": "002594_2025", "data_year": 2026}):
+                with self.subTest(**fields):
+                    r = c.post("/api/ask", json={**fields, "question": "营业收入是多少？"})
+                    self.assertEqual((r.status_code, r.json()["reason"]), (400, "route"))
+                    self.assertTrue(r.json()["message"])
+            reserve.assert_not_called()
+
+    def test_v3_graph_usage_flows_to_live_settlement(self):
+        from src import pilot_comparison as pc
+
+        def build_app(namespace, strategy, *, logger):
+            def generate(state):
+                logger.emit("calls", state, prompt_tokens=200, completion_tokens=50, status="completed",
+                            system_fingerprint="fp-v3")
+                return {**state, "draft_answer": "Test v3 answer", "total_tokens": 250}
+
+            return SimpleNamespace(invoke=logger.wrap(generate, "generate"))
+
+        c = self.client()
+        c.post("/api/access/session", json={"code": self.code})
+        P._install_logger()
+        tapes = []
+        with (patch.object(pc, "build_arm_app", side_effect=build_app),
+              patch.object(server.expansion, "store_for", return_value=object()) as store,
+              patch("src.runtime_status.update_status"),
+              patch.object(P.PIPELINE, "namespace", {"corpus_embeddings": object()}),
+              patch.object(P, "LOG_ROOT", Path(TMP) / "runs"),
+              patch.object(P, "summarize_final", return_value={"answer": "Test v3 answer"}) as summarize,
+              patch.object(server.Tape, "save", lambda tape: tapes.append(tape))):
+            r = c.post("/api/ask", json={"corpus": "002594_2025", "data_year": 2024,
+                                         "question": "营业收入是多少？", "strategies": ["S1", "S2"]})
+        self.assertEqual(r.status_code, 200)
+        events = [json.loads(line[5:]) for line in r.text.splitlines() if line.startswith("data:")]
+        self.assertEqual([e["type"] for e in events], ["meta", "start", "node_start", "node", "final", "done"])
+        self.assertEqual(events[0]["strategies"], ["S3"])
+        self.assertEqual(events[0]["company"], "002594_2025")
+        self.assertEqual(events[0]["data_year"], 2024)
+        self.assertIsNone(events[0]["paper"])
+        self.assertEqual(store.call_args.args[0]["collection_name"], "v3_002594_2025")
+        self.assertEqual(summarize.call_args.args[0]["question_year"], 2024)
+        self.assertEqual(summarize.call_args.args[1], "002594_2025")
+        self.assertEqual(tapes[0].company, "002594_2025")
+        self.assertEqual([row["event"] for row in tapes[0].events], events)
+        with server.QUOTA.lock, access.closing(server.QUOTA._connect()) as db:
+            status, cost = db.execute("SELECT status, cost FROM ledger ORDER BY created DESC").fetchone()
+        self.assertEqual((status, cost), ("settled", 200 * 2 + 50 * 8))
+        self.assertEqual(c.get("/api/status").json()["fingerprint"]["last_seen"], "fp-v3")
 
     def test_loading_model_is_refused_without_reservation(self):
         c = self.client()

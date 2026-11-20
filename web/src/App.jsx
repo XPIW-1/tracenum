@@ -19,11 +19,13 @@ function loadDraft() {
 export default function App() {
   const [view, setView] = useState(() => (location.hash.slice(1) in { lookup: 1, lab: 1, method: 1 } ? location.hash.slice(1) : 'lookup'))
   const [corpus, setCorpus] = useState([])
+  const [v3Corpora, setV3Corpora] = useState([])
   const [questions, setQuestions] = useState([])
   const [featured, setFeatured] = useState([])
+  const [v3Featured, setV3Featured] = useState([])
   const [mode, setMode] = useState(null)
   const [status, setStatus] = useState(null)
-  const [company, setCompany] = useState('BYD')
+  const [corpusKey, setCorpusKey] = useState('BYD')
   const [pdfTarget, setPdfTarget] = useState(null)
   const [labPdf, setLabPdf] = useState(null)
   const [draft, setDraft] = useState(loadDraft)
@@ -31,9 +33,13 @@ export default function App() {
   const [toast, setToast] = useState(null)
 
   useEffect(() => {
-    getJSON('/data/corpora.json').then(setCorpus).catch(() => {})
+    getJSON('/data/corpora.json').then((reports) => setCorpus(reports.map((report) => ({
+      ...report, key: report.code, report_year: report.year, pdf_url: `/data/pdf/${report.code}.pdf`,
+    })))).catch(() => {})
+    getJSON('/data/v3/corpora.json').then(setV3Corpora).catch(() => {})
     getJSON('/data/questions.json').then(setQuestions).catch(() => {})
     getJSON('/data/showcase.json').then((showcase) => setFeatured(showcase.featured)).catch(() => {})
+    getJSON('/data/v3/showcase.json').then((showcase) => setV3Featured(showcase.featured)).catch(() => {})
     detectMode().then(setMode)
   }, [])
   useEffect(() => {
@@ -71,9 +77,10 @@ export default function App() {
   useEffect(() => { if (!toast) return; const id = setTimeout(() => setToast(null), 2200); return () => clearTimeout(id) }, [toast])
 
   const lookupTarget = useMemo(
-    () => (pdfTarget && pdfTarget.company === company ? pdfTarget : { company, page: 1, values: [], cover: true }),
-    [pdfTarget, company],
+    () => (pdfTarget?.corpusKey === corpusKey ? pdfTarget : { corpusKey, page: 1, values: [], cover: true }),
+    [pdfTarget, corpusKey],
   )
+  const allCorpora = [...corpus, ...v3Corpora]
   const draftIds = new Set(draft.map((d) => d.id))
   const addDraft = (item) => { setDraft((d) => (d.some((x) => x.id === item.id) ? d : [...d, item])); setToast(`已加入底稿：${item.value}`) }
   const statusLabel = mode === 'loading' ? '实时服务启动中…' : mode === 'static' ? '公开演示 · 预计算结果' : !status ? '连接中' : status.error ? '后端不可用' : status.ready ? `${status.model} 已就绪` : '正在加载检索模型'
@@ -97,11 +104,12 @@ export default function App() {
       {view === 'lookup' && (
         <div className="lookup">
           <main className="lookup-main">
-            <Lookup mode={mode === 'loading' ? 'static' : mode} featured={featured} corpus={corpus} company={company} setCompany={setCompany} questions={questions} openPdf={setPdfTarget}
+            <Lookup mode={mode === 'loading' ? 'static' : mode} featured={featured} v3Featured={v3Featured} corpus={corpus} v3Corpora={v3Corpora}
+              corpusKey={corpusKey} setCorpusKey={setCorpusKey} questions={questions} openPdf={setPdfTarget}
               addDraft={addDraft} draftIds={draftIds} openMethod={() => setView('method')} status={status} />
           </main>
           <aside className="lookup-side" aria-label="年报原页">
-            <PdfPane target={lookupTarget} corpus={corpus} onPage={setPdfTarget} />
+            <PdfPane key={corpusKey} target={lookupTarget} corpus={allCorpora} onPage={setPdfTarget} />
           </aside>
         </div>
       )}
@@ -122,7 +130,7 @@ export default function App() {
       {view === 'method' && <Method mode={mode === 'loading' ? 'static' : mode} questions={questions} goLab={() => setView('lab')} />}
 
       {drawer && <Draft items={draft} setItems={setDraft} onClose={() => setDrawer(false)} corpus={corpus}
-        openPdf={(t) => { setDrawer(false); setView('lookup'); setCompany(t.company); setPdfTarget(t) }} toast={setToast} />}
+        openPdf={(t) => { setDrawer(false); setView('lookup'); setCorpusKey(t.corpusKey); setPdfTarget(t) }} toast={setToast} />}
       {toast && <div className="toast" role="status">{toast}</div>}
     </>
   )

@@ -46,6 +46,10 @@ tracenum.{$DOMAIN} {
 			flush_interval -1
 		}
 	}
+	handle_path /reports/* {
+		root * /srv/reports
+		file_server
+	}
 	handle {
 		root * /srv/tracenum
 		try_files {path} /index.html

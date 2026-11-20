@@ -2,6 +2,7 @@
 #   runtime/        build context from deploy/package_runtime.py (live backend)
 #   sites/portfolio Astro build of the personal homepage
 #   sites/tracenum  Vite build of the TraceNum web app (works without the backend)
+#   sites/reports   v3 PDFs named <code>_<year>.pdf (uploaded separately)
 #   Caddyfile, .env (secrets; chmod 600; never committed)
 #
 #   docker compose up -d --build

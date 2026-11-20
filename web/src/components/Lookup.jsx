@@ -103,41 +103,85 @@ function snippetFor(result, value, page) {
   return ''
 }
 
-export default function Lookup({ mode, featured, corpus, company, setCompany, questions, openPdf, addDraft, draftIds, openMethod, status }) {
+function CorpusSelector({ corpus, v3Corpora, v3Featured, corpusKey, v3Report, chooseCorpus }) {
+  const companies = [...new Map(v3Corpora.map((c) => [c.code, c.company]))]
+  const reports = v3Report ? v3Corpora.filter((c) => c.code === v3Report.code) : []
+  // Open the extended corpus on a report that has a featured replay, so the first view is not empty.
+  const featuredKeys = new Set((v3Featured || []).map((q) => q.company))  // featured entries carry the report key in `company`
+  const defaultV3 = v3Corpora.find((c) => featuredKeys.has(c.key)) ?? v3Corpora.find((c) => c.report_year === 2025) ?? v3Corpora[0]
+  return (
+    <div className="corpus-selector">
+      <div className="segmented" role="group" aria-label="语料类别">
+        <button type="button" aria-pressed={!v3Report} onClick={() => v3Report && chooseCorpus('BYD')}>论文实验语料</button>
+        <button type="button" aria-pressed={!!v3Report} disabled={!defaultV3} onClick={() => !v3Report && chooseCorpus(defaultV3.key)}>扩展语料 · 12 家 × 2023–2025</button>
+      </div>
+      {v3Report ? (
+        <div className="corpus-controls">
+          <select aria-label="选择公司" value={v3Report.code} onChange={(e) => {
+            const own = v3Corpora.filter((c) => c.code === e.target.value)
+            chooseCorpus((own.find((c) => c.report_year === v3Report.report_year) ?? own.at(-1)).key)
+          }}>
+            {companies.map(([code, name]) => <option key={code} value={code}>{name} · {code}</option>)}
+          </select>
+          <div className="segmented" role="group" aria-label="年报年度">
+            {reports.map((c) => (
+              <button type="button" key={c.key} aria-pressed={c.key === corpusKey} onClick={() => chooseCorpus(c.key)}>{c.report_year}</button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="corpus-switch" role="group" aria-label="选择年报">
+          {corpus.map((c) => (
+            <button key={c.key} type="button" aria-pressed={c.key === corpusKey} onClick={() => chooseCorpus(c.key)}>
+              <span>{c.company} {c.report_year} 年报</span>
+              <small className="num">{c.ticker} · {c.pages} 页</small>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function Lookup({ mode, featured, v3Featured, corpus, v3Corpora, corpusKey, setCorpusKey, questions, openPdf, addDraft, draftIds, openMethod, status }) {
   const [input, setInput] = useState('')
   const [run, setRun] = useState(null)
   const [meta, setMeta] = useState(null)
   const [error, setError] = useState(null)
   const [recordedAt, setRecordedAt] = useState(null)
+  const [comparative, setComparative] = useState(false)
   const abortRef = useRef(null)
   const elapsed = useElapsed(run?.status === 'running', run?.startedAt)
   const isStatic = mode === 'static'
   const isLive = mode === 'live'
+  const v3Report = v3Corpora.find((c) => c.key === corpusKey)
+  const info = v3Report ?? corpus.find((c) => c.key === corpusKey)
+  const ownFeatured = (v3Report ? v3Featured : featured).filter((q) => q.company === corpusKey)
+  const dataYear = v3Report && v3Report.report_year - Number(comparative)
 
   useEffect(() => () => abortRef.current?.abort(), [])
-  // The company can also change from outside (opening a draft row of another company):
-  // an answer must never be shown against another company's PDF or written to the draft
-  // under the wrong name, so drop it.
-  const runCompanyRef = useRef(null)
+  // Draft links can switch the report from outside this component.
+  const runCorpusRef = useRef(null)
   useEffect(() => {
-    if (runCompanyRef.current && runCompanyRef.current !== company) {
+    setComparative(false)
+    if (runCorpusRef.current && runCorpusRef.current !== corpusKey) {
       abortRef.current?.abort()
-      runCompanyRef.current = null
+      runCorpusRef.current = null
       setRun(null)
       setMeta(null)
       setError(null)
       setRecordedAt(null)
     }
-  }, [company])
+  }, [corpusKey])
 
   const examples = useMemo(() => {
-    const own = questions.filter((q) => q.company === company)
+    const own = questions.filter((q) => q.company === corpusKey)
     const groups = TYPE_ORDER.map((type) => ({ type, items: own.filter((q) => q.question_type === type).slice(0, 2) })).filter((g) => g.items.length)
     return groups
-  }, [questions, company])
+  }, [questions, corpusKey])
 
   async function ask(text, recording) {
-    if (!recording && !isLive) return  // featured replays work in both modes
+    if (!recording && (!isLive || !info)) return
     const q = (recording?.question ?? text ?? input).trim()
     if (!q) return
     abortRef.current?.abort()
@@ -147,7 +191,7 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
     setError(null)
     setMeta(null)
     setRecordedAt(recording?.recorded_at ?? null)
-    runCompanyRef.current = company
+    runCorpusRef.current = corpusKey
     let current = emptyRun('S3')
     setRun(current)
     const onEvent = (event) => {
@@ -158,13 +202,17 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
         setRun(current)
         if (event.type === 'final' && event.result.cited_pages?.length) {
           const first = event.result.numbers?.find((n) => n.status === 'matched')
-          openPdf(first ? { company, page: first.pages[0], values: [first.value] } : { company, page: event.result.cited_pages[0], values: [] })
+          openPdf(first ? { corpusKey, page: first.pages[0], values: [first.value] } : { corpusKey, page: event.result.cited_pages[0], values: [] })
         }
       }
     }
     try {
-      if (recording) await replayStrategy(recording.recording_id, 'S3', 20, onEvent, controller.signal)
-      else await streamAsk({ company, question: q, strategies: ['S3'] }, onEvent, controller.signal)
+      if (recording) await replayStrategy(recording.recording_id, 'S3', 20, onEvent, controller.signal, !!v3Report)
+      else {
+        const selection = v3Report ? { corpus: corpusKey } : { company: corpusKey }
+        if (v3Report && comparative) selection.data_year = dataYear
+        await streamAsk({ ...selection, question: q, strategies: ['S3'] }, onEvent, controller.signal)
+      }
     } catch (err) {
       if (controller.signal.aborted) return
       setError(recording ? `回放未能加载：${err.message}` : err.status ? err.message : '暂时连不上实时服务，请稍后再试；精选题可以直接查看。')
@@ -177,18 +225,13 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
     setRun((r) => r && { ...r, status: 'error', active: null, error: '已停止。' })
   }
 
-  function chooseCompany(code) {
-    abortRef.current?.abort()
-    setCompany(code)
+  function chooseCorpus(key) {
+    if (key === corpusKey) return
+    setCorpusKey(key)
     if (isStatic) setInput('')
-    setRun(null)
-    setMeta(null)
-    setError(null)
-    setRecordedAt(null)
   }
 
   const result = run?.result
-  const info = corpus.find((c) => c.code === company)
   const keyFor = (n) => `${meta?.question_id}:${normNum(n.value)}`
 
   function add(n) {
@@ -196,7 +239,7 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
     const formal = questions.find((q) => q.question_id === meta?.question_id)
     addDraft({
       id: keyFor(n), metric: n.label || formal?.metric || '', value: n.value, unit: n.unit || '', scope: /合并/.test(meta?.question || '') ? '合并' : '',
-      company: info?.company, year: info?.year, page, status: n.status === 'matched' ? '原文一致' : '计算得出',
+      corpusKey, company: info?.company, year: info?.report_year, page, status: n.status === 'matched' ? '原文一致' : '计算得出',
       snippet: n.line || (page ? snippetFor(result, n.value, page) : ''), question: meta?.question, time: new Date().toLocaleString('zh-CN'),
     })
   }
@@ -209,25 +252,28 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
           <p>{isStatic ? '选一份年报和一道精选问题，查看已录制的查数结果。点开答案里的数字，即可查看年报原页。' : '选一份年报，像问同事一样提问。溯数会检索原文、核对口径，答案里的数字都能点开，直接看到年报原页。'}</p>
         </div>
       )}
-      <div className="corpus-switch" role="group" aria-label="选择年报" style={{ marginBottom: 12 }}>
-        {corpus.map((c) => (
-          <button key={c.code} type="button" aria-pressed={c.code === company} onClick={() => chooseCompany(c.code)}>
-            <span>{c.company} {c.year} 年报</span>
-            <small className="num">{c.ticker} · {c.pages} 页</small>
-          </button>
-        ))}
-      </div>
+      <CorpusSelector corpus={corpus} v3Corpora={v3Corpora} v3Featured={v3Featured} corpusKey={corpusKey} v3Report={v3Report} chooseCorpus={chooseCorpus} />
       <form className="ask" onSubmit={(e) => { e.preventDefault(); ask() }}>
+        {v3Report && (
+          <div className="data-year" role="group" aria-labelledby="data-year-label">
+            <span id="data-year-label">数据年度</span>
+            <div className="segmented">
+              <button type="button" aria-pressed={!comparative} disabled={!isLive} onClick={() => setComparative(false)}>本年</button>
+              <button type="button" aria-pressed={comparative} disabled={!isLive} onClick={() => setComparative(true)}>上年（比较期）</button>
+            </div>
+          </div>
+        )}
         <label htmlFor="q" className="sr-only" style={{ position: 'absolute', left: -9999 }}>问题</label>
         <textarea id="q" rows={2} value={input} disabled={!isLive} aria-describedby="ask-hint"
-          placeholder={isStatic ? '自由提问' : `问 ${info?.company ?? ''} ${info?.year ?? ''} 年报里的一个数，例如：${FREE_EXAMPLES[company]?.[0] ?? ''}`}
+          placeholder={isStatic ? '自由提问' : v3Report ? `例如：${dataYear} 年合并口径的营业收入是多少？` :
+            `问 ${info?.company ?? ''} ${info?.report_year ?? ''} 年报里的一个数，例如：${FREE_EXAMPLES[corpusKey]?.[0] ?? ''}`}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask() } }} />
         <div className="ask-bar">
           <span className="ask-hint" id="ask-hint">{isStatic ? '自由提问仅对专属链接开放，下面是预先运行的真实结果' : '使用论文中表现最好的自适应策略（S3）：每轮核验后判断是否继续，最多检索三轮'}</span>
           {run?.status === 'running' || run?.status === 'waiting'
             ? <button type="button" className="btn ghost" onClick={stop}><Square size={14} />停止</button>
-            : isLive && <button type="submit" className="btn" disabled={!input.trim() || status?.error}><ArrowUp size={15} />查数</button>}
+            : isLive && <button type="submit" className="btn" disabled={!info || !input.trim() || status?.error}><ArrowUp size={15} />查数</button>}
         </div>
       </form>
 
@@ -235,7 +281,8 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
         <div className="examples">
           <h2>精选问题</h2>
           <div className="featured-questions">
-            {featured.filter((q) => q.company === company).map((q) => (
+            {v3Report && ownFeatured.length === 0 && <p className="question-meta">这份年报还没有精选回放。</p>}
+            {ownFeatured.map((q) => (
               <button className="example" key={q.question_id} type="button" onClick={() => ask(null, q)}>
                 <span>{q.question}</span><small>{q.question_id}</small>
                 {FEATURED_NOTES[q.question_id] && <small className="featured-note">{FEATURED_NOTES[q.question_id]}</small>}
@@ -245,12 +292,12 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
         </div>
       )}
 
-      {isLive && !run && (
+      {isLive && !v3Report && !run && (
         <div className="examples">
           <h2>从论文的 20 道正式题里挑一道试试，或者直接提问</h2>
           <div className="example-group">
             <h3>常用查数</h3>
-            {(FREE_EXAMPLES[company] || []).map((q) => (
+            {(FREE_EXAMPLES[corpusKey] || []).map((q) => (
               <button key={q} type="button" className="example" onClick={() => ask(q)}><span>{q}</span></button>
             ))}
           </div>
@@ -273,7 +320,8 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
         <section style={{ marginTop: 28 }} aria-live="polite">
           <p className="question-echo">{meta?.question ?? input}</p>
           <div className="question-meta">
-            <span>{info?.company} {info?.year} 年报</span>
+            <span>{info?.company} {info?.report_year} 年报</span>
+            {meta?.data_year && <span>数据年度 {meta.data_year}</span>}
             {recordedAt && <span>预计算结果 · 录制于 {SHANGHAI_TIME.format(new Date(recordedAt))}</span>}
             <span className="num">{run.status === 'running' ? `已用时 ${elapsed.toFixed(0)} 秒` : result?.elapsed ? `用时 ${result.elapsed} 秒` : ''}</span>
             <PaperVerdict paper={meta?.paper} onOpenMethod={openMethod} />
@@ -281,16 +329,16 @@ export default function Lookup({ mode, featured, corpus, company, setCompany, qu
           {run.status === 'running' && run.rounds.length === 0 && !run.active && <p className="question-meta">{recordedAt ? '正在回放…' : status?.ready ? '正在准备检索…' : '检索模型还在加载（启动后约 1 分钟），加载完会自动开始。'}</p>}
           {(run.rounds.length > 0 || run.active) && <RoundTrace run={run} />}
           {run.status === 'error' && <div className="error-box">{run.error}</div>}
-          {result && <AnswerSheet result={result} company={company} openPdf={openPdf} add={add} added={(n) => draftIds.has(keyFor(n))} />}
+          {result && <AnswerSheet result={result} corpusKey={corpusKey} openPdf={openPdf} add={add} added={(n) => draftIds.has(keyFor(n))} />}
         </section>
       )}
     </div>
   )
 }
 
-function AnswerSheet({ result, company, openPdf, add, added }) {
-  const onPage = (page) => openPdf({ company, page, values: result.numbers.filter((n) => n.pages.includes(page)).map((n) => n.value) })
-  const onFigure = (n) => openPdf({ company, page: n.pages[0], values: [n.value] })
+function AnswerSheet({ result, corpusKey, openPdf, add, added }) {
+  const onPage = (page) => openPdf({ corpusKey, page, values: result.numbers.filter((n) => n.pages.includes(page)).map((n) => n.value) })
+  const onFigure = (n) => openPdf({ corpusKey, page: n.pages[0], values: [n.value] })
   const boundary = result.boundary_year
   const refused = result.refused
   const figures = result.numbers || []
@@ -300,7 +348,7 @@ function AnswerSheet({ result, company, openPdf, add, added }) {
         <h2>{refused ? '没有找到可核验的答案' : '答案'}</h2>
         <span className="sheet-stats">{result.rounds} 轮 · {result.model_calls} 次模型调用 · {(result.total_tokens || 0).toLocaleString()} tokens · {result.stop_reason}</span>
       </div>
-      {!boundary && result.answer && <AnswerText text={result.answer} numbers={figures} onPage={onPage} onFigure={onFigure} />}
+      {!boundary && result.answer && <AnswerText text={result.answer} foldRevision numbers={figures} onPage={onPage} onFigure={onFigure} />}
       {refused && (
         <div className="refusal">
           <h3>{boundary ? `超出年报覆盖范围` : '溯数没有用相近口径替代，也没有编数'}</h3>
@@ -324,7 +372,7 @@ function AnswerSheet({ result, company, openPdf, add, added }) {
                 <span className="v">{n.value}</span>{' '}
                 {n.label && <small style={{ marginRight: 6 }}>{n.label}{n.unit ? `（${n.unit}）` : ''}</small>}
                 {n.status === 'matched'
-                  ? <small>原文 {n.pages.map((p) => <button key={p} type="button" className="page-link" onClick={() => openPdf({ company, page: p, values: [n.value] })}>第{p}页</button>)}</small>
+                  ? <small>原文 {n.pages.map((p) => <button key={p} type="button" className="page-link" onClick={() => openPdf({ corpusKey, page: p, values: [n.value] })}>第{p}页</button>)}</small>
                   : <small>计算得出，请核对计算过程</small>}
               </span>
               <span />

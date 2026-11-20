@@ -1,4 +1,4 @@
-"""TraceNum API: live, streamed answers over the frozen formal-v1 pipeline.
+"""TraceNum API: streamed answers over the paper and expansion corpora.
 
 Run:  python -m uvicorn server:app --port 8765   (from tracenum/backend)
 """
@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field
 
 import access
 import billing
+import expansion
 import pipeline as P
 from quota import Quota
 
@@ -88,7 +89,9 @@ def current_access(request: Request):
 
 
 class AskBody(BaseModel):
-    company: str = Field(max_length=8)
+    company: str | None = Field(default=None, max_length=8)
+    corpus: str | None = None
+    data_year: int | None = None
     question: str = Field(max_length=MAX_QUESTION_CHARS * 2)
     strategies: list[str] = Field(default=["S3"], max_length=3)
 
@@ -302,10 +305,36 @@ def refuse(status: int, reason: str, message: str):
     return JSONResponse({"reason": reason, "message": message}, status_code=status)
 
 
+def ask_meta(key, question, strategies, paper=None, route_info=None):
+    event = {"type": "meta", "question": question["question"], "question_id": question["question_id"],
+             "paper": paper, "strategies": strategies, "budget": P.FREEZE["budget"]["token_budget_per_run"],
+             "company": key}
+    if route_info is not None:
+        event.update(report_year=route_info["report_year"], data_year=route_info["data_year"])
+    return event
+
+
+def run_strategy(key, question, strategy, emit, route_info=None):
+    def send(event):
+        emit({**event, "strategy": strategy})
+
+    started = time.perf_counter()
+    send({"type": "start"})
+    if route_info is None:
+        final = P.PIPELINE.run(question, strategy, send)
+    else:
+        final = P.PIPELINE.run_expansion(route_info, question, strategy, send)
+    result = P.summarize_final(final, key)
+    result["elapsed"] = round(time.perf_counter() - started, 1)
+    send({"type": "final", "result": result})
+
+
 @app.post("/api/ask")
 async def ask(body: AskBody, request: Request):
-    if body.company not in P.CORPORA:
+    if body.corpus is None and body.company not in P.CORPORA:
         raise HTTPException(400, "unknown company")
+    if body.corpus is not None and body.company is not None:
+        return refuse(400, "route", "请只选择一份年报语料")
     text = " ".join(body.question.split())
     if not text or len(text) > MAX_QUESTION_CHARS:
         return refuse(400, "length", f"问题请控制在 {MAX_QUESTION_CHARS} 字以内")
@@ -318,6 +347,13 @@ async def ask(body: AskBody, request: Request):
         if not granted:
             return refuse(403, "no_access", "自由提问仅对专属链接开放，下面是预先运行的真实结果。")
         strategies = ["S3"]  # live runs are S3 only; strategy comparison uses recordings
+    key = body.corpus if body.corpus is not None else body.company
+    route_info = None
+    if body.corpus is not None:
+        try:
+            route_info = expansion.route_key(key, body.data_year)
+        except expansion.RouteError as exc:
+            return refuse(400, "route", str(exc))
     request_id = uuid.uuid4().hex
     if not DEV:
         if P.PIPELINE.error or not rerank_validated():
@@ -343,8 +379,12 @@ async def ask(body: AskBody, request: Request):
     # Everything that can fail or end the request happens before the response is
     # returned, so a reserved slot is always settled (by refund, or by the worker).
     try:
-        question, paper = P.build_question(body.company, text)
-        later = P.out_of_corpus_year(body.company, text, question)
+        if route_info is None:
+            question, paper = P.build_question(key, text)
+            later = P.out_of_corpus_year(key, text, question)
+        else:
+            question, paper = expansion.build_question(route_info, text), None
+            later = None
     except Exception:
         settle()
         raise
@@ -354,14 +394,12 @@ async def ask(body: AskBody, request: Request):
     def push(event):
         loop.call_soon_threadsafe(queue.put_nowait, event)
 
-    tape = Tape(body.company, question, strategies)
-    meta = {"type": "meta", "question": question["question"], "question_id": question["question_id"],
-            "paper": paper, "strategies": strategies, "budget": P.FREEZE["budget"]["token_budget_per_run"],
-            "company": body.company}
+    tape = Tape(key, question, strategies)
+    meta = ask_meta(key, question, strategies, paper, route_info)
 
     if later:
         settle()  # no model call: refund, does not count against limits
-        info = P.CORPORA[body.company]
+        info = P.CORPORA[key]
 
         async def boundary_stream():
             yield sse(meta)
@@ -399,20 +437,16 @@ async def ask(body: AskBody, request: Request):
             if e.get("type") == "usage":
                 on_usage(e)  # billing only; not streamed to the browser or recorded
                 return
-            push({**e, "strategy": strategy})
-        started = time.perf_counter()
-        emit({"type": "start"})
+            push(e)
         try:
-            final = P.PIPELINE.run(question, strategy, emit)
-            result = P.summarize_final(final, body.company)
-            result["elapsed"] = round(time.perf_counter() - started, 1)
-            emit({"type": "final", "result": result})
+            run_strategy(key, question, strategy, emit, route_info)
         except Exception as exc:
             with guard:
                 # A call may have been sent (and billed) before its usage reached us, e.g. if
                 # writing the run log failed. Keep the full reservation; never refund here.
                 ledger["unknown"] = True
-            emit({"type": "error", "message": f"{type(exc).__name__}: {exc}" if DEV else "这次运行失败了，未产生答案。",
+            emit({"type": "error", "strategy": strategy,
+                  "message": f"{type(exc).__name__}: {exc}" if DEV else "这次运行失败了，未产生答案。",
                   **({"trace": traceback.format_exc()[-800:]} if DEV else {})})
             print(f"[ask {request_id}] {type(exc).__name__}: {exc}", flush=True)
         finally:
@@ -462,6 +496,7 @@ async def ask(body: AskBody, request: Request):
 # --------------------------------------------------------------------------- #
 RECORDINGS = Path(__file__).resolve().parent / "recordings"
 FEATURED = RECORDINGS / "featured.json"
+FEATURED_V3 = RECORDINGS / "featured_v3.json"
 
 
 class Tape:
@@ -496,9 +531,9 @@ class Tape:
         return rid
 
 
-def _featured():
+def _featured(path):
     try:
-        return json.loads(FEATURED.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return {}
 
@@ -512,26 +547,30 @@ def _recording(rid):
 
 @app.get("/api/recordings", dependencies=[Depends(dev_only)])
 def recordings(question_id: str | None = None):
-    featured = _featured()
+    featured = _featured(FEATURED)
+    featured_v3 = _featured(FEATURED_V3)
     out = []
     for path in sorted(RECORDINGS.glob("*.json"), reverse=True) if RECORDINGS.is_dir() else []:
-        if path.name == FEATURED.name:
+        if path.name in {FEATURED.name, FEATURED_V3.name}:
             continue
         record = json.loads(path.read_text(encoding="utf-8"))
         if question_id and record["question_id"] != question_id:
             continue
         out.append({k: v for k, v in record.items() if k != "events"}
-                   | {"featured": featured.get(record["question_id"]) == record["id"]})
+                   | {"featured": (featured.get(record["question_id"]) == record["id"]
+                                   or featured_v3.get(record["company"]) == record["id"])})
     return out
 
 
 @app.post("/api/recordings/{rid}/feature", dependencies=[Depends(dev_only)])
 def feature(rid: str):
     record = _recording(rid)
-    featured = _featured()
-    featured[record["question_id"]] = rid
+    paper = record["company"] in P.CORPORA
+    path = FEATURED if paper else FEATURED_V3
+    featured = _featured(path)
+    featured[record["question_id"] if paper else record["company"]] = rid
     RECORDINGS.mkdir(parents=True, exist_ok=True)
-    FEATURED.write_text(json.dumps(featured, ensure_ascii=False, indent=1), encoding="utf-8")
+    path.write_text(json.dumps(featured, ensure_ascii=False, indent=1), encoding="utf-8")
     return {"ok": True}
 
 

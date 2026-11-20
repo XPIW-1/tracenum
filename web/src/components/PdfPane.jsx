@@ -6,12 +6,12 @@ import { normNum, TickMark } from './AnswerText.jsx'
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
 const docs = new Map()
-function loadDoc(code) {
-  if (!docs.has(code)) docs.set(code, pdfjs.getDocument(`/data/pdf/${encodeURIComponent(code)}.pdf`).promise.catch((err) => {
-    docs.delete(code)
+function loadDoc(url) {
+  if (!docs.has(url)) docs.set(url, pdfjs.getDocument(url).promise.catch((err) => {
+    docs.delete(url)
     throw err
   }))
-  return docs.get(code)
+  return docs.get(url)
 }
 
 // PDF text layers often split one figure into several runs ("803," "96" "4" ",958").
@@ -77,7 +77,7 @@ function locate(items, wanted, viewport) {
   }
 }
 
-// target: { company, page, values: [raw strings], label }
+// target: { corpusKey, page, values: [raw strings], label }
 export default function PdfPane({ target, corpus, onPage }) {
   const scrollRef = useRef(null)
   const canvasRef = useRef(null)
@@ -86,15 +86,17 @@ export default function PdfPane({ target, corpus, onPage }) {
   const [total, setTotal] = useState(null)
   const [state, setState] = useState('idle')
   const [renderKey, setRenderKey] = useState(0)
+  const info = corpus?.find((c) => c.key === target?.corpusKey)
+  const url = info?.pdf_url
 
   useEffect(() => {
-    if (!target) return
+    if (!target || !url) return
     let cancelled = false
     let task
     setState('loading')
     ;(async () => {
       try {
-        const pdf = await loadDoc(target.company)
+        const pdf = await loadDoc(url)
         if (cancelled) return
         setTotal(pdf.numPages)
         const page = await pdf.getPage(Math.min(Math.max(1, target.page), pdf.numPages))
@@ -132,7 +134,7 @@ export default function PdfPane({ target, corpus, onPage }) {
       }
     })()
     return () => { cancelled = true; task?.cancel?.() }
-  }, [target])
+  }, [target, url])
 
   if (!target) {
     return (
@@ -142,12 +144,11 @@ export default function PdfPane({ target, corpus, onPage }) {
       </div>
     )
   }
-  const info = corpus?.find((c) => c.code === target.company)
   return (
     <>
       <div className="pdf-head">
         <div>
-          <b>{info?.company ?? target.company} {info?.year} 年年报</b>
+          <b>{info ? `${info.company} ${info.report_year} 年报` : target.corpusKey}</b>
           <div><small className="num">第 {target.page} 页{total ? ` / 共 ${total} 页` : ''}</small></div>
         </div>
         <span className="spacer" />

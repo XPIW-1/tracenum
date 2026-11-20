@@ -109,7 +109,17 @@ button { cursor: pointer; }
 .draft-button b { min-width: 20px; padding: 0 6px; border-radius: 10px; background: var(--ink); color: var(--paper); font-size: 12px; text-align: center; }
 
 /* ---------- company switch ---------- */
-.corpus-switch { display: flex; gap: 6px; }
+.corpus-selector { display: grid; gap: 8px; margin-bottom: 12px; }
+.corpus-controls, .corpus-switch { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.corpus-controls select {
+  min-width: 0; max-width: 100%; padding: 6px 10px; font-size: 14px;
+  border: 1px solid var(--rule); border-radius: var(--r-sm); background: var(--paper);
+}
+.segmented { display: inline-flex; flex-wrap: wrap; width: fit-content; max-width: 100%; gap: 2px; padding: 2px; border: 1px solid var(--rule); border-radius: var(--r-sm); }
+.segmented button { padding: 5px 8px; border: 0; border-radius: var(--r-sm); background: transparent; font-size: 13px; }
+.segmented button[aria-pressed='true'] { background: var(--ink); color: var(--paper); }
+.segmented button:disabled { opacity: .65; cursor: default; }
+.data-year { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--ink-2); font-size: 13px; }
 .corpus-switch button {
   display: flex; flex-direction: column; align-items: flex-start;
   border: 1px solid var(--rule); background: var(--paper); border-radius: var(--r-sm);
@@ -203,6 +213,9 @@ button { cursor: pointer; }
 .answer h4 { font-family: var(--sans); font-size: 15px; margin: 16px 0 6px; }
 .answer ul { margin: 0 0 12px; padding-left: 1.2em; }
 .answer li { margin: 2px 0; }
+.revision { margin: 10px 0; border-top: 1px solid var(--rule); padding-top: 8px; }
+.revision summary { width: fit-content; color: var(--ink-2); font-size: 13px; cursor: pointer; }
+.revision .answer { margin-top: 8px; }
 .calc {
   font-family: var(--sans); font-variant-numeric: tabular-nums; font-size: 14px;
   background: var(--desk); border-radius: var(--r-sm); padding: 8px 12px; margin: 6px 0 12px; overflow-x: auto; white-space: pre-wrap;
@@ -375,3 +388,8 @@ button { cursor: pointer; }
 .featured-questions .example { flex-wrap: wrap; }
 .featured-questions .example span { flex: 1 1 0; min-width: 0; }
 .example small.featured-note { flex: 1 0 100%; margin-top: 2px; color: var(--amber); line-height: 1.5; }
+@media (max-width: 400px) {
+  /* phones: keep the 底稿 button inside the bar */
+  .nav button { padding: 6px 5px; font-size: 14px; }
+  .topbar .status-dot { display: none; }
+}

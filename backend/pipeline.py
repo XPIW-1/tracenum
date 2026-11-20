@@ -309,6 +309,16 @@ class Pipeline:
             _sink.emit = None
         return final
 
+    def run_expansion(self, route_info: dict, question: dict, strategy: str, emit: Callable[[dict], None]):
+        import expansion
+
+        self.load()
+        _sink.emit = emit
+        try:
+            return expansion.run_expansion(self.namespace, route_info, question, strategy, log_root=LOG_ROOT)
+        finally:
+            _sink.emit = None
+
 
 PIPELINE = Pipeline()
 

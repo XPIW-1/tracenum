@@ -23,6 +23,10 @@
 		try_files {path} {path}/ /index.html
 		file_server
 	}
+	handle_path /reports/* {
+		root * /srv/reports
+		file_server
+	}
 	handle {
 		root * /srv/tracenum
 		try_files {path} /index.html
