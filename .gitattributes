@@ -1,4 +1,7 @@
+# Files that run on the Linux server must keep LF line endings.
+# (This file itself must be LF: with CRLF, git reads "eol=lf" and ignores the rule.)
 *.sh text eol=lf
 deploy/Dockerfile text eol=lf
-deploy/Caddyfile text eol=lf
+deploy/Caddyfile* text eol=lf
 deploy/*.yaml text eol=lf
+.gitattributes text eol=lf
