@@ -9,6 +9,7 @@ Findings (each {"code", "severity", "detail"}):
   system_note_leak  the answer repeats a corpus system note or placeholder (待核验, 系统注 …)
   verifier_talk     the answer uses the verifier's internal vocabulary (UNSUPPORTED …);
                     the web app folds those sentences into 查看修正过程
+  english_internal_value  unknown / None / null in the answer (warn: may be report English)
   unsupported_quote a quoted phrase (“…” 「…」 ‘…’ "…") that occurs in no evidence source text
   page_not_in_evidence  [第N页] cited but no evidence chunk comes from page N
 
@@ -28,9 +29,16 @@ SYSTEM_MARK = "〔系统注：非年报原文〕"
 LOCATION = re.compile(r"^【[^】]*PDF物理页\d+】$")
 QUOTED_LINE = re.compile(r"^[^（）：]{1,10}（第\d+页原文）：(?P<text>.+)$")
 STRUCTURE = {"表头（重复供定位）：", "本片原始行序：", "本片原始行序"}
-# Corpus system text: header placeholders and notes that must never read as report text.
+# Corpus system text: header placeholders and the fixed wording of the parser's system notes
+# (corpus/v3/parse.py render_table_header). check() also matches, dynamically, any longer
+# phrase from the system notes in the evidence the model saw, so a new note wording is covered.
 SYSTEM_NOTE = re.compile(r"系统注|非年报原文|待核验|章节推定|本表附近未找到单位说明|仅已绑定的行或列|"
-                         r"\b(?:unknown|None|null|numeric_answer_allowed)\b")
+                         r"页原文）|系统按所在章节判断|依据原文表题或章节|沿用前页表头|系统依据第\d+页|"
+                         r"本表混合合并与母公司口径|无法绑定口径|不能用于数值回答|被投资主体按(?:本片行序|列)|"
+                         r"\bnumeric_answer_allowed\b")
+# English internal values: a warning only (a report's own English text may contain them).
+ENGLISH_VALUE = re.compile(r"\b(?:unknown|None|null)\b")
+NOTE_PIECE = re.compile(r"[；;：:（）()、，,]")
 # The frozen pipeline shows the model its verifier's feedback and the model sometimes argues
 # with it; the web app folds those sentences (web/src/answerRevision.js foldAnswer).
 VERIFIER_TALK = re.compile(r"\b(?:UNSUPPORTED|SUPPORTED|verified_operands|NONE|calculation_ok|metric_match|"
@@ -62,16 +70,29 @@ def source_text(chunk_text: str) -> str:
 def check(answer: str, evidence: list[tuple[int, str]]) -> list[dict]:
     """evidence: (page, chunk text) for every chunk the answer could draw on."""
     findings = []
-    for match in SYSTEM_NOTE.finditer(answer or ""):
-        findings.append({"code": "system_note_leak", "severity": "block", "detail": match[0]})
+    leaks = {match[0] for match in SYSTEM_NOTE.finditer(answer or "")}
+    said = norm(answer)
+    reference = "\x00".join(norm(source_text(text)) for _, text in evidence)
+    for _, text in evidence:
+        for line in text.split("\n"):
+            if line.startswith(SYSTEM_MARK):
+                for piece in NOTE_PIECE.split(line[len(SYSTEM_MARK):]):
+                    piece = norm(piece)
+                    if len(piece) >= 8 and piece in said and piece not in reference:
+                        leaks.add(piece)
+    for leak in sorted(leaks):
+        findings.append({"code": "system_note_leak", "severity": "block", "detail": leak})
+    for match in ENGLISH_VALUE.finditer(answer or ""):
+        findings.append({"code": "english_internal_value", "severity": "warn", "detail": match[0]})
     for match in VERIFIER_TALK.finditer(answer or ""):
         findings.append({"code": "verifier_talk", "severity": "warn", "detail": match[0]})
-    reference = "\x00".join(norm(source_text(text)) for _, text in evidence)
     for match in QUOTE.finditer(answer or ""):
         phrase = norm(match[1])
         if re.search(r"[一-鿿]", phrase) and phrase not in reference:
             findings.append({"code": "unsupported_quote", "severity": "warn", "detail": match[1]})
-    pages = {int(p) for p, _ in evidence}
+    # Evidence pages include the pages of quoted source lines (e.g. a unit stated on p153).
+    pages = {int(p) for p, _ in evidence} | {int(p) for _, text in evidence
+                                             for p in re.findall(r"（第(\d+)页原文）", text)}
     for page in sorted({int(p) for p in PAGE.findall(answer or "")} - pages):
         findings.append({"code": "page_not_in_evidence", "severity": "warn", "detail": str(page)})
     return findings

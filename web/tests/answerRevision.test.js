@@ -49,3 +49,19 @@ test('never folds an answer into nothing', () => {
   const only = '外部核验反馈为 UNSUPPORTED。'
   assert.deepEqual(splitProcessNotes(only), { answer: only, notes: '' })
 })
+
+test('never folds a clause that carries an amount', () => {
+  const text = '净利润为 200万元，核验为 UNSUPPORTED。\n\n数据见[第8页]。'
+  const { answer } = foldAnswer(text)
+  assert.ok(answer.includes('200万元'))
+  const plain = '营业收入为 13,632,727,136.01元，外部反馈为 UNSUPPORTED，不影响结论。'
+  const r = foldAnswer(plain)
+  assert.ok(r.answer.includes('13,632,727,136.01元'))
+  assert.doesNotMatch(r.answer, /UNSUPPORTED/)
+})
+
+test('folds every verifier field name the backend knows', () => {
+  const { answer, revision } = foldAnswer('答案为 5 元。\n\n核验 calculation_ok 为 SUPPORTED。')
+  assert.doesNotMatch(answer, /SUPPORTED|calculation_ok/)
+  assert.match(revision, /calculation_ok/)
+})

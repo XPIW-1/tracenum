@@ -40,5 +40,8 @@ def run_record(run_dir) -> dict:
         for line in calls.read_text(encoding="utf-8").splitlines():
             if line.strip() and (fp := json.loads(line).get("system_fingerprint")):
                 fingerprints.add(fp)
-    checked = answer_check.check_run_dir(run_dir)
-    return {"run": run_dir.name, "model_fingerprints": sorted(fingerprints), "findings": checked["findings"]}
+    try:
+        findings = answer_check.check_run_dir(run_dir)["findings"]
+    except (OSError, ValueError) as exc:  # incomplete run log: cannot vouch for the answer
+        findings = [{"code": "run_log_unreadable", "severity": "block", "detail": f"{type(exc).__name__}: {exc}"}]
+    return {"run": run_dir.name, "model_fingerprints": sorted(fingerprints), "findings": findings}

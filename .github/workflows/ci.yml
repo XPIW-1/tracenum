@@ -19,7 +19,7 @@ jobs:
       - run: python -m unittest tests.test_live_guard -v
       # Corpus contract, parser rules (tests needing the local PDF cache skip themselves),
       # numeric gold helpers. Pure stdlib.
-      - run: python -m unittest tests.test_corpus_contract tests.test_corpus_v3 tests.test_numeric_gold -v
+      - run: python -m unittest tests.test_corpus_contract tests.test_corpus_v3 tests.test_numeric_gold tests.test_answer_check tests.test_traps -v
 
   web-build:
     runs-on: ubuntu-latest

@@ -4,8 +4,9 @@ Why: the frozen generation prompt presents every retrieved chunk under the headi
 【年报原文】, so the model treats all of a chunk's text as annual-report text. A chunk may
 therefore contain only
   1. a location line            【公司 YYYY年年报｜PDF物理页N】
-  2. quoted source lines        <标签>（第N页原文）：<text>   -- <text> must occur verbatim
-                                (whitespace-insensitive) on PDF page N
+  2. quoted source lines        <标签>（第N页原文）：<text>   -- 标签 is 表题/口径依据/单位 (a
+                                单位 line must name a unit); <text> must occur verbatim
+                                (whitespace-insensitive) in the RAW extraction of page N
   3. system notes               〔系统注：非年报原文〕...      -- the only place for anything
                                 the system inferred; one fixed marker the answer check
                                 (backend/answer_check.py) can recognise
@@ -36,10 +37,13 @@ LOCATION = re.compile(r"【(?P<company>[^｜】]+) (?P<year>\d{4})年年报｜PD
 QUOTE = re.compile(r"(?P<label>[^（）：]{1,10})（第(?P<page>\d+)页原文）：(?P<text>.+)")
 CELL_BREAK = "↵"  # in-cell line break written by the table renderer; layout only
 MARKERS = {"表头（重复供定位）：", "本片原始行序："}
-# Words that only the system writes. Checked in every model-visible line.
-BANNED = re.compile(r"待核验|章节推定|\b(?:unknown|other|None|null|nan|NaN|TODO|undefined|True|False)\b")
-# ASCII words allowed outside the source body (system notes and labels).
-ASCII_OK = {"PDF"}
+# Placeholders only the system writes: banned in every model-visible line.
+BANNED = re.compile(r"待核验|章节推定|TODO")
+# Internal English values: banned outside the source body (a report's own English text,
+# e.g. an A+H filing, may contain "other" or "None").
+BANNED_OUTSIDE_BODY = re.compile(r"\b(?:unknown|other|None|null|nan|NaN|undefined|True|False)\b")
+# The only labels a quoted source line may carry, and what its text must contain.
+LABELS = {"表题": None, "口径依据": None, "单位": re.compile(r"元")}
 PRIMARY = {"资产负债表", "利润表", "现金流量表", "所有者权益变动表"}
 STATEMENT_TYPES = PRIMARY | {"other"}
 UNITS = {"元", "千元", "万元", "百万元", "亿元", "美元", "港元"}  # parse.UNIT can print USD/HKD
@@ -56,15 +60,18 @@ class Pages:
         self._cache: dict[int, str] = {}
 
     def text(self, page: int) -> str:
+        """Reference text of a page from the RAW extraction only (pdfplumber text and the
+        cells of its raw table finds), never from the cleaned output being checked."""
         if page not in self._cache:
-            path = self.directory / "cleaned" / f"page_{page:04d}.json"
+            path = self.directory / "raw" / f"page_{page:04d}.json"
             if not path.exists():
                 self._cache[page] = ""
             else:
                 data = json.loads(path.read_text(encoding="utf-8"))
-                cells = " ".join(c or "" for t in data.get("tables", []) for r in t["rows"] for c in r["cells"])
-                self._cache[page] = norm(data.get("verbatim_text", "")) + "\x00" + norm(data.get("text", "")) \
-                    + "\x00" + norm(cells)
+                cells = "\x00".join(c or "" for key in ("tables", "recovery_tables") for t in data.get(key) or []
+                                    for r in t["rows"] for c in r["cells"])
+                lines = "\x00".join(line.get("text") or "" for line in data.get("lines") or [])
+                self._cache[page] = norm(data.get("text", "")) + "\x00" + norm(lines) + "\x00" + norm(cells)
         return self._cache[page]
 
     def contains(self, pages, fragment: str) -> bool:
@@ -90,6 +97,13 @@ def check_record(record: dict, pages: Pages, report: dict) -> list[str]:
     kind = meta.get("type") or record["id"].split(":")[2]
     for match in BANNED.finditer(text):
         problems.append(f"system word {match[0]!r}")
+    lines = text.split("\n")
+    body_from = 1 if lines and LOCATION.fullmatch(lines[0]) else 0
+    for i, line in enumerate(lines):
+        in_body = line.startswith("|") if kind == "table" else i >= body_from
+        if not in_body:
+            for match in BANNED_OUTSIDE_BODY.finditer(line):
+                problems.append(f"system word {match[0]!r}")
     if meta.get("statement_type") not in STATEMENT_TYPES:
         problems.append(f"statement_type {meta.get('statement_type')!r} outside the closed set")
     if meta.get("unit") not in UNITS | {None}:
@@ -131,9 +145,10 @@ def check_record(record: dict, pages: Pages, report: dict) -> list[str]:
         if not quote:
             problems.append(f"header line outside the grammar: {line[:40]!r}")
             continue
-        for word in re.findall(r"[A-Za-z]{2,}", quote["label"]):
-            if word not in ASCII_OK:
-                problems.append(f"ASCII word in label: {word!r}")
+        if quote["label"] not in LABELS:
+            problems.append(f"label outside the allowed set: {quote['label']!r}")
+        elif LABELS[quote["label"]] and not LABELS[quote["label"]].search(quote["text"]):
+            problems.append(f"{quote['label']} line without a unit: {quote['text'][:30]!r}")
         if not pages.contains({int(quote["page"])}, quote["text"]):
             problems.append(f"quoted text not on page {quote['page']}: {quote['text'][:30]!r}")
     return problems

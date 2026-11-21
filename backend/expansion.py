@@ -163,5 +163,9 @@ def run_expansion(namespace, route_info: dict, question: dict, strategy: str = "
     update_status(final)
     logger.finish(final)
     final.update(strategy=strategy, question_id=question["question_id"], comparison_version=pc.COMPARISON_VERSION,
-                 expansion_route=route_info, observation_dir=str(logger.directory))
+                 expansion_route=route_info, observation_dir=str(logger.directory),
+                 # what this answer was actually retrieved from (provenance for evals and recordings)
+                 # (None when unreadable: release_check then treats the result as stale)
+                 collection_chunks_sha256=(getattr(getattr(store, "_collection", None), "metadata", None)
+                                           or {}).get("chunks_sha256"))
     return final

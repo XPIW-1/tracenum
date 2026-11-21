@@ -25,7 +25,12 @@ MONTHLY_CAP = int(float(os.environ.get("LIVE_MONTHLY_CAP_YUAN", "45")) * MICRO)
 # them at the output price bounds the cost no matter how they split. Up to three
 # retrieval rounds each call the reranker once.
 TOKEN_BUDGET = 39_000
-RESERVE_PER_QUESTION = TOKEN_BUDGET * OUTPUT_PER_M // 1_000_000 + 3 * RERANK_PER_REQUEST
+# A retrieval round makes one reranker request, retried once on failure (backend/rerank.py
+# HostedReranker retries=1); a failed attempt may still be billed, so a round costs at most
+# two requests.
+RERANK_ATTEMPTS_PER_ROUND = 2
+RERANK_PER_ROUND = RERANK_ATTEMPTS_PER_ROUND * RERANK_PER_REQUEST
+RESERVE_PER_QUESTION = TOKEN_BUDGET * OUTPUT_PER_M // 1_000_000 + 3 * RERANK_PER_ROUND
 
 
 def call_cost(prompt_tokens: int | None, completion_tokens: int | None) -> int | None:

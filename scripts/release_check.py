@@ -41,7 +41,15 @@ sys.path.insert(0, str(ROOT / "eval"))
 CORPUS = ROOT / "build" / "corpus_v3"
 DB = ROOT / "build" / "vector_v3"
 RECORDINGS = ROOT / "backend" / "recordings"
-DEFAULT_EVAL = ROOT / "eval" / "results" / "full431_latest.json"
+RESULTS = ROOT / "eval" / "results"
+# The published numeric result is 430/431; a release must not fall below 98% strict.
+MIN_STRICT_ACCURACY = 0.98
+
+
+def newest(pattern: str) -> Path | None:
+    """The newest result file for a runner (dated names such as full431_20261121.json)."""
+    found = sorted(p for p in RESULTS.glob(pattern) if not p.stem.endswith(("_strict", ".meta")))
+    return found[-1] if found else None
 SECRET = re.compile(r"sk-[A-Za-z0-9]{24,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|(?i:api[_-]?key)\s*[=:]\s*['\"][A-Za-z0-9_\-]{16,}")
 
 results: list[tuple[str, str, str]] = []
@@ -82,8 +90,30 @@ def check_corpus() -> None:
     except json.JSONDecodeError:
         report("corpus", "FAIL", f"lint did not run: {out.stderr[-300:]}")
         return
-    report("corpus", "PASS" if out.returncode == 0 else "FAIL",
-           f"{summary['reports']} reports, {summary['chunks']} chunks, violations {summary['violations'] or 'none'}")
+    missing = [k for k, sha in current_chunks().items() if not sha]
+    linted = {d["report"].removesuffix("_v3") for d in summary.get("details", [])}
+    unlinted = sorted(set(current_chunks()) - linted)
+    ok = out.returncode == 0 and not missing and not unlinted
+    report("corpus", "PASS" if ok else "FAIL",
+           f"{summary['reports']} reports, {summary['chunks']} chunks, violations {summary['violations'] or 'none'}"
+           + (f"; registry reports without chunks: {missing}" if missing else "")
+           + (f"; not linted: {unlinted}" if unlinted else ""))
+
+
+_CURRENT: dict[str, str | None] = {}
+
+
+def current_chunks() -> dict[str, str | None]:
+    if not _CURRENT:
+        import provenance
+        _CURRENT.update({k: provenance.chunks_sha256(k) for k in registry_keys()})
+    return _CURRENT
+
+
+def same(recorded, key: str) -> bool:
+    """A result belongs to the current corpus only if both hashes exist and are equal."""
+    current = current_chunks().get(key)
+    return bool(current) and recorded == current
 
 
 def check_index(current: dict[str, str]) -> dict:
@@ -94,12 +124,20 @@ def check_index(current: dict[str, str]) -> dict:
     con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
     rows = con.execute("SELECT c.name, m.str_value FROM collections c JOIN collection_metadata m "
                        "ON m.collection_id = c.id WHERE m.key = 'chunks_sha256'").fetchall()
+    counts = dict(con.execute("SELECT c.name, COUNT(e.id) FROM collections c JOIN segments s ON s.collection = c.id "
+                              "JOIN embeddings e ON e.segment_id = s.id GROUP BY c.name").fetchall())
     con.close()
     built = {name.removeprefix("v3_"): sha for name, sha in rows}
-    stale = [k for k in current if built.get(k) != current[k]]
-    report("index", "FAIL" if stale else "PASS",
-           f"{len(current) - len(stale)}/{len(current)} collections built from the current chunks"
-           + (f"; stale: {', '.join(stale[:6])}{'…' if len(stale) > 6 else ''}" if stale else ""))
+    lines = {k: sum(1 for l in (CORPUS / f"{k}_v3" / "chunks.jsonl").open(encoding="utf-8") if l.strip())
+             for k in current if (CORPUS / f"{k}_v3" / "chunks.jsonl").is_file()}
+    stale = [k for k in current if not same(built.get(k), k)]
+    short = [k for k in current if k not in stale and counts.get(f"v3_{k}") != lines.get(k)]
+    bad = stale + short
+    incomplete = ", ".join(f"{k} {counts.get('v3_' + k, 0)}/{lines.get(k)}" for k in short[:6])
+    report("index", "FAIL" if bad else "PASS",
+           f"{len(current) - len(bad)}/{len(current)} collections built from the current chunks with every vector"
+           + (f"; stale: {', '.join(stale[:6])}{'…' if len(stale) > 6 else ''}" if stale else "")
+           + (f"; incomplete: {incomplete}" if short else ""))
     return built
 
 
@@ -130,7 +168,7 @@ def check_featured(current: dict[str, str]) -> set[str]:
             problems.append(f"{key}: no provenance")
         else:
             fingerprints.update(entry.get("model_fingerprints", []))
-            if entry.get("chunks_sha256") != current.get(key):
+            if not same(entry.get("chunks_sha256"), key):
                 problems.append(f"{key}: recorded from other chunks")
             if answer_check.blocking(entry.get("findings", [])):
                 problems.append(f"{key}: blocking finding")
@@ -155,18 +193,27 @@ def check_eval(path: Path, current: dict[str, str]) -> dict:
         report("eval", "FAIL", f"{path.relative_to(ROOT)} missing (run eval/run_numeric.py)")
         return {}
     rows = json.loads(path.read_text(encoding="utf-8"))
-    stale = [r["id"] for r in rows if r.get("chunks_sha256") != current.get(f"{r['code']}_{r['report_year']}")]
+    stale = [r["id"] for r in rows if not same(r.get("chunks_sha256"), f"{r['code']}_{r['report_year']}")]
     from strict_grade import strict_row
     gold = {q["id"]: q for q in json.loads((ROOT / "eval" / "numeric_gold.json").read_text(encoding="utf-8"))["questions"]}
+    expected = {q["id"] for q in gold.values() if q.get("usable", True)}
+    ids = [r["id"] for r in rows]
+    missing, duplicate = sorted(expected - set(ids)), len(ids) - len(set(ids))
     strict = Counter(strict_row(r, gold.get(r["id"], {}))["strict_verdict"] for r in rows)
     lenient = Counter(r["verdict"] for r in rows)
     leaks = sum(bool(system_text(v)) for v in visible([r.get("answer") or "" for r in rows]))
     fingerprints = sorted({fp for r in rows for fp in r.get("model_fingerprints", [])})
+    accuracy = strict.get("strict", 0) / max(len(expected), 1)
     summary = {"file": path.name, "n": len(rows), "lenient": dict(lenient), "strict": dict(strict),
-               "visible_system_text": leaks, "model_fingerprints": fingerprints}
-    status = "FAIL" if stale or leaks or lenient.get("error") else "PASS"
-    report("eval", status, f"{len(rows)} rows; lenient {dict(lenient)}; strict {dict(strict)}; "
-           f"visible system text {leaks}" + (f"; {len(stale)} rows from other chunks" if stale else ""))
+               "strict_accuracy": round(accuracy, 4), "visible_system_text": leaks, "model_fingerprints": fingerprints}
+    problems = [p for p, bad in [(f"{len(stale)} rows from other chunks", stale), (f"{len(missing)} questions missing", missing),
+                                 (f"{duplicate} duplicate rows", duplicate), (f"{lenient.get('error', 0)} run errors", lenient.get("error")),
+                                 (f"visible system text in {leaks}", leaks),
+                                 (f"strict accuracy {accuracy:.1%} below {MIN_STRICT_ACCURACY:.0%}", accuracy < MIN_STRICT_ACCURACY)]
+                if bad]
+    report("eval", "FAIL" if problems else "PASS",
+           f"{path.name}: {len(rows)} rows; lenient {dict(lenient)}; strict {dict(strict)} ({accuracy:.1%})"
+           + (f"; {'; '.join(problems)}" if problems else ""))
     return summary
 
 
@@ -177,14 +224,18 @@ def check_traps(path: Path | None, current: dict[str, str]) -> dict:
         report("traps", "FAIL", "no trap results (run eval/run_traps.py)")
         return {}
     rows = json.loads(path.read_text(encoding="utf-8"))
-    stale = [r["id"] for r in rows if r.get("chunks_sha256") != current.get(f"{r['code']}_{r['report_year']}")]
+    stale = [r["id"] for r in rows if not same(r.get("chunks_sha256"), f"{r['code']}_{r['report_year']}")]
     blocking = [r["id"] for r in rows if r.get("blocking")]
+    expected = {i["id"] for i in json.loads((ROOT / "eval" / "trap_set.json").read_text(encoding="utf-8"))}
+    missing = sorted(expected - {r["id"] for r in rows})
+    errors = [r["id"] for r in rows if r["verdict"] == "error"]
     by_kind = {}
     for r in rows:
         by_kind.setdefault(r["kind"], Counter())[r["verdict"]] += 1
     summary = {"file": path.name, "n": len(rows), "by_kind": {k: dict(v) for k, v in by_kind.items()}}
-    if stale or blocking:
-        report("traps", "FAIL", f"{len(stale)} rows from other chunks; blocking leaks in {blocking[:5]}")
+    if stale or blocking or missing or errors:
+        report("traps", "FAIL", f"{path.name}: {len(stale)} rows from other chunks; {len(missing)} missing; "
+                                f"{len(errors)} errors; blocking leaks in {blocking[:5]}")
     else:
         wrong = sum(n for v in by_kind.values() for k, n in v.items() if k != "correct")
         report("traps", "WARN" if wrong else "PASS", f"{len(rows)} rows; {summary['by_kind']}")
@@ -210,6 +261,11 @@ def check_line_endings() -> None:
     bad = [p.name for p in files if b"\r" in p.read_bytes()]
     report("line-endings", "FAIL" if bad else "PASS",
            f"{len(files)} server files" + (f"; CRLF in {bad}" if bad else ""))
+    # A NUL byte in a source file (it happened once through an editing tool) breaks imports.
+    tracked = [ROOT / n for n in run(["git", "ls-files"]).stdout.splitlines()
+               if n.endswith((".py", ".js", ".jsx", ".mjs", ".json", ".md", ".yml", ".yaml", ".css", ".html"))]
+    nul = [p.relative_to(ROOT).as_posix() for p in tracked if p.is_file() and bytes([0]) in p.read_bytes()]
+    report("source-bytes", "FAIL" if nul else "PASS", f"{len(tracked)} text files" + (f"; NUL in {nul}" if nul else ""))
 
 
 def check_secrets() -> None:
@@ -230,18 +286,20 @@ def check_secrets() -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--eval", type=Path, default=DEFAULT_EVAL)
-    ap.add_argument("--traps", type=Path, default=ROOT / "eval" / "results" / "traps_latest.json")
+    ap.add_argument("--eval", type=Path, help="numeric results (default: newest eval/results/full431_*.json)")
+    ap.add_argument("--traps", type=Path, help="trap results (default: newest eval/results/traps_*.json)")
     ap.add_argument("--python", default=sys.executable, help="interpreter with the full model environment")
     args = ap.parse_args()
-    import provenance
-    current = {k: provenance.chunks_sha256(k) for k in registry_keys()}
+    current = current_chunks()
+    eval_path = args.eval or newest("full431_*.json")
+    traps_path = args.traps or newest("traps_*.json")
+    resolve = lambda p: None if p is None else (p if p.is_absolute() else ROOT / p)
     check_tests(args.python)
     check_corpus()
     built = check_index(current)
     fingerprints = check_featured(current)
-    eval_summary = check_eval(args.eval if args.eval.is_absolute() else ROOT / args.eval, current)
-    traps = check_traps(args.traps if args.traps.is_absolute() else ROOT / args.traps, current)
+    eval_summary = check_eval(resolve(eval_path), current)
+    traps = check_traps(resolve(traps_path), current)
     git = check_git()
     check_line_endings()
     check_secrets()

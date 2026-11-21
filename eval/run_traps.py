@@ -31,7 +31,7 @@ import re  # noqa: E402
 from run_numeric import UNITS, cited_pages, grade  # noqa: E402
 from strict_grade import candidates, conclusion  # noqa: E402
 
-UNIT_WORD = re.compile(r"百万元|千元|万元|亿元|元")
+UNIT_WORD = re.compile(r"美元|港元|百万元|千元|万元|亿元|元")
 DECLINE = re.compile(r"未找到|没有(?:披露|找到|相关)|未披露|无法(?:确定|回答|找到|提供)|不包含|未提供")
 
 
@@ -41,18 +41,20 @@ def grade_item(item: dict, answer: str) -> str:
         heads = candidates(answer, item.get("unit"))
         hit = lambda value: any(u in UNITS and grade(f"{v}{u}", Decimal(value), item.get("tolerance"), item.get("unit"))
                                 for v, u in heads)
+        if hit(item["trap_value_yuan"]):  # the consolidated value as a result: trap, even next to the right one
+            return "trap"
         if hit(item["expected_value_yuan"]):
             return "correct"
-        if hit(item["trap_value_yuan"]):
-            return "trap"
         return "refused" if not heads or DECLINE.search(answer) else "wrong"
     if kind == "unit":
         text = re.sub(r"第\s*\d+\s*页", " ", conclusion(answer))
         first = UNIT_WORD.search(text)
         return "correct" if first and first[0] == item["expected_unit"] else "wrong"
     if kind == "refuse":
-        heads = [h for h in candidates(answer, None) if h[1]]
-        return "correct" if DECLINE.search(answer) and not heads else "wrong"
+        # Declines, and gives no figure at all (not even an estimate such as 「约32.5岁」/「85%」):
+        # page references and years are not figures.
+        text = re.sub(r"第\s*\d+\s*页|(?:19|20)\d\d\s*年(?:度)?|PDF物理页\s*\d+", " ", answer)
+        return "correct" if DECLINE.search(answer) and not re.search(r"\d", text) else "wrong"
     raise ValueError(kind)
 
 
@@ -74,8 +76,8 @@ def main():
     done = {}
     if out.is_file():
         for row in json.loads(out.read_text(encoding="utf-8")):
-            if row.get("verdict") != "error" and row.get("chunks_sha256") == provenance.chunks_sha256(
-                    f"{row['code']}_{row['report_year']}"):
+            current = provenance.chunks_sha256(f"{row['code']}_{row['report_year']}")
+            if row.get("verdict") != "error" and current and row.get("chunks_sha256") == current:
                 done[row["id"]] = row
     results, lock = dict(done), threading.Lock()
 
@@ -103,7 +105,7 @@ def main():
                "stop": final.get("stop_reason"), "seconds": round(time.time() - started, 1),
                "answer": answer, "error": error,
                "blocking": answer_check.blocking(record.get("findings", [])),
-               "chunks_sha256": provenance.chunks_sha256(f"{item['code']}_{item['report_year']}"),
+               "chunks_sha256": final.get("collection_chunks_sha256"),  # the collection actually read
                **{k: v for k, v in record.items() if k != "run"},
                "observation_dir": Path(final["observation_dir"]).name if final.get("observation_dir") else None}
         with lock:

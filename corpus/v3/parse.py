@@ -1830,11 +1830,18 @@ def anchor_text(anchors, rules=None):
     return None
 
 
-def render_table_header(base, page, ctx, rows, opening, has_amounts, document_unit=None, headers=()):
+def render_table_header(base, page, ctx, rows, opening, has_amounts, document_unit=None, headers=(),
+                        verbatim=None):
+    """verbatim(page, text) -> bool: does text occur in the RAW extraction of that page?
+    A line is quoted as 「原文」 only then (the cleaning step can merge separate lines)."""
     lines = [f"【{base['company']} {base['report_year']}年年报｜PDF物理页{page}】"]
     notes = []
-    if title := ctx.get("table_title"):
+    is_source = lambda anchor: verbatim is None or verbatim(anchor["source_page"], anchor["text"])
+    title = ctx.get("table_title")
+    if title and is_source(title):
         lines.append(quoted("表题", title["source_page"], title["text"]))
+    else:
+        title = None
     if ctx["statement_type"] in STATEMENTS:
         notes.append(f"报表类型：{ctx['statement_type']}")
 
@@ -1849,7 +1856,8 @@ def render_table_header(base, page, ctx, rows, opening, has_amounts, document_un
                      else "本表混合合并与母公司口径，本片金额无法绑定口径，不能用于数值回答")
     elif scope in SCOPE_WORDS:
         evidence = anchor_text(ctx.get("scope_evidence"))
-        if evidence and (not title or (evidence["source_page"], evidence["text"]) != (title["source_page"], title["text"])):
+        if evidence and is_source(evidence) and (
+                not title or (evidence["source_page"], evidence["text"]) != (title["source_page"], title["text"])):
             lines.append(quoted("口径依据", evidence["source_page"], evidence["text"]))
         how = "系统按所在章节判断" if scope == "合并(章节推定)" else "依据原文表题或章节"
         notes.append(f"财务口径：{SCOPE_WORDS[scope]}（{how}）")
@@ -1858,13 +1866,17 @@ def render_table_header(base, page, ctx, rows, opening, has_amounts, document_un
 
     if ctx["unit"]:
         unit = anchor_text(ctx.get("anchors"), UNIT_RULES)
-        if unit:
+        if unit and is_source(unit):
             lines.append(quoted("单位", unit["source_page"], unit["text"]))
+        elif unit:
+            notes.append(f"单位：{ctx['unit']}（系统依据第{unit['source_page']}页单位行识别）")
         else:
             notes.append(f"单位：{ctx['unit']}（沿用前页表头）")
+    elif not has_amounts or any(UNIT_IN_TABLE.search(cell or "") for row in [*headers, *rows] for cell in row["cells"]):
+        pass  # no amounts, or the table prints its own unit (「金额（万元）」): that unit wins
     elif document_unit:
         lines.append(quoted("单位", document_unit["page"], document_unit["text"]))
-    elif has_amounts and not any(UNIT_IN_TABLE.search(cell or "") for row in [*headers, *rows] for cell in row["cells"]):
+    else:
         notes.append("本表附近未找到单位说明，请勿自行推断单位")
 
     if entity := ctx.get("entity"):
@@ -1898,7 +1910,23 @@ def find_document_unit(out, report, limit=None):
     return (found[0], "found") if found else (None, "none")
 
 
-def make_chunks(raw, cleaned, report, document_unit=None, financial_start=None):
+def raw_reference(out):
+    """verbatim(page, text) over the cached RAW pages (pdfplumber text and line texts),
+    normalised the same way as corpus/v3/lint.py."""
+    import unicodedata
+    norm = lambda t: re.sub(r"\s+", "", unicodedata.normalize("NFKC", t or ""))
+    cache = {}
+
+    def verbatim(page, text):
+        if page not in cache:
+            path = out / "raw" / f"page_{int(page):04d}.json"
+            data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+            cache[page] = norm(data.get("text")) + "\x00" + "\x00".join(norm(l.get("text")) for l in data.get("lines") or [])
+        return norm(text) in cache[page]
+    return verbatim
+
+
+def make_chunks(raw, cleaned, report, document_unit=None, financial_start=None, verbatim=None):
     page = raw["page"]
     base = {"code": report["code"], "company": report["company"], "report_year": report["report_year"],
             "corpus_id": f"{report_id(report)}_v3", "source_id": raw["source_id"], "page": page,
@@ -1942,7 +1970,7 @@ def make_chunks(raw, cleaned, report, document_unit=None, financial_start=None):
                                       for col, cell in enumerate(row["cells"]))
             has_amounts = any(is_amount(cell) for row in rows for cell in row["cells"])
             unit_quote = None if ctx["unit"] else document_unit if page >= (financial_start or 10**9) else None
-            text = render_table_header(base, page, ctx, rows, opening, has_amounts, unit_quote, headers)
+            text = render_table_header(base, page, ctx, rows, opening, has_amounts, unit_quote, headers, verbatim)
             unit_meta = {"document_unit": unit_quote["unit"], "document_unit_page": unit_quote["page"]} if unit_quote else {}
             if headers:
                 text += "表头（重复供定位）：\n" + table_render(headers) + "\n"
@@ -1986,7 +2014,14 @@ def parse_report(report, output, pages=None, baseline=None, *, cached_only=False
     chunks = Counter()
     summaries = []
     segments = []
+    verbatim = raw_reference(out)
     document_unit, document_unit_status = find_document_unit(out, report, pages)
+    if document_unit_status == "raw_cache_incomplete" and not cached_only:
+        # Cold build: extract (and cache) every raw page first, then scan, so a declaration
+        # printed after the statements is never silently missed.
+        for _ in raw_pages(report, out, pages):
+            pass
+        document_unit, document_unit_status = find_document_unit(out, report, pages)
     # Hash/page validation runs at the first iteration, before derived writes.
     raw_stream = raw_pages(report, out, pages, cached_only=cached_only)
     with ExitStack() as stack:
@@ -2003,7 +2038,7 @@ def parse_report(report, output, pages=None, baseline=None, *, cached_only=False
 
             cleaned["raw_sha256"] = digest(out / cleaned["raw_ref"])
             financial_start = min((seg["start_page"] for seg in segments), default=None)
-            page_chunks = list(make_chunks(raw, cleaned, report, document_unit, financial_start))
+            page_chunks = list(make_chunks(raw, cleaned, report, document_unit, financial_start, verbatim))
             allowed_counts = Counter(c["metadata"]["table_id"] for c in page_chunks
                                      if c["metadata"]["type"] == "table" and c["metadata"]["numeric_answer_allowed"])
             for table in cleaned["tables"]:

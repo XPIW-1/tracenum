@@ -38,8 +38,14 @@ REFUSE = [
 
 
 def page_texts(key: str) -> str:
-    return "".join(re.sub(r"\s+", "", json.loads(p.read_text(encoding="utf-8"))["text"])
-                   for p in sorted((CORPUS / f"{key}_v3" / "cleaned").glob("page_*.json")))
+    """Every page's raw text and raw table cells (an absent term must be absent from both)."""
+    out = []
+    for p in sorted((CORPUS / f"{key}_v3" / "raw").glob("page_*.json")):
+        data = json.loads(p.read_text(encoding="utf-8"))
+        out.append(data.get("text", ""))
+        out.extend(c or "" for k in ("tables", "recovery_tables") for t in data.get(k) or [] for r in t["rows"]
+                   for c in r["cells"])
+    return re.sub(r"\s+", "", "".join(out))
 
 
 def main():

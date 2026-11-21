@@ -27,7 +27,16 @@ class TrapGradingTest(unittest.TestCase):
     def test_refuse(self):
         item = {"kind": "refuse"}
         self.assertEqual(grade_item(item, "年报中未找到相关数据。"), "correct")
+        self.assertEqual(grade_item(item, "2025年年报未披露该数据（已查第12页）。"), "correct")
         self.assertEqual(grade_item(item, "南极洲地区营业收入为 **12,345.00 元**。"), "wrong")
+        self.assertEqual(grade_item(item, "年报未披露，但估计约 32.5 岁。"), "wrong")
+
+    def test_trap_wins_over_a_listed_right_value(self):
+        both = "合并为 **45,104,844,200.13 元**；母公司为 **2,886,701,207.85 元**。"
+        self.assertEqual(grade_item(PARENT, both), "trap")
+
+    def test_foreign_currency_is_not_yuan(self):
+        self.assertEqual(grade_item({"kind": "unit", "expected_unit": "元"}, "单位为美元。"), "wrong")
 
 
 if __name__ == "__main__":

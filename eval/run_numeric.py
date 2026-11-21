@@ -96,7 +96,7 @@ def main():
     if out.is_file():
         for row in json.loads(out.read_text(encoding="utf-8")):
             current = provenance.chunks_sha256(f"{row['code']}_{row['report_year']}")
-            if row.get("verdict") != "error" and row.get("chunks_sha256") == current:
+            if row.get("verdict") != "error" and current and row.get("chunks_sha256") == current:
                 done[row["id"]] = row
     lock = threading.Lock()
     results = dict(done)
@@ -131,7 +131,7 @@ def main():
                "stop": final.get("stop_reason"), "seconds": round(time.time() - started, 1),
                "answer": answer, "error": error,
                # what this row was produced from (scripts/release_check.py compares it)
-               "chunks_sha256": provenance.chunks_sha256(f"{q['code']}_{q['report_year']}"),
+               "chunks_sha256": final.get("collection_chunks_sha256"),  # the collection actually read
                **({k: v for k, v in provenance.run_record(final["observation_dir"]).items() if k != "run"}
                   if final.get("observation_dir") else {}),
                "observation_dir": Path(final["observation_dir"]).name if final.get("observation_dir") else None}

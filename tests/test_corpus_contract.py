@@ -22,6 +22,9 @@ class FakePages(lint.Pages):
     def __init__(self, pages):
         self._cache = {p: lint.norm(t) for p, t in pages.items()}
 
+    def text(self, page):
+        return self._cache.get(page, "")
+
 
 class HeaderTest(unittest.TestCase):
     def test_unknowns_are_left_out(self):
@@ -78,6 +81,16 @@ class LintTest(unittest.TestCase):
 
     def test_invented_quote_fails(self):
         self.assertTrue(any("not on page" in p for p in self.check("单位（第9页原文）：单位：千元\n")))
+
+    def test_unknown_label_and_unitless_unit_line_fail(self):
+        self.assertTrue(any("label outside" in p for p in self.check("金额已核验（第9页原文）：单位：元\n")))
+        self.assertTrue(any("without a unit" in p for p in self.check("单位（第10页原文）：营业收入\n")))
+
+    def test_report_english_in_body_is_allowed(self):
+        pages = FakePages({10: "Other income 1,234,567.00"})
+        text = "【示例公司 2025年年报｜PDF物理页10】\n本片原始行序：\n| Other income | 1,234,567.00 |"
+        self.assertEqual(lint.check_record(self.record(text), pages, self.report), [])
+        self.assertTrue(any("other" in p for p in self.check(SYSTEM_MARK + "报表类型：other\n")))
 
     def test_cell_not_in_pdf_fails(self):
         text = "【示例公司 2025年年报｜PDF物理页10】\n本片原始行序：\n| 营业收入 | 9,999.00 |"

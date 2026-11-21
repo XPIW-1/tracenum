@@ -7,6 +7,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import re
 import threading
 import time
 import traceback
@@ -194,18 +195,34 @@ def prune_logs(now: float | None = None, days: float | None = None) -> dict:
     if not days or days <= 0:
         return {"runs": 0, "recordings": 0}
     cutoff = (now or time.time()) - days * 86400
-    keep = {f"{rid}.json" for path in (FEATURED, FEATURED_V3) for rid in _featured(path).values()}
-    keep |= {"featured.json", "featured_v3.json", "provenance.json"}
     removed = {"runs": 0, "recordings": 0}
-    for folder, kind in ((P.LOG_ROOT, "runs"), (RECORDINGS, "recordings")):
+    folders = [(P.LOG_ROOT, "runs", RUN_DIR_NAME, True)]
+    # Recordings are pruned only when every featured manifest that exists can be read; an
+    # unreadable manifest would otherwise make featured recordings look deletable.
+    manifests = [p for p in (FEATURED, FEATURED_V3) if p.exists()]
+    try:
+        keep = {f"{rid}.json" for p in manifests for rid in json.loads(p.read_text(encoding="utf-8")).values()}
+        folders.append((RECORDINGS, "recordings", TAPE_NAME, False))
+    except (OSError, ValueError, AttributeError):
+        keep = set()
+    for folder, kind, pattern, is_dir in folders:
         if not folder.is_dir():
             continue
         for entry in folder.iterdir():
-            if entry.name in keep or entry.stat().st_mtime >= cutoff:
-                continue
-            shutil.rmtree(entry, ignore_errors=True) if entry.is_dir() else entry.unlink(missing_ok=True)
-            removed[kind] += 1
+            try:  # only names this app writes; anything else is left alone
+                if entry.name in keep or not pattern.fullmatch(entry.name) or entry.is_dir() != is_dir \
+                        or entry.stat().st_mtime >= cutoff:
+                    continue
+                shutil.rmtree(entry) if is_dir else entry.unlink()
+                removed[kind] += 1
+            except FileNotFoundError:
+                continue  # removed meanwhile
     return removed
+
+
+# 20261121T021309472593_52e80d95_expansion_v3_…  /  20261121T021226_X-…_S3.json
+RUN_DIR_NAME = re.compile(r"\d{8}T\d{6,12}_[0-9a-f]{8}_[\w.-]+")
+TAPE_NAME = re.compile(r"\d{8}T\d{6}_[\w.-]+_S[123]+\.json")
 
 
 @app.on_event("startup")
@@ -233,9 +250,11 @@ def ready():
         checks["quota_db"] = True
     except Exception:
         checks["quota_db"] = False
-    free = shutil.disk_usage(DATA_DIR).free
-    checks["disk_free_gb"] = round(free / 1e9, 1)
-    checks["disk_ok"] = free >= MIN_FREE_BYTES
+    try:
+        free = shutil.disk_usage(DATA_DIR).free
+        checks["disk_ok"] = free >= MIN_FREE_BYTES
+    except OSError:
+        checks["disk_ok"] = False
     try:
         import sqlite3
         con = sqlite3.connect(f"file:{expansion.DB / 'chroma.sqlite3'}?mode=ro", uri=True)
@@ -247,7 +266,8 @@ def ready():
         checks["index_ok"] = False
     checks["live_enabled"] = bool(LIVE_ENABLED)
     if LIVE_ENABLED:
-        checks["pipeline_ok"] = getattr(P.PIPELINE, "error", None) is None
+        # ready only once the models have loaded (warm() loads them in the background)
+        checks["pipeline_ok"] = bool(getattr(P.PIPELINE, "ready", False)) and getattr(P.PIPELINE, "error", None) is None
     failed = [k for k in ("quota_db", "disk_ok", "index_ok", "pipeline_ok") if checks.get(k) is False]
     # Public endpoint: say what failed, not the numbers behind it.
     return JSONResponse({"ok": not failed, "failed": failed, "live_enabled": checks["live_enabled"]},
@@ -518,7 +538,7 @@ async def ask(body: AskBody, request: Request):
                 # Each retrieval round calls the hosted reranker once (a cache hit is free,
                 # so this can only overstate). Without it the ledger understated the cost.
                 with guard:
-                    ledger["cost"] += billing.RERANK_PER_REQUEST
+                    ledger["cost"] += billing.RERANK_PER_ROUND
             push(e)
         try:
             run_strategy(key, question, strategy, emit, route_info)

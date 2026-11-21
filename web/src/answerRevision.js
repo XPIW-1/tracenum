@@ -36,8 +36,12 @@ export function splitRevision(text) {
 // The frozen pipeline shows the model its verifier's feedback (status UNSUPPORTED,
 // operation NONE, verified_operands …); the model then often argues with it inside the
 // answer. Those sentences are process, not answer: fold them with the revision notes.
-// Only the sentence or 「；」 clause that mentions the feedback moves; the rest stays.
-const FEEDBACK = /外部(?:计算)?核验反馈|外部反馈|核验器|UNSUPPORTED|verified_operands|operation\s*[:：=]|\bNONE\b|calculation unsupported/
+// Only the clause (split at 「；，」) that mentions the feedback moves, and never one that
+// carries an amount; a clause with both stays visible (release_check then flags it).
+// Same vocabulary as VERIFIER_TALK in backend/answer_check.py, plus the Chinese phrases.
+const FEEDBACK = /外部(?:计算)?核验反馈|外部反馈|核验器|\b(?:UNSUPPORTED|SUPPORTED|verified_operands|NONE|calculation_ok|metric_match|time_match|retrieval_complete)\b|\boperation\s*[:：=]|calculation unsupported/
+// An amount (with a unit, or 4+ digits) marks a clause as part of the answer: never folded.
+const AMOUNT = /\d[\d,，]*(?:\.\d+)?\s*(?:亿元|万元|千元|百万元|元|%|％)|\d[\d,，]{3,}/
 const SENTENCE = /[^。！？\n]*(?:[。！？]+[”」’"]?|\n|$)/g
 
 export function splitProcessNotes(text) {
@@ -45,8 +49,8 @@ export function splitProcessNotes(text) {
   const notes = []
   for (const sentence of text.match(SENTENCE) || []) {
     if (!sentence || !FEEDBACK.test(sentence)) { kept.push(sentence); continue }
-    const clauses = sentence.split(/(?<=[；;])/)
-    for (const clause of clauses) (FEEDBACK.test(clause) ? notes : kept).push(clause)
+    const clauses = sentence.split(/(?<=[；;，,])/)
+    for (const clause of clauses) (FEEDBACK.test(clause) && !AMOUNT.test(clause) ? notes : kept).push(clause)
   }
   const answer = kept.join('').replace(/\n{3,}/g, '\n\n')
   if (!notes.length || !answer.trim()) return { answer: text, notes: '' }

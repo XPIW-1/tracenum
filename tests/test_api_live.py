@@ -82,7 +82,7 @@ class ApiLiveTest(unittest.TestCase):
             status, cost = db.execute("SELECT status, cost FROM ledger ORDER BY created DESC").fetchone()
         self.assertEqual(status, "settled")
         # micro-yuan at 2/8 元 per M, plus one reranker request for the one retrieval round
-        self.assertEqual(cost, 1000 * 2 + 500 * 8 + server.billing.RERANK_PER_REQUEST)
+        self.assertEqual(cost, 1000 * 2 + 500 * 8 + server.billing.RERANK_PER_ROUND)
         self.assertEqual(c.get("/api/status").json()["fingerprint"]["last_seen"], "fp-test")
 
     def test_boundary_year_is_free(self):
@@ -219,22 +219,27 @@ class ApiLiveTest(unittest.TestCase):
     def test_retention_deletes_old_logs_but_never_featured(self):
         root = Path(tempfile.mkdtemp())
         runs, recs = root / "runs", root / "recordings"
-        (runs / "old_run").mkdir(parents=True)
-        (runs / "new_run").mkdir()
+        old_run = "20261001T101010123456_52e80d95_expansion_v3_deepseek-flash_S3_X-002594-2025-abc_12345678"
+        new_run = "20261120T101010123456_52e80d95_expansion_v3_deepseek-flash_S3_X-002594-2025-def_12345678"
+        (runs / old_run).mkdir(parents=True)
+        (runs / new_run).mkdir()
+        (runs / "notes_by_hand").mkdir()  # not a name this app writes: never touched
         recs.mkdir()
-        for name in ("old.json", "featured_one.json", "provenance.json"):
+        old_tape, featured_tape = "20261001T101010_X-002594-2025-abc_S3.json", "20261001T101011_X-002594-2025-fff_S3.json"
+        for name in (old_tape, featured_tape, "provenance.json"):
             (recs / name).write_text("{}", encoding="utf-8")
-        (recs / "featured_v3.json").write_text(json.dumps({"002594_2025": "featured_one"}), encoding="utf-8")
+        (recs / "featured_v3.json").write_text(json.dumps({"002594_2025": featured_tape[:-5]}), encoding="utf-8")
         old = time.time() - 40 * 86400
-        for p in (runs / "old_run", recs / "old.json", recs / "featured_one.json", recs / "provenance.json"):
+        for p in (runs / old_run, runs / "notes_by_hand", recs / old_tape, recs / featured_tape, recs / "provenance.json"):
             os.utime(p, (old, old))
-        with patch.object(P, "LOG_ROOT", runs), patch.object(server, "RECORDINGS", recs), \
-             patch.object(server, "FEATURED", recs / "featured.json"), \
-             patch.object(server, "FEATURED_V3", recs / "featured_v3.json"):
+        with patch.object(P, "LOG_ROOT", runs), patch.object(server, "RECORDINGS", recs),              patch.object(server, "FEATURED", recs / "featured.json"),              patch.object(server, "FEATURED_V3", recs / "featured_v3.json"):
             self.assertEqual(server.prune_logs(days=None), {"runs": 0, "recordings": 0})  # unset: never deletes
-            self.assertEqual(server.prune_logs(days=30), {"runs": 1, "recordings": 1})
-        self.assertEqual(sorted(p.name for p in runs.iterdir()), ["new_run"])
-        self.assertEqual(sorted(p.name for p in recs.iterdir()), ["featured_one.json", "featured_v3.json", "provenance.json"])
+            (recs / "featured_v3.json").write_text("{broken", encoding="utf-8")
+            self.assertEqual(server.prune_logs(days=30), {"runs": 1, "recordings": 0})  # unreadable manifest: keep tapes
+            (recs / "featured_v3.json").write_text(json.dumps({"002594_2025": featured_tape[:-5]}), encoding="utf-8")
+            self.assertEqual(server.prune_logs(days=30), {"runs": 0, "recordings": 1})
+        self.assertEqual(sorted(p.name for p in runs.iterdir()), sorted([new_run, "notes_by_hand"]))
+        self.assertEqual(sorted(p.name for p in recs.iterdir()), sorted([featured_tape, "featured_v3.json", "provenance.json"]))
 
     def test_ready_reports_failures_without_numbers(self):
         r = self.client().get("/api/ready")

@@ -62,7 +62,11 @@ def main():
         items = list(load_items(args.items, MAX_QUESTION_CHARS))
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
+    import time
+    import expansion
+    import pipeline as P
     for key, route_info, question in items:
+        started = time.time() - 1
         tape = Tape(key, question, ["S3"])
         tape.add(ask_meta(key, question, ["S3"], route_info=route_info))
 
@@ -75,9 +79,22 @@ def main():
         rid = tape.save()
         if not rid:
             raise RuntimeError(f"No completed recording for {key}")
-        runs = sorted((ROOT / "backend" / "runs").glob(f"*_{question['question_id']}_*"))
-        record_info = provenance.run_record(runs[-1]) if runs else {"findings": [], "model_fingerprints": []}
-        entry = {"key": key, "chunks_sha256": provenance.chunks_sha256(key), "code": provenance.git_commit(),
+        # the run log written by this recording (created after it started), never an older one
+        runs = sorted(p for p in (P.LOG_ROOT).glob(f"*_{question['question_id']}_*") if p.stat().st_mtime >= started)
+        record_info = provenance.run_record(runs[-1]) if runs else {
+            "model_fingerprints": [],
+            "findings": [{"code": "run_log_missing", "severity": "block", "detail": str(P.LOG_ROOT)}]}
+        collection = {}
+        try:
+            import sqlite3
+            con = sqlite3.connect(f"file:{expansion.DB / 'chroma.sqlite3'}?mode=ro", uri=True)
+            collection = dict(con.execute(
+                "SELECT m.key, m.str_value FROM collection_metadata m JOIN collections c ON c.id = m.collection_id "
+                "WHERE c.name = ? AND m.key = 'chunks_sha256'", (route_info["collection_name"],)).fetchall())
+            con.close()
+        except Exception as exc:
+            print(f"{key}: cannot read collection metadata: {exc}", flush=True)
+        entry = {"key": key, "chunks_sha256": collection.get("chunks_sha256"), "code": provenance.git_commit(),
                  **record_info}
         update_featured(FEATURED_V3.parent / "provenance.json", rid, entry)
         if answer_check.blocking(record_info["findings"]):
