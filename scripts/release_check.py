@@ -13,6 +13,8 @@ Checks (each prints PASS / FAIL / WARN with the reason):
              folds it) contains no system text
   eval       the numeric eval rows were all produced from the current chunks; reports the
              original and strict grading and visible system text
+  traps      the trap set (parent scope, unit, should-refuse) from the current chunks
+             with no blocking leak; its verdicts are reported
   git        working tree clean and HEAD on the remote (a release is reproducible)
   line-endings  deploy files that run on Linux are LF
   secrets    no key-like strings or private-key blocks in tracked files
@@ -168,6 +170,27 @@ def check_eval(path: Path, current: dict[str, str]) -> dict:
     return summary
 
 
+def check_traps(path: Path | None, current: dict[str, str]) -> dict:
+    """Trap set (eval/run_traps.py): must be from the current corpus with no blocking leak;
+    the verdicts themselves are a measurement, reported as WARN when not all correct."""
+    if path is None or not path.is_file():
+        report("traps", "FAIL", "no trap results (run eval/run_traps.py)")
+        return {}
+    rows = json.loads(path.read_text(encoding="utf-8"))
+    stale = [r["id"] for r in rows if r.get("chunks_sha256") != current.get(f"{r['code']}_{r['report_year']}")]
+    blocking = [r["id"] for r in rows if r.get("blocking")]
+    by_kind = {}
+    for r in rows:
+        by_kind.setdefault(r["kind"], Counter())[r["verdict"]] += 1
+    summary = {"file": path.name, "n": len(rows), "by_kind": {k: dict(v) for k, v in by_kind.items()}}
+    if stale or blocking:
+        report("traps", "FAIL", f"{len(stale)} rows from other chunks; blocking leaks in {blocking[:5]}")
+    else:
+        wrong = sum(n for v in by_kind.values() for k, n in v.items() if k != "correct")
+        report("traps", "WARN" if wrong else "PASS", f"{len(rows)} rows; {summary['by_kind']}")
+    return summary
+
+
 def check_git() -> dict:
     dirty = run(["git", "status", "--porcelain", "--untracked-files=no"]).stdout.strip()
     head = run(["git", "rev-parse", "HEAD"]).stdout.strip()
@@ -208,6 +231,7 @@ def check_secrets() -> None:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--eval", type=Path, default=DEFAULT_EVAL)
+    ap.add_argument("--traps", type=Path, default=ROOT / "eval" / "results" / "traps_latest.json")
     ap.add_argument("--python", default=sys.executable, help="interpreter with the full model environment")
     args = ap.parse_args()
     import provenance
@@ -217,13 +241,14 @@ def main() -> int:
     built = check_index(current)
     fingerprints = check_featured(current)
     eval_summary = check_eval(args.eval if args.eval.is_absolute() else ROOT / args.eval, current)
+    traps = check_traps(args.traps if args.traps.is_absolute() else ROOT / args.traps, current)
     git = check_git()
     check_line_endings()
     check_secrets()
     failed =[n for n, s, _ in results if s == "FAIL"]
     if not failed:
         manifest = {"git": git, "chunks_sha256": current, "index_matches": built == current,
-                    "eval": eval_summary,
+                    "eval": eval_summary, "traps": traps,
                     "model_fingerprints": sorted(fingerprints | set(eval_summary.get("model_fingerprints", []))),
                     "lint_sha256": hashlib.sha256((ROOT / "corpus" / "v3" / "lint.py").read_bytes()).hexdigest()}
         (ROOT / "build" / "release_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1),

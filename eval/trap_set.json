@@ -1,0 +1,522 @@
+[
+ {
+  "id": "TRAP-PARENT-001301_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "001301",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据尚太科技2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "7970758380.96",
+  "unit": "元",
+  "evidence_page": 151,
+  "printed_value": "7,970,758,380.96",
+  "trap_value_yuan": "7943039962.41",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-001301_2025-NETCASH_OPERATE",
+  "kind": "parent_scope",
+  "code": "001301",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "NETCASH_OPERATE",
+  "question": "根据尚太科技2025年年报，2025年母公司报表口径下的经营活动产生的现金流量净额是多少？",
+  "expected_value_yuan": "-472515816.02",
+  "unit": "元",
+  "evidence_page": 154,
+  "printed_value": "-472,515,816.02",
+  "trap_value_yuan": "955677366.21",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-002460_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "002460",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据赣锋锂业2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "7786484278.87",
+  "unit": "元",
+  "evidence_page": 134,
+  "printed_value": "7,786,484,278.87",
+  "trap_value_yuan": "23081732746.32",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-002466_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "002466",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据天齐锂业2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "81728991.06",
+  "unit": "元",
+  "evidence_page": 144,
+  "printed_value": "81,728,991.06",
+  "trap_value_yuan": "10346364563.27",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-002466_2025-NETCASH_OPERATE",
+  "kind": "parent_scope",
+  "code": "002466",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "NETCASH_OPERATE",
+  "question": "根据天齐锂业2025年年报，2025年母公司报表口径下的经营活动产生的现金流量净额是多少？",
+  "expected_value_yuan": "-305418132.16",
+  "unit": "元",
+  "evidence_page": 146,
+  "printed_value": "-305,418,132.16",
+  "trap_value_yuan": "2960503399.35",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-002594_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "002594",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据比亚迪2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "1525075000",
+  "unit": "千元",
+  "evidence_page": 134,
+  "printed_value": "1,525,075",
+  "trap_value_yuan": "803964958000",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-002709_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "002709",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据天赐材料2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "5772159573.67",
+  "unit": "元",
+  "evidence_page": 85,
+  "printed_value": "5,772,159,573.67",
+  "trap_value_yuan": "16649892556.28",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-002709_2025-NETCASH_OPERATE",
+  "kind": "parent_scope",
+  "code": "002709",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "NETCASH_OPERATE",
+  "question": "根据天赐材料2025年年报，2025年母公司报表口径下的经营活动产生的现金流量净额是多少？",
+  "expected_value_yuan": "-243397278.36",
+  "unit": "元",
+  "evidence_page": 88,
+  "printed_value": "-243,397,278.36",
+  "trap_value_yuan": "1182243395.29",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-300014_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "300014",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据亿纬锂能2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "14999266224.86",
+  "unit": "元",
+  "evidence_page": 92,
+  "printed_value": "14,999,266,224.86",
+  "trap_value_yuan": "61469630776.09",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-300014_2025-NETCASH_OPERATE",
+  "kind": "parent_scope",
+  "code": "300014",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "NETCASH_OPERATE",
+  "question": "根据亿纬锂能2025年年报，2025年母公司报表口径下的经营活动产生的现金流量净额是多少？",
+  "expected_value_yuan": "-264865606.28",
+  "unit": "元",
+  "evidence_page": 94,
+  "printed_value": "-264,865,606.28",
+  "trap_value_yuan": "7492131666.79",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-300124_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "300124",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据汇川技术2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "2886701207.85",
+  "unit": "元",
+  "evidence_page": 122,
+  "printed_value": "2,886,701,207.85",
+  "trap_value_yuan": "45104844200.13",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-300750_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "300750",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据宁德时代2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "265326794000",
+  "unit": "千元",
+  "evidence_page": 118,
+  "printed_value": "265,326,794",
+  "trap_value_yuan": "423701834000",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-301358_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "301358",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据湖南裕能2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "7151903206.96",
+  "unit": "元",
+  "evidence_page": 98,
+  "printed_value": "7,151,903,206.96",
+  "trap_value_yuan": "34624768328.39",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-301358_2025-NETCASH_OPERATE",
+  "kind": "parent_scope",
+  "code": "301358",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "NETCASH_OPERATE",
+  "question": "根据湖南裕能2025年年报，2025年母公司报表口径下的经营活动产生的现金流量净额是多少？",
+  "expected_value_yuan": "850190073.87",
+  "unit": "元",
+  "evidence_page": 101,
+  "printed_value": "850,190,073.87",
+  "trap_value_yuan": "-1546350345.41",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-601633_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "601633",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据长城汽车2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "198349578282.38",
+  "unit": "元",
+  "evidence_page": 147,
+  "printed_value": "198,349,578,282.38",
+  "trap_value_yuan": "222824238516.25",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-PARENT-688005_2025-OPERATE_INCOME",
+  "kind": "parent_scope",
+  "code": "688005",
+  "report_year": 2025,
+  "data_year": 2025,
+  "metric": "OPERATE_INCOME",
+  "question": "根据容百科技2025年年报，2025年母公司报表口径下的营业收入是多少？",
+  "expected_value_yuan": "2170477320.79",
+  "unit": "元",
+  "evidence_page": 126,
+  "printed_value": "2,170,477,320.79",
+  "trap_value_yuan": "12267435004.35",
+  "tolerance": {
+   "元": {
+    "absolute_yuan": 0
+   },
+   "万元": {
+    "relative": 0.005
+   },
+   "亿元": {
+    "relative": 0.005
+   }
+  }
+ },
+ {
+  "id": "TRAP-UNIT-002594_2023",
+  "kind": "unit",
+  "code": "002594",
+  "report_year": 2023,
+  "data_year": 2023,
+  "question": "根据比亚迪2023年年报，合并资产负债表中的金额单位是什么？",
+  "expected_unit": "千元"
+ },
+ {
+  "id": "TRAP-UNIT-002594_2025",
+  "kind": "unit",
+  "code": "002594",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "根据比亚迪2025年年报，合并资产负债表中的金额单位是什么？",
+  "expected_unit": "千元"
+ },
+ {
+  "id": "TRAP-UNIT-300750_2025",
+  "kind": "unit",
+  "code": "300750",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "根据宁德时代2025年年报，合并资产负债表中的金额单位是什么？",
+  "expected_unit": "千元"
+ },
+ {
+  "id": "TRAP-UNIT-601633_2025",
+  "kind": "unit",
+  "code": "601633",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "根据长城汽车2025年年报，合并资产负债表中的金额单位是什么？",
+  "expected_unit": "元"
+ },
+ {
+  "id": "TRAP-UNIT-300014_2025",
+  "kind": "unit",
+  "code": "300014",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "根据亿纬锂能2025年年报，合并资产负债表中的金额单位是什么？",
+  "expected_unit": "元"
+ },
+ {
+  "id": "TRAP-UNIT-002466_2025",
+  "kind": "unit",
+  "code": "002466",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "根据天齐锂业2025年年报，合并资产负债表中的金额单位是什么？",
+  "expected_unit": "元"
+ },
+ {
+  "id": "TRAP-REFUSE-300750_2025-南极洲",
+  "kind": "refuse",
+  "code": "300750",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "宁德时代2025年在南极洲地区的营业收入是多少？",
+  "absent_terms": [
+   "南极洲"
+  ]
+ },
+ {
+  "id": "TRAP-REFUSE-300014_2025-平均年龄",
+  "kind": "refuse",
+  "code": "300014",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "亿纬锂能2025年员工的平均年龄是多少岁？",
+  "absent_terms": [
+   "平均年龄"
+  ]
+ },
+ {
+  "id": "TRAP-REFUSE-002466_2025-现金成本",
+  "kind": "refuse",
+  "code": "002466",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "天齐锂业2025年每吨碳酸锂的现金成本是多少？",
+  "absent_terms": [
+   "现金成本"
+  ]
+ },
+ {
+  "id": "TRAP-REFUSE-300124_2025-产能利用率",
+  "kind": "refuse",
+  "code": "300124",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "汇川技术2025年越南工厂的产能利用率是多少？",
+  "absent_terms": [
+   "产能利用率"
+  ]
+ },
+ {
+  "id": "TRAP-REFUSE-601633_2025-单车净利",
+  "kind": "refuse",
+  "code": "601633",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "长城汽车2025年的单车净利润是多少？",
+  "absent_terms": [
+   "单车净利"
+  ]
+ },
+ {
+  "id": "TRAP-REFUSE-002460_2025-现金成本",
+  "kind": "refuse",
+  "code": "002460",
+  "report_year": 2025,
+  "data_year": 2025,
+  "question": "赣锋锂业2025年每吨氢氧化锂的现金成本是多少？",
+  "absent_terms": [
+   "现金成本"
+  ]
+ }
+]

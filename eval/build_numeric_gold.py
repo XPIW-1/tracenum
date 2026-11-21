@@ -99,11 +99,11 @@ def recover_continuation(directory, segments, table_rows):
     return {(page, table["table_id"]): (segment, header["period_columns"], header_page)}
 
 
-def extract_report(directory, year):
+def extract_report(directory, year, scope="合并"):
     segments = {
         segment["segment_id"]: segment
         for segment in read_json(directory / "segments.json")
-        if segment["scope"] == "合并"
+        if segment["scope"] == scope
     }
     table_rows = defaultdict(set)
     with (directory / "chunks.jsonl").open(encoding="utf-8") as stream:
