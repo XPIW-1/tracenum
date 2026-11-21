@@ -14,6 +14,7 @@ Checks (each prints PASS / FAIL / WARN with the reason):
   eval       the numeric eval rows were all produced from the current chunks; reports the
              original and strict grading and visible system text
   git        working tree clean and HEAD on the remote (a release is reproducible)
+  line-endings  deploy files that run on Linux are LF
   secrets    no key-like strings or private-key blocks in tracked files
 On success, writes build/release_manifest.json: commit, chunks sha256 per report, index
 check, eval summary and model fingerprints seen.
@@ -176,6 +177,18 @@ def check_git() -> dict:
     return {"commit": head, "dirty": bool(dirty), "on_remote": bool(remote)}
 
 
+def check_line_endings() -> None:
+    """Files that run on the Linux server must be LF: a CR after a Dockerfile line
+    continuation breaks the build, and a CRLF .gitattributes had silently stopped
+    enforcing this (git read "eol=lf" + CR as an unknown value)."""
+    candidates = [*(ROOT / "deploy").iterdir(), ROOT / ".gitattributes"]
+    files = [p for p in candidates if p.is_file() and (p.suffix in {"", ".sh", ".yaml"}
+                                                         or p.name.startswith(("Caddyfile", "Dockerfile")))]
+    bad = [p.name for p in files if b"\r" in p.read_bytes()]
+    report("line-endings", "FAIL" if bad else "PASS",
+           f"{len(files)} server files" + (f"; CRLF in {bad}" if bad else ""))
+
+
 def check_secrets() -> None:
     files = run(["git", "ls-files"]).stdout.splitlines()
     hits = []
@@ -205,8 +218,9 @@ def main() -> int:
     fingerprints = check_featured(current)
     eval_summary = check_eval(args.eval if args.eval.is_absolute() else ROOT / args.eval, current)
     git = check_git()
+    check_line_endings()
     check_secrets()
-    failed = [n for n, s, _ in results if s == "FAIL"]
+    failed =[n for n, s, _ in results if s == "FAIL"]
     if not failed:
         manifest = {"git": git, "chunks_sha256": current, "index_matches": built == current,
                     "eval": eval_summary,
