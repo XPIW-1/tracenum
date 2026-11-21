@@ -34,7 +34,7 @@ MANIFEST_REL = "v2/config/dataset_manifest_v1.draft.json"
 HF_MODEL = "models--BAAI--bge-base-zh-v1.5"
 HF_CACHE = Path.home() / ".cache" / "huggingface" / "hub"
 BACKEND_FILES = ["pipeline.py", "server.py", "rerank.py", "access.py", "quota.py", "billing.py",
-                 "review_recordings.py", "expansion.py"]  # the last one grades the post-deploy smoke test
+                 "review_recordings.py", "expansion.py", "answer_check.py"]  # expansion.py also grades the post-deploy smoke test
 
 
 def sha(path: Path) -> str:

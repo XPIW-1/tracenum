@@ -393,3 +393,5 @@ button { cursor: pointer; }
   .nav button { padding: 6px 5px; font-size: 14px; }
   .topbar .status-dot { display: none; }
 }
+
+.check-notice { margin: 0 0 12px; padding: 8px 12px; border-left: 3px solid var(--amber); background: var(--amber-bg); border-radius: var(--r-sm); font-size: 14px; }

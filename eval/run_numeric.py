@@ -8,6 +8,9 @@ Each question makes real DeepSeek + reranker calls. Grading is automatic and str
   refused      - the pipeline declined (no number);
   wrong        - a number was given but none matches.
 Citation: whether the gold evidence page is among the pages the answer cites.
+Each row also records the chunks sha256 it was answered from, the model fingerprint(s)
+and the answer check findings (backend/answer_check.py). Rows from a different corpus
+version are re-run on resume, never mixed in.
 """
 from __future__ import annotations
 
@@ -23,6 +26,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "backend"))
+sys.path.insert(0, str(REPO / "scripts"))
 
 UNITS = {"亿元": Decimal("100000000"), "亿": Decimal("100000000"), "万元": Decimal("10000"), "万": Decimal("10000"),
          "千元": Decimal("1000"), "元": Decimal("1")}
@@ -85,11 +89,14 @@ def main():
     P.PIPELINE.load()
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    # Resume: questions already graded in --out (by id) are kept and skipped.
+    import provenance
+    # Resume: questions already graded in --out (by id) are kept and skipped, but only when
+    # they were answered from the same chunks as the current corpus.
     done = {}
     if out.is_file():
         for row in json.loads(out.read_text(encoding="utf-8")):
-            if row.get("verdict") != "error":
+            current = provenance.chunks_sha256(f"{row['code']}_{row['report_year']}")
+            if row.get("verdict") != "error" and row.get("chunks_sha256") == current:
                 done[row["id"]] = row
     lock = threading.Lock()
     results = dict(done)
@@ -122,7 +129,12 @@ def main():
                "cites_gold_page": q.get("evidence_page") in pages, "cited_pages": sorted(pages),
                "rounds": final.get("retrieval_count"), "tokens": final.get("total_tokens"),
                "stop": final.get("stop_reason"), "seconds": round(time.time() - started, 1),
-               "answer": answer[:600], "error": error}
+               "answer": answer, "error": error,
+               # what this row was produced from (scripts/release_check.py compares it)
+               "chunks_sha256": provenance.chunks_sha256(f"{q['code']}_{q['report_year']}"),
+               **({k: v for k, v in provenance.run_record(final["observation_dir"]).items() if k != "run"}
+                  if final.get("observation_dir") else {}),
+               "observation_dir": Path(final["observation_dir"]).name if final.get("observation_dir") else None}
         with lock:  # every finished question is on disk immediately
             results[row["id"]] = row
             save()

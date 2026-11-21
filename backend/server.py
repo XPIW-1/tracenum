@@ -21,6 +21,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response, StreamingRes
 from pydantic import BaseModel, Field
 
 import access
+import answer_check
 import billing
 import expansion
 import pipeline as P
@@ -179,6 +180,80 @@ def private_contact(request: Request):
     return JSONResponse(data, headers={"Cache-Control": "no-store"})
 
 
+# --------------------------------------------------------------------------- #
+# Retention: run logs and replay tapes hold visitors' questions. In production (the
+# Dockerfile sets LOG_RETENTION_DAYS=30) they are deleted after that many days; featured
+# recordings are never deleted. Unset (laptop, tests): nothing is ever deleted.
+LOG_RETENTION_DAYS = float(os.environ["LOG_RETENTION_DAYS"]) if os.environ.get("LOG_RETENTION_DAYS") else None
+MIN_FREE_BYTES = int(float(os.environ.get("MIN_FREE_GB", "2")) * 1e9)
+
+
+def prune_logs(now: float | None = None, days: float | None = None) -> dict:
+    import shutil
+    days = LOG_RETENTION_DAYS if days is None else days
+    if not days or days <= 0:
+        return {"runs": 0, "recordings": 0}
+    cutoff = (now or time.time()) - days * 86400
+    keep = {f"{rid}.json" for path in (FEATURED, FEATURED_V3) for rid in _featured(path).values()}
+    keep |= {"featured.json", "featured_v3.json", "provenance.json"}
+    removed = {"runs": 0, "recordings": 0}
+    for folder, kind in ((P.LOG_ROOT, "runs"), (RECORDINGS, "recordings")):
+        if not folder.is_dir():
+            continue
+        for entry in folder.iterdir():
+            if entry.name in keep or entry.stat().st_mtime >= cutoff:
+                continue
+            shutil.rmtree(entry, ignore_errors=True) if entry.is_dir() else entry.unlink(missing_ok=True)
+            removed[kind] += 1
+    return removed
+
+
+@app.on_event("startup")
+def start_retention():
+    if not LOG_RETENTION_DAYS:
+        return
+
+    def loop():
+        while True:
+            try:
+                prune_logs()
+            except Exception:  # never take the API down for housekeeping
+                traceback.print_exc()
+            time.sleep(6 * 3600)
+    threading.Thread(target=loop, daemon=True).start()
+
+
+@app.get("/api/ready")
+def ready():
+    """Readiness, unlike /api/health (liveness): the things a live question depends on."""
+    import shutil
+    checks = {}
+    try:
+        QUOTA.snapshot(None, "readiness-probe")  # reads the ledger; writes nothing
+        checks["quota_db"] = True
+    except Exception:
+        checks["quota_db"] = False
+    free = shutil.disk_usage(DATA_DIR).free
+    checks["disk_free_gb"] = round(free / 1e9, 1)
+    checks["disk_ok"] = free >= MIN_FREE_BYTES
+    try:
+        import sqlite3
+        con = sqlite3.connect(f"file:{expansion.DB / 'chroma.sqlite3'}?mode=ro", uri=True)
+        count = con.execute("SELECT COUNT(*) FROM collections WHERE name LIKE 'v3_%'").fetchone()[0]
+        con.close()
+        checks["v3_collections"] = count
+        checks["index_ok"] = count == len(expansion.REPORTS)
+    except Exception:
+        checks["index_ok"] = False
+    checks["live_enabled"] = bool(LIVE_ENABLED)
+    if LIVE_ENABLED:
+        checks["pipeline_ok"] = getattr(P.PIPELINE, "error", None) is None
+    failed = [k for k in ("quota_db", "disk_ok", "index_ok", "pipeline_ok") if checks.get(k) is False]
+    # Public endpoint: say what failed, not the numbers behind it.
+    return JSONResponse({"ok": not failed, "failed": failed, "live_enabled": checks["live_enabled"]},
+                        status_code=503 if failed else 200, headers={"Cache-Control": "no-store"})
+
+
 @app.on_event("startup")
 def warm():
     # Load models in the background so the first question does not pay for it.
@@ -326,6 +401,8 @@ def run_strategy(key, question, strategy, emit, route_info=None):
         final = P.PIPELINE.run_expansion(route_info, question, strategy, send)
     result = P.summarize_final(final, key)
     result["elapsed"] = round(time.perf_counter() - started, 1)
+    if route_info is not None:  # v3 corpus: chunks follow the contract checked by answer_check
+        result["answer_check"] = answer_check.check_state(final)
     send({"type": "final", "result": result})
 
 
@@ -437,6 +514,11 @@ async def ask(body: AskBody, request: Request):
             if e.get("type") == "usage":
                 on_usage(e)  # billing only; not streamed to the browser or recorded
                 return
+            if e.get("type") == "node" and e.get("node") == "retrieve":
+                # Each retrieval round calls the hosted reranker once (a cache hit is free,
+                # so this can only overstate). Without it the ledger understated the cost.
+                with guard:
+                    ledger["cost"] += billing.RERANK_PER_REQUEST
             push(e)
         try:
             run_strategy(key, question, strategy, emit, route_info)

@@ -32,3 +32,29 @@ export function splitRevision(text) {
   if (!i || !answer.trim()) return unchanged
   return { answer, revision: leading + chunks.slice(0, i).join('') }
 }
+
+// The frozen pipeline shows the model its verifier's feedback (status UNSUPPORTED,
+// operation NONE, verified_operands …); the model then often argues with it inside the
+// answer. Those sentences are process, not answer: fold them with the revision notes.
+// Only the sentence or 「；」 clause that mentions the feedback moves; the rest stays.
+const FEEDBACK = /外部(?:计算)?核验反馈|外部反馈|核验器|UNSUPPORTED|verified_operands|operation\s*[:：=]|\bNONE\b|calculation unsupported/
+const SENTENCE = /[^。！？\n]*(?:[。！？]+[”」’"]?|\n|$)/g
+
+export function splitProcessNotes(text) {
+  const kept = []
+  const notes = []
+  for (const sentence of text.match(SENTENCE) || []) {
+    if (!sentence || !FEEDBACK.test(sentence)) { kept.push(sentence); continue }
+    const clauses = sentence.split(/(?<=[；;])/)
+    for (const clause of clauses) (FEEDBACK.test(clause) ? notes : kept).push(clause)
+  }
+  const answer = kept.join('').replace(/\n{3,}/g, '\n\n')
+  if (!notes.length || !answer.trim()) return { answer: text, notes: '' }
+  return { answer, notes: notes.join('').trim() }
+}
+
+export function foldAnswer(text) {
+  const { answer, revision } = splitRevision(text)
+  const { answer: body, notes } = splitProcessNotes(answer)
+  return { answer: body, revision: [revision.trim(), notes].filter(Boolean).join('\n\n') }
+}

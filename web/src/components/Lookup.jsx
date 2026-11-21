@@ -348,6 +348,11 @@ function AnswerSheet({ result, corpusKey, openPdf, add, added }) {
         <h2>{refused ? '没有找到可核验的答案' : '答案'}</h2>
         <span className="sheet-stats">{result.rounds} 轮 · {result.model_calls} 次模型调用 · {(result.total_tokens || 0).toLocaleString()} tokens · {result.stop_reason}</span>
       </div>
+      {result.answer_check?.some((f) => f.severity === 'block') && (
+        <p className="check-notice" role="note">
+          本回答复述了检索系统的标注（{[...new Set(result.answer_check.filter((f) => f.severity === 'block').map((f) => f.detail))].join('、')}），这不是年报原文。请以右侧原页为准。
+        </p>
+      )}
       {!boundary && result.answer && <AnswerText text={result.answer} foldRevision numbers={figures} onPage={onPage} onFigure={onFigure} />}
       {refused && (
         <div className="refusal">

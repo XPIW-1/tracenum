@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { splitRevision } from '../answerRevision.js'
+import { foldAnswer } from '../answerRevision.js'
 
 export const normNum = (v) => String(v).replace(/[,，\s]/g, '').replace(/^[-(（]+|[)）]+$/g, '')
 
@@ -99,7 +99,7 @@ function AnswerBody({ text, numbers = [], onPage, onFigure }) {
 }
 
 export default function AnswerText({ text, foldRevision = false, ...props }) {
-  const { answer, revision } = foldRevision ? splitRevision(text || '') : { answer: text }
+  const { answer, revision } = foldRevision ? foldAnswer(text || '') : { answer: text }
   return <>
     <AnswerBody text={answer} {...props} />
     {revision && <details className="revision" key={revision}>

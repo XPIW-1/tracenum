@@ -6,7 +6,8 @@ on:
 
 jobs:
   guard-tests:
-    # Offline tests of the live-question guard (quota, money cap, access sessions).
+    # Offline tests: live-question guard (quota, money cap, access sessions) and the corpus
+    # contract. scripts/release_check.py runs everything, including the model-backed tests.
     # The API end-to-end test needs the frozen paper assets, which are not in this repo.
     runs-on: ubuntu-latest
     steps:
@@ -16,6 +17,9 @@ jobs:
           python-version: "3.12"
       - run: pip install numpy==2.5.4
       - run: python -m unittest tests.test_live_guard -v
+      # Corpus contract, parser rules (tests needing the local PDF cache skip themselves),
+      # numeric gold helpers. Pure stdlib.
+      - run: python -m unittest tests.test_corpus_contract tests.test_corpus_v3 tests.test_numeric_gold -v
 
   web-build:
     runs-on: ubuntu-latest
@@ -27,6 +31,8 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
+        working-directory: web
+      - run: node --test tests/answerRevision.test.js
         working-directory: web
       - run: npm run build
         working-directory: web

@@ -1,6 +1,11 @@
 """Record featured S3 answers using the live pipeline (makes real model calls).
 
     python scripts/record_v3_featured.py --items items.json
+
+Each recording gets an entry in <recordings>/provenance.json: the chunks sha256 of its
+report, the code commit, the model fingerprint and the answer check findings. A run whose
+answer contains system text (answer_check "block") is not published as featured;
+scripts/release_check.py later refuses featured recordings made from another corpus.
 """
 from __future__ import annotations
 
@@ -11,6 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 
 def load_items(path, max_chars):
@@ -49,6 +55,8 @@ def main():
     args = parser.parse_args()
 
     from server import FEATURED_V3, MAX_QUESTION_CHARS, Tape, ask_meta, run_strategy
+    import answer_check
+    import provenance
 
     try:
         items = list(load_items(args.items, MAX_QUESTION_CHARS))
@@ -67,6 +75,14 @@ def main():
         rid = tape.save()
         if not rid:
             raise RuntimeError(f"No completed recording for {key}")
+        runs = sorted((ROOT / "backend" / "runs").glob(f"*_{question['question_id']}_*"))
+        record_info = provenance.run_record(runs[-1]) if runs else {"findings": [], "model_fingerprints": []}
+        entry = {"key": key, "chunks_sha256": provenance.chunks_sha256(key), "code": provenance.git_commit(),
+                 **record_info}
+        update_featured(FEATURED_V3.parent / "provenance.json", rid, entry)
+        if answer_check.blocking(record_info["findings"]):
+            print(f"{key}: {rid} NOT featured: {record_info['findings']}", flush=True)
+            continue
         update_featured(FEATURED_V3, key, rid)
         print(f"{key}: {rid}", flush=True)
 
