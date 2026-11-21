@@ -1,0 +1,4503 @@
+{
+ "counts": {
+  "strict": 430,
+  "wrong": 1,
+  "with_conflicting_results": 22
+ },
+ "rows": [
+  {
+   "id": "002594-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "602315354000.00元",
+    "6023.15354亿元",
+    "602315354000.00元",
+    "602315354000.00元",
+    "602315354千元",
+    "602315354000.00元"
+   ]
+  },
+  {
+   "id": "002594-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "424060635000.00元",
+    "4240.60635亿元"
+   ]
+  },
+  {
+   "id": "002594-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "480558350000.00元",
+    "480558350000.00元"
+   ]
+  },
+  {
+   "id": "002594-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "351815680000.00元",
+    "92465733000.00元",
+    "351815680000.00元"
+   ]
+  },
+  {
+   "id": "002594-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30040811000.00元",
+    "30040811000.00元",
+    "30040811000.00元",
+    "30040811千元",
+    "30040811000.00元"
+   ]
+  },
+  {
+   "id": "002594-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "16622448千元"
+   ]
+  },
+  {
+   "id": "002594-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "169725025000.00元",
+    "1697.25025亿元",
+    "169725025000.00元",
+    "169725025000.00元"
+   ]
+  },
+  {
+   "id": "002594-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "140837657000.00元"
+   ]
+  },
+  {
+   "id": "002594-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "679547670千元",
+    "679547670千元",
+    "679547670000元"
+   ]
+  },
+  {
+   "id": "002594-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "493860646千元",
+    "493860646千元"
+   ]
+  },
+  {
+   "id": "002594-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "453666671千元"
+   ],
+   "result_amounts": [
+    "529085557千元",
+    "453666671千元",
+    "529085557千元"
+   ]
+  },
+  {
+   "id": "002594-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "372470809千元"
+   ]
+  },
+  {
+   "id": "002594-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "777102455000元",
+    "777102455千元",
+    "7771.02亿元",
+    "777102455千元",
+    "777102455千元",
+    "777102455000.00元",
+    "124944397000千元",
+    "777102455000元",
+    "777102455000元",
+    "777102455000元"
+   ]
+  },
+  {
+   "id": "002594-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "602315354千元",
+    "602315354千元",
+    "602315354000元"
+   ]
+  },
+  {
+   "id": "002594-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "626046616千元",
+    "626046616千元",
+    "626046616000元",
+    "6260.46616亿元"
+   ]
+  },
+  {
+   "id": "002594-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "490398945千元",
+    "490398945000元",
+    "4903.98945亿元"
+   ]
+  },
+  {
+   "id": "002594-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40254346000.00元",
+    "40254346千元",
+    "40254346千元",
+    "40254346000.00元",
+    "40254346000元"
+   ]
+  },
+  {
+   "id": "002594-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30040811千元",
+    "30040811000元"
+   ]
+  },
+  {
+   "id": "002594-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "133453873千元",
+    "133453873000元",
+    "133453873千元",
+    "814817630千元",
+    "681363757千元",
+    "133453873千元",
+    "133453873千元"
+   ]
+  },
+  {
+   "id": "002594-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "169725025千元",
+    "169725025千元",
+    "1697.25025亿元"
+   ]
+  },
+  {
+   "id": "002594-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "783355855千元",
+    "783355855000元"
+   ]
+  },
+  {
+   "id": "002594-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "679547670千元",
+    "6795.4767亿元"
+   ]
+  },
+  {
+   "id": "002594-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "584667646千元",
+    "584667646000元"
+   ]
+  },
+  {
+   "id": "002594-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "529085557千元",
+    "5290.85557亿元"
+   ]
+  },
+  {
+   "id": "002594-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "803964958000.00元",
+    "803964958千元",
+    "803964958千元",
+    "803964958千元",
+    "803964958000.00元",
+    "170360448000.00千元",
+    "803964958000元",
+    "803964958000.00元"
+   ]
+  },
+  {
+   "id": "002594-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "777102455千元",
+    "777102455000元"
+   ]
+  },
+  {
+   "id": "002594-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "661305161千元",
+    "661305161000元",
+    "6613.05161亿元"
+   ]
+  },
+  {
+   "id": "002594-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "626046616000元"
+   ]
+  },
+  {
+   "id": "002594-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "32619022千元",
+    "32619022千元",
+    "32619022000.00元",
+    "32619022000元",
+    "326.19022亿元",
+    "32619022000元",
+    "326.19022亿元"
+   ]
+  },
+  {
+   "id": "002594-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40254346千元"
+   ]
+  },
+  {
+   "id": "002594-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "59135544千元",
+    "59135544000.00元",
+    "59135544千元",
+    "59135544000.00元",
+    "861740107千元",
+    "59135544千元",
+    "59135544千元",
+    "59135544000元"
+   ]
+  },
+  {
+   "id": "002594-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "133453873千元",
+    "133453873000元"
+   ]
+  },
+  {
+   "id": "002594-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "883729883千元",
+    "883729883000元"
+   ]
+  },
+  {
+   "id": "002594-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "783355855千元",
+    "783355855000元"
+   ]
+  },
+  {
+   "id": "002594-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "625190698千元"
+   ]
+  },
+  {
+   "id": "002594-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "584667646千元"
+   ]
+  },
+  {
+   "id": "601633-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "173212076757.97元",
+    "17321207.68万元",
+    "29038525580.90元",
+    "173212076757.97元"
+   ]
+  },
+  {
+   "id": "601633-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "137339985187.76元",
+    "13733998.52万元"
+   ]
+  },
+  {
+   "id": "601633-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "139075576085.24元"
+   ],
+   "result_amounts": [
+    "140773127749.65元",
+    "14077312.77万元",
+    "139075576085.24元",
+    "1697551664.41元",
+    "140773127749.65元",
+    "140773127749.65元",
+    "14077312.77万元",
+    "140773127749.65元"
+   ]
+  },
+  {
+   "id": "601633-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "110739333423.32元",
+    "110739333423.32元"
+   ]
+  },
+  {
+   "id": "601633-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7021559679.84元",
+    "7021559679.84元",
+    "7021559679.84元",
+    "7021559679.84元"
+   ]
+  },
+  {
+   "id": "601633-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "8266041808.18元"
+   ]
+  },
+  {
+   "id": "601633-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "17753789028.71元",
+    "17753789028.71元"
+   ]
+  },
+  {
+   "id": "601633-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12311254519.44元"
+   ]
+  },
+  {
+   "id": "601633-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "118583843848.95元"
+   ],
+   "result_amounts": [
+    "118583843848.95元",
+    "201270288570.21元"
+   ]
+  },
+  {
+   "id": "601633-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "185357300473.07元"
+   ]
+  },
+  {
+   "id": "601633-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "132761504625.02元"
+   ]
+  },
+  {
+   "id": "601633-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "120141392357.77元"
+   ]
+  },
+  {
+   "id": "601633-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "202195472334.88元",
+    "20219547.23万元"
+   ]
+  },
+  {
+   "id": "601633-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "173212076757.97元",
+    "17321207.68万元"
+   ]
+  },
+  {
+   "id": "601633-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "162746753859.32元",
+    "162746753859.32元"
+   ]
+  },
+  {
+   "id": "601633-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "141772092554.01元"
+   ]
+  },
+  {
+   "id": "601633-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12692204172.58元",
+    "126.92亿元",
+    "12692204172.58元",
+    "12692204172.58元",
+    "3227751398.16元",
+    "1269220.42万元",
+    "126.92亿元",
+    "12692204172.58元"
+   ]
+  },
+  {
+   "id": "601633-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7021559679.84元"
+   ]
+  },
+  {
+   "id": "601633-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "27782626338.16元",
+    "27782626338.16元",
+    "-2617380652.64元",
+    "27782626338.16元",
+    "27782626338.16元"
+   ]
+  },
+  {
+   "id": "601633-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "17753789028.71元"
+   ]
+  },
+  {
+   "id": "601633-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "217266223746.47元"
+   ]
+  },
+  {
+   "id": "601633-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "201270288570.21元"
+   ]
+  },
+  {
+   "id": "601633-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "122228797798.25元"
+   ],
+   "result_amounts": [
+    "138269994927.77元",
+    "122228797798.25元",
+    "138269994927.77元"
+   ]
+  },
+  {
+   "id": "601633-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "132761504625.02元"
+   ]
+  },
+  {
+   "id": "601633-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "222824238516.25元",
+    "222824238516.25元"
+   ]
+  },
+  {
+   "id": "601633-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "202193779642.49元"
+   ]
+  },
+  {
+   "id": "601633-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "180773484820.23元"
+   ],
+   "result_amounts": [
+    "180773484820.23元",
+    "182622062999.98元"
+   ]
+  },
+  {
+   "id": "601633-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "162751816682.81元",
+    "16275181.67万元"
+   ]
+  },
+  {
+   "id": "601633-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "9865280190.16元",
+    "986528.02万元",
+    "9865280190.16元",
+    "9865280190.16元",
+    "986528.02万元",
+    "9865280190.16元"
+   ]
+  },
+  {
+   "id": "601633-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12659777358.87元",
+    "1265977.74万元"
+   ]
+  },
+  {
+   "id": "601633-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40355401297.93元",
+    "40355401297.93元",
+    "40355401297.93元"
+   ]
+  },
+  {
+   "id": "601633-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "27771483801.77元"
+   ]
+  },
+  {
+   "id": "601633-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "225287872883.05元"
+   ]
+  },
+  {
+   "id": "601633-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "217720295344.69元"
+   ]
+  },
+  {
+   "id": "601633-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "137395831405.82元"
+   ]
+  },
+  {
+   "id": "601633-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "138727125825.55元"
+   ]
+  },
+  {
+   "id": "300750-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40091704.49万元",
+    "4009.17亿元",
+    "40091704.49万元",
+    "4009.170449亿元",
+    "40091704.49万元",
+    "40091704.49万元",
+    "40091704.49万元",
+    "40091704.49万元",
+    "4009.170449亿元"
+   ]
+  },
+  {
+   "id": "300750-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "32859398.75万元",
+    "3285.939875亿元"
+   ]
+  },
+  {
+   "id": "300750-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "30333761.00万元"
+   ],
+   "result_amounts": [
+    "30907043.40万元",
+    "30907043.40万元",
+    "30333761.00万元",
+    "30907043.40万元"
+   ]
+  },
+  {
+   "id": "300750-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "25775534.08万元"
+   ],
+   "result_amounts": [
+    "25775534.08万元",
+    "26204960.92万元"
+   ]
+  },
+  {
+   "id": "300750-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4412124.83万元"
+   ]
+  },
+  {
+   "id": "300750-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3072916.35万元"
+   ]
+  },
+  {
+   "id": "300750-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "9282612.44万元",
+    "44640749.71万元",
+    "9282612.44万元"
+   ]
+  },
+  {
+   "id": "300750-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "6120884.33万元"
+   ]
+  },
+  {
+   "id": "300750-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "71716804.11万元"
+   ]
+  },
+  {
+   "id": "300750-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "60095235.19万元",
+    "6009.523519亿元"
+   ]
+  },
+  {
+   "id": "300750-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "49728489.05万元",
+    "49728489.05万元",
+    "49728489.05万元"
+   ]
+  },
+  {
+   "id": "300750-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "42404318.99万元",
+    "42404318.99万元",
+    "42404318.99万元"
+   ]
+  },
+  {
+   "id": "300750-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "362012554千元",
+    "3620.12554亿元",
+    "362012554千元",
+    "362012554千元",
+    "3620.12554亿元",
+    "362012554千元",
+    "3620.12554亿元"
+   ]
+  },
+  {
+   "id": "300750-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "400917045千元",
+    "400917045千元",
+    "4009.17045亿元"
+   ]
+  },
+  {
+   "id": "300750-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "273518959千元",
+    "2735.18959亿元"
+   ]
+  },
+  {
+   "id": "300750-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "323982130千元"
+   ]
+  },
+  {
+   "id": "300750-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "50744682千元",
+    "507.44682亿元",
+    "507.44682亿元",
+    "100000千元"
+   ]
+  },
+  {
+   "id": "300750-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "44121248千元",
+    "441.21248亿元",
+    "44121248千元",
+    "441.21248亿元"
+   ]
+  },
+  {
+   "id": "300750-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "96990345千元"
+   ]
+  },
+  {
+   "id": "300750-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "92826124千元",
+    "92826124000元",
+    "928.26124亿元"
+   ]
+  },
+  {
+   "id": "300750-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "786658123千元",
+    "7866.58123亿元"
+   ]
+  },
+  {
+   "id": "300750-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "717168041千元",
+    "7171.68041亿元"
+   ]
+  },
+  {
+   "id": "300750-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "513201949千元",
+    "513201949000元",
+    "5132.01949亿元"
+   ]
+  },
+  {
+   "id": "300750-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "497284890千元",
+    "49728489万元",
+    "4972.8489亿元"
+   ]
+  },
+  {
+   "id": "300750-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "423701834千元",
+    "423701834千元",
+    "423701834千元",
+    "423701834千元",
+    "423701834千元",
+    "423701834千元",
+    "100000千元",
+    "4237.01834亿元"
+   ]
+  },
+  {
+   "id": "300750-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "362012554千元",
+    "3620.12554亿元"
+   ]
+  },
+  {
+   "id": "300750-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "312383297千元",
+    "31238329.7万元",
+    "312383297千元",
+    "312383297千元"
+   ]
+  },
+  {
+   "id": "300750-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "273518959千元",
+    "27351895.9万元"
+   ]
+  },
+  {
+   "id": "300750-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "72201282千元",
+    "722.01282亿元",
+    "72201282千元",
+    "722.01282亿元",
+    "72201282千元",
+    "72201282千元",
+    "72201282000元",
+    "722.01282亿元"
+   ]
+  },
+  {
+   "id": "300750-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "507.44682亿元"
+   ]
+  },
+  {
+   "id": "300750-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "133219982千元",
+    "1332亿元"
+   ]
+  },
+  {
+   "id": "300750-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "96990345千元",
+    "969.90345亿元"
+   ]
+  },
+  {
+   "id": "300750-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "974827544千元",
+    "974827544000元"
+   ]
+  },
+  {
+   "id": "300750-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "786658123千元"
+   ]
+  },
+  {
+   "id": "300750-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "603801220千元",
+    "6038.0122亿元"
+   ]
+  },
+  {
+   "id": "300750-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "513201949千元",
+    "5132.01949亿元"
+   ]
+  },
+  {
+   "id": "300014-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "48783587175.86元",
+    "487.84亿元"
+   ]
+  },
+  {
+   "id": "300014-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "36303947808.53元",
+    "363.04亿元"
+   ]
+  },
+  {
+   "id": "300014-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40473296810.60元"
+   ]
+  },
+  {
+   "id": "300014-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30338440631.84元"
+   ]
+  },
+  {
+   "id": "300014-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4050174699.52元",
+    "40.50亿元",
+    "4050174699.52元",
+    "4050174699.52元",
+    "4050174699.52元",
+    "4050174元"
+   ]
+  },
+  {
+   "id": "300014-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3508963827.40元"
+   ]
+  },
+  {
+   "id": "300014-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "8676259761.12元",
+    "8676259761.12元",
+    "8676259761.12元",
+    "37460503561.93元",
+    "28784243800.81元",
+    "8676259761.12元",
+    "8676259761.12元",
+    "8676259761.12元"
+   ]
+  },
+  {
+   "id": "300014-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2860220008.15元"
+   ]
+  },
+  {
+   "id": "300014-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "94355337998.71元"
+   ]
+  },
+  {
+   "id": "300014-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "83637813181.68元"
+   ]
+  },
+  {
+   "id": "300014-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "56350070377.39元"
+   ]
+  },
+  {
+   "id": "300014-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "50477633656.34元"
+   ]
+  },
+  {
+   "id": "300014-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "48614556525.09元",
+    "48614556525.09元",
+    "48614556525.09元"
+   ]
+  },
+  {
+   "id": "300014-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "48783587175.86元",
+    "48783587175.86元",
+    "48783587175.86元"
+   ]
+  },
+  {
+   "id": "300014-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40149208233.59元"
+   ]
+  },
+  {
+   "id": "300014-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40664273886.86元"
+   ]
+  },
+  {
+   "id": "300014-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4075585284.37元",
+    "40.76亿元",
+    "4075585284.37元",
+    "4075585284.37元",
+    "4075585284.37元",
+    "4075585284.37元",
+    "4075585284.37元"
+   ]
+  },
+  {
+   "id": "300014-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4050174699.52元",
+    "405017.469952万元"
+   ]
+  },
+  {
+   "id": "300014-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4433732894.55元",
+    "4433732894.55元"
+   ]
+  },
+  {
+   "id": "300014-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "8676259761.12元"
+   ]
+  },
+  {
+   "id": "300014-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "100890624125.27元"
+   ]
+  },
+  {
+   "id": "300014-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "94355337998.71元"
+   ]
+  },
+  {
+   "id": "300014-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "59891437252.63元"
+   ]
+  },
+  {
+   "id": "300014-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "56350070377.39元",
+    "56350070377.39元",
+    "563.5007037739亿元"
+   ]
+  },
+  {
+   "id": "300014-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "61469630776.09元",
+    "6146963.08万元"
+   ]
+  },
+  {
+   "id": "300014-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "48614556525.09元",
+    "4861455.652509万元"
+   ]
+  },
+  {
+   "id": "300014-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "51528491525.28元"
+   ]
+  },
+  {
+   "id": "300014-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40149208233.59元"
+   ]
+  },
+  {
+   "id": "300014-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4134303670.89元",
+    "4134303670.89元",
+    "4134303670.89元",
+    "4134303670.89元"
+   ]
+  },
+  {
+   "id": "300014-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4075585284.37元"
+   ]
+  },
+  {
+   "id": "300014-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "51123719216.22元",
+    "7492131666.79元",
+    "7492131666.79元"
+   ]
+  },
+  {
+   "id": "300014-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4433732894.55元"
+   ]
+  },
+  {
+   "id": "300014-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "125542296569.58元"
+   ]
+  },
+  {
+   "id": "300014-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "100890624125.27元",
+    "100890624125.27元",
+    "100890624125.27元",
+    "100890624125.27元"
+   ]
+  },
+  {
+   "id": "300014-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "80570865986.93元",
+    "80570865986.93元"
+   ]
+  },
+  {
+   "id": "300014-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "59891437252.63元",
+    "598.91亿元"
+   ]
+  },
+  {
+   "id": "301358-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "41357670979.28元",
+    "41357670979.28元",
+    "41357670979.28元"
+   ]
+  },
+  {
+   "id": "301358-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "42790361250.00元"
+   ]
+  },
+  {
+   "id": "301358-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "38195456355.00元"
+   ]
+  },
+  {
+   "id": "301358-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "37451442229.15元"
+   ]
+  },
+  {
+   "id": "301358-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1580629275.19元",
+    "1580629275.19元",
+    "1580629275.19元",
+    "1580629275.19元",
+    "1580629275.19元"
+   ]
+  },
+  {
+   "id": "301358-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3007205835.14元"
+   ]
+  },
+  {
+   "id": "301358-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "501243814.33元",
+    "501243814.33元",
+    "501243814.33元"
+   ]
+  },
+  {
+   "id": "301358-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-2783170588.67元"
+   ]
+  },
+  {
+   "id": "301358-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "26794644913.16元"
+   ]
+  },
+  {
+   "id": "301358-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "26434432058.15元"
+   ]
+  },
+  {
+   "id": "301358-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "15478861790.09元"
+   ]
+  },
+  {
+   "id": "301358-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20719967585.89元",
+    "207.20亿元",
+    "20719967585.89元"
+   ]
+  },
+  {
+   "id": "301358-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "22598527203.79元",
+    "22598527203.79元",
+    "22598527203.79元",
+    "22598527203.79元",
+    "22598527203.79元",
+    "22598527203.79元"
+   ]
+  },
+  {
+   "id": "301358-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "41357670979.28元"
+   ]
+  },
+  {
+   "id": "301358-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "20520397911.42元"
+   ],
+   "result_amounts": [
+    "20825021307.44元",
+    "20520397911.42元",
+    "20825021307.44元"
+   ]
+  },
+  {
+   "id": "301358-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "38195456355.00元"
+   ]
+  },
+  {
+   "id": "301358-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "593552116.99元",
+    "593552116.99元",
+    "593552116.99元",
+    "593552116.99元",
+    "593552116.99元",
+    "593552116.99元"
+   ]
+  },
+  {
+   "id": "301358-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1580629275.19元"
+   ]
+  },
+  {
+   "id": "301358-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-1042215051.46元"
+   ]
+  },
+  {
+   "id": "301358-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "16145016167.74元",
+    "501243814.33元"
+   ]
+  },
+  {
+   "id": "301358-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30342069784.05元"
+   ]
+  },
+  {
+   "id": "301358-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "26794644913.16元"
+   ]
+  },
+  {
+   "id": "301358-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "18681527370.53元"
+   ]
+  },
+  {
+   "id": "301358-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "15478861790.09元"
+   ]
+  },
+  {
+   "id": "301358-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "34624768328.39元",
+    "34624768328.39元",
+    "34624768328.39元",
+    "34624768328.39元",
+    "34624768328.39元"
+   ]
+  },
+  {
+   "id": "301358-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "22598527203.79元",
+    "22598527203.79元",
+    "22598527203.79元"
+   ]
+  },
+  {
+   "id": "301358-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "30921271707.71元"
+   ],
+   "result_amounts": [
+    "31454908506.93元",
+    "31454908506.93元",
+    "30921271707.71元",
+    "31454908506.93元"
+   ]
+  },
+  {
+   "id": "301358-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "20520397911.42元"
+   ],
+   "result_amounts": [
+    "20825021307.44元",
+    "20520397911.42元",
+    "304623396.02元",
+    "20825021307.44元",
+    "20825021307.44元"
+   ]
+  },
+  {
+   "id": "301358-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1277183442.45元",
+    "1277183442.45元",
+    "1277183442.45元",
+    "1277183442.45元",
+    "1277183442.45元",
+    "1277183442.45元"
+   ]
+  },
+  {
+   "id": "301358-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "593552116.99元"
+   ]
+  },
+  {
+   "id": "301358-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-1546350345.41元",
+    "-1546350345.41元",
+    "-1546350345.41元",
+    "-1546350345.41元",
+    "-1546350345.41元"
+   ]
+  },
+  {
+   "id": "301358-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-1042215051.46元",
+    "-1042215051.46元"
+   ]
+  },
+  {
+   "id": "301358-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "39092154734.77元"
+   ]
+  },
+  {
+   "id": "301358-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30342069784.05元",
+    "30342069784.05元",
+    "30342069784.05元"
+   ]
+  },
+  {
+   "id": "301358-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "26148720319.73元"
+   ]
+  },
+  {
+   "id": "301358-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "18681527370.53元"
+   ]
+  },
+  {
+   "id": "688005-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "22657274651.38元",
+    "22657274651.38元",
+    "22657274651.38元",
+    "22657274651.38元",
+    "22657274651.38元",
+    "22657274651.38元"
+   ]
+  },
+  {
+   "id": "688005-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30122995138.19元",
+    "30122995138.19元"
+   ]
+  },
+  {
+   "id": "688005-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20712978367.13元"
+   ]
+  },
+  {
+   "id": "688005-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "27332189628.56元"
+   ]
+  },
+  {
+   "id": "688005-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "580908514.51元",
+    "580908514.51元"
+   ]
+  },
+  {
+   "id": "688005-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1353229887.56元",
+    "135322.988756万元"
+   ]
+  },
+  {
+   "id": "688005-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1795379751.91元"
+   ]
+  },
+  {
+   "id": "688005-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-240981050.07元",
+    "-240981050.07元"
+   ]
+  },
+  {
+   "id": "688005-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "24639096566.49元"
+   ]
+  },
+  {
+   "id": "688005-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "25660046343.51元"
+   ]
+  },
+  {
+   "id": "688005-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "14369312278.35元"
+   ]
+  },
+  {
+   "id": "688005-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "17107704980.55元"
+   ]
+  },
+  {
+   "id": "688005-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "14463604954.93元"
+   ],
+   "result_amounts": [
+    "15087554666.76元",
+    "15087554666.76元",
+    "14463604954.93元",
+    "623949711.83元",
+    "15087554666.76元",
+    "15087554666.76元",
+    "15087554666.76元",
+    "15087554666.76元"
+   ]
+  },
+  {
+   "id": "688005-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "22657274651.38元"
+   ]
+  },
+  {
+   "id": "688005-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "13576435854.14元"
+   ]
+  },
+  {
+   "id": "688005-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20712978367.13元"
+   ]
+  },
+  {
+   "id": "688005-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "295910777.62元",
+    "295910777.62元",
+    "295910777.62元",
+    "295910777.62元",
+    "295910777.62元"
+   ]
+  },
+  {
+   "id": "688005-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "580908514.51元",
+    "580908514.51元"
+   ]
+  },
+  {
+   "id": "688005-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "523401116.89元",
+    "523401116.89元",
+    "523401116.89元",
+    "523401116.89元",
+    "523401116.89元",
+    "523401116.89元"
+   ]
+  },
+  {
+   "id": "688005-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1795379751.91元"
+   ]
+  },
+  {
+   "id": "688005-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "24622978521.33元"
+   ]
+  },
+  {
+   "id": "688005-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "24639096566.49元"
+   ]
+  },
+  {
+   "id": "688005-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "15435313948.64元"
+   ]
+  },
+  {
+   "id": "688005-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "14369312278.35元"
+   ]
+  },
+  {
+   "id": "688005-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12267435004.35元",
+    "12267435004.35元",
+    "12267435004.35元",
+    "12267435004.35元",
+    "12267435004.35元",
+    "12267435004.35元"
+   ]
+  },
+  {
+   "id": "688005-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "15087554666.76元"
+   ]
+  },
+  {
+   "id": "688005-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "11358889797.47元"
+   ]
+  },
+  {
+   "id": "688005-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "13576435854.14元"
+   ]
+  },
+  {
+   "id": "688005-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-187442870.48元",
+    "-187442870.48元",
+    "-187442870.48元",
+    "-187442870.48元"
+   ]
+  },
+  {
+   "id": "688005-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "295910777.62元"
+   ]
+  },
+  {
+   "id": "688005-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1135208772.74元",
+    "11.3521亿元",
+    "1135208772.74元",
+    "1135208772.74元"
+   ]
+  },
+  {
+   "id": "688005-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "523401116.89元"
+   ]
+  },
+  {
+   "id": "688005-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "22967962917.01元"
+   ]
+  },
+  {
+   "id": "688005-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "24622978521.33元"
+   ]
+  },
+  {
+   "id": "688005-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "14803784880.46元"
+   ]
+  },
+  {
+   "id": "688005-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "15435313948.64元",
+    "15435313948.64元"
+   ]
+  },
+  {
+   "id": "001301-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4390760656.26元",
+    "4390760656.26元",
+    "4390760656.26元",
+    "4390760656.26元",
+    "4390760656.26元"
+   ]
+  },
+  {
+   "id": "001301-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4781846232.25元",
+    "478184.623225万元"
+   ]
+  },
+  {
+   "id": "001301-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "3170291639.23元"
+   ],
+   "result_amounts": [
+    "3170291639.23元",
+    "3172760073.08元"
+   ]
+  },
+  {
+   "id": "001301-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2790030556.84元"
+   ]
+  },
+  {
+   "id": "001301-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "722904951.59元"
+   ]
+  },
+  {
+   "id": "001301-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1289454531.93元",
+    "1289454531.93元"
+   ]
+  },
+  {
+   "id": "001301-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-416373730.85元",
+    "-41637.373085万元",
+    "-416373730.85元",
+    "-416373730.85元",
+    "-416373730.85元",
+    "-416373730.85元",
+    "-41637.373085万元",
+    "-416373730.85元",
+    "-41637.373085万元"
+   ]
+  },
+  {
+   "id": "001301-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-794420615.48元"
+   ]
+  },
+  {
+   "id": "001301-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7417525523.64元"
+   ]
+  },
+  {
+   "id": "001301-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "8870031485.55元"
+   ]
+  },
+  {
+   "id": "001301-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1753248600.40元"
+   ]
+  },
+  {
+   "id": "001301-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3673302521.86元"
+   ]
+  },
+  {
+   "id": "001301-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "5229246463.94元",
+    "5229246463.94元",
+    "5229246463.94元",
+    "5229246463.94元",
+    "5229246463.94元"
+   ]
+  },
+  {
+   "id": "001301-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4390760656.26元"
+   ]
+  },
+  {
+   "id": "001301-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3884114033.88元"
+   ]
+  },
+  {
+   "id": "001301-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3172760073.08元"
+   ]
+  },
+  {
+   "id": "001301-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "838327119.60元",
+    "838327119.60元",
+    "838327119.60元",
+    "838327119.60元"
+   ]
+  },
+  {
+   "id": "001301-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "722904951.59元"
+   ]
+  },
+  {
+   "id": "001301-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "284404301.87元"
+   ],
+   "result_amounts": [
+    "-284404301.87元",
+    "284404301.87元",
+    "-284404301.87元",
+    "3400634438.97元",
+    "3685038740.84元",
+    "-284404301.87元",
+    "-284404301.87元",
+    "-284404301.87元"
+   ]
+  },
+  {
+   "id": "001301-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-416373730.85元"
+   ]
+  },
+  {
+   "id": "001301-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "9264856279.72元"
+   ]
+  },
+  {
+   "id": "001301-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7417525523.64元",
+    "7417525523.64元",
+    "7417525523.64元",
+    "7417525523.64元"
+   ]
+  },
+  {
+   "id": "001301-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2999682809.21元"
+   ]
+  },
+  {
+   "id": "001301-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1753248600.40元"
+   ]
+  },
+  {
+   "id": "001301-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7943039962.41元",
+    "7943039962.41元",
+    "7943039962.41元",
+    "1627680775.30元",
+    "7943039962.41元"
+   ]
+  },
+  {
+   "id": "001301-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "5229246463.94元"
+   ]
+  },
+  {
+   "id": "001301-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "6250292905.25元"
+   ],
+   "result_amounts": [
+    "6250292905.25元",
+    "6258479218.70元"
+   ]
+  },
+  {
+   "id": "001301-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3884114033.88元",
+    "3884114033.88元"
+   ]
+  },
+  {
+   "id": "001301-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "945821307.80元",
+    "945821307.80元"
+   ]
+  },
+  {
+   "id": "001301-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "838327119.60元"
+   ]
+  },
+  {
+   "id": "001301-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "955677366.21元",
+    "955677366.21元",
+    "955677366.21元",
+    "955677366.21元",
+    "955677366.21元",
+    "955677366.21元",
+    "955677366.21元"
+   ]
+  },
+  {
+   "id": "001301-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-284404301.87元"
+   ]
+  },
+  {
+   "id": "001301-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "11737776859.02元"
+   ]
+  },
+  {
+   "id": "001301-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "9264856279.72元",
+    "9264856279.72元",
+    "9264856279.72元"
+   ]
+  },
+  {
+   "id": "001301-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4725889151.33元"
+   ]
+  },
+  {
+   "id": "001301-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2999682809.21元"
+   ]
+  },
+  {
+   "id": "002709-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "15404639485.24元",
+    "15404639485.24元",
+    "15404639485.24元",
+    "15404639485.24元",
+    "15404639485.24元"
+   ]
+  },
+  {
+   "id": "002709-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "22316935603.86元"
+   ]
+  },
+  {
+   "id": "002709-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "11411598928.41元"
+   ]
+  },
+  {
+   "id": "002709-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "13843385622.32元",
+    "1384338.562232万元"
+   ]
+  },
+  {
+   "id": "002709-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1890621314.16元"
+   ]
+  },
+  {
+   "id": "002709-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "5714438026.64元"
+   ]
+  },
+  {
+   "id": "002709-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2274216054.11元",
+    "2274216054.11元",
+    "2274216054.11元"
+   ]
+  },
+  {
+   "id": "002709-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4163859812.88元"
+   ]
+  },
+  {
+   "id": "002709-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "23976869911.88元"
+   ]
+  },
+  {
+   "id": "002709-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "25530928935.72元"
+   ]
+  },
+  {
+   "id": "002709-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10397214803.90元"
+   ]
+  },
+  {
+   "id": "002709-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12693212063.73元"
+   ]
+  },
+  {
+   "id": "002709-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12518297342.63元",
+    "12518297342.63元",
+    "12518297342.63元",
+    "12518297342.63元",
+    "12518297342.63元",
+    "12518297342.63元",
+    "12518297342.63元",
+    "12518297342.63元"
+   ]
+  },
+  {
+   "id": "002709-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "15404639485.24元"
+   ]
+  },
+  {
+   "id": "002709-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10154135596.71元"
+   ]
+  },
+  {
+   "id": "002709-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "11411598928.41元",
+    "11411598928.41元"
+   ]
+  },
+  {
+   "id": "002709-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "483929654.43元",
+    "483929654.43元",
+    "483929654.43元",
+    "483929654.43元",
+    "483929654.43元",
+    "483929654.43元"
+   ]
+  },
+  {
+   "id": "002709-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1890621314.16元"
+   ]
+  },
+  {
+   "id": "002709-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "881535736.54元"
+   ]
+  },
+  {
+   "id": "002709-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2274216054.11元"
+   ]
+  },
+  {
+   "id": "002709-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "23953389261.08元"
+   ]
+  },
+  {
+   "id": "002709-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "23976869911.88元"
+   ]
+  },
+  {
+   "id": "002709-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10628818637.80元"
+   ]
+  },
+  {
+   "id": "002709-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10397214803.90元",
+    "103.9721亿元",
+    "10397214803.90元",
+    "10397214803.90元"
+   ]
+  },
+  {
+   "id": "002709-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "16649892556.28元",
+    "16649892556.28元",
+    "16649892556.28元",
+    "16649892556.28元"
+   ]
+  },
+  {
+   "id": "002709-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12518297342.63元"
+   ]
+  },
+  {
+   "id": "002709-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12946736447.91元"
+   ]
+  },
+  {
+   "id": "002709-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10154135596.71元",
+    "10154135596.71元"
+   ]
+  },
+  {
+   "id": "002709-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1361917896.52元",
+    "1361917896.52元",
+    "1361917896.52元",
+    "1361917896.52元",
+    "1361917896.52元",
+    "1361917896.52元"
+   ]
+  },
+  {
+   "id": "002709-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "483929654.43元"
+   ]
+  },
+  {
+   "id": "002709-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1182243395.29元",
+    "1182243395.29元",
+    "1182243395.29元"
+   ]
+  },
+  {
+   "id": "002709-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "881535736.54元"
+   ]
+  },
+  {
+   "id": "002709-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "26926733976.62元"
+   ]
+  },
+  {
+   "id": "002709-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "23953389261.08元"
+   ]
+  },
+  {
+   "id": "002709-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "8890557351.16元"
+   ]
+  },
+  {
+   "id": "002709-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10628818637.80元"
+   ]
+  },
+  {
+   "id": "002812-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12042229789.30元",
+    "120.42亿元",
+    "12042229789.30元",
+    "12042229789.30元",
+    "12042229789.30元",
+    "12042229789.30元",
+    "12042229789.30元",
+    "12042229789.30元"
+   ]
+  },
+  {
+   "id": "002812-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12590925529.68元"
+   ]
+  },
+  {
+   "id": "002812-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "7486113707.42元"
+   ],
+   "result_amounts": [
+    "7535223456.34元",
+    "7486113707.42元",
+    "7535223456.34元"
+   ]
+  },
+  {
+   "id": "002812-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "6568148382.65元"
+   ]
+  },
+  {
+   "id": "002812-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2526688570.92元",
+    "2526688570.92元",
+    "2526688570.92元",
+    "2526688570.92元",
+    "2526688570.92元"
+   ]
+  },
+  {
+   "id": "002812-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4000461964.37元"
+   ]
+  },
+  {
+   "id": "002812-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2667453259.32元",
+    "2667453259.32元",
+    "2667453259.32元"
+   ]
+  },
+  {
+   "id": "002812-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "503587598.66元"
+   ]
+  },
+  {
+   "id": "002812-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "47200916635.69元",
+    "18518681497.97元",
+    "47200916635.69元"
+   ]
+  },
+  {
+   "id": "002812-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "38622731492.57元"
+   ]
+  },
+  {
+   "id": "002812-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "18518681497.97元"
+   ]
+  },
+  {
+   "id": "002812-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "19768308177.43元",
+    "19768308177.43元",
+    "19768308177.43元"
+   ]
+  },
+  {
+   "id": "002812-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10163655793.70元",
+    "10163655793.70元",
+    "10163655793.70元"
+   ]
+  },
+  {
+   "id": "002812-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "12042229789.30元"
+   ]
+  },
+  {
+   "id": "002812-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "9038746050.98元"
+   ]
+  },
+  {
+   "id": "002812-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7535223456.34元"
+   ]
+  },
+  {
+   "id": "002812-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-556317501.09元",
+    "-556317501.09元"
+   ]
+  },
+  {
+   "id": "002812-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2526688570.92元"
+   ]
+  },
+  {
+   "id": "002812-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1158249055.10元"
+   ]
+  },
+  {
+   "id": "002812-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2667453259.32元"
+   ]
+  },
+  {
+   "id": "002812-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "47199637500.22元"
+   ]
+  },
+  {
+   "id": "002812-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "47200916635.69元"
+   ]
+  },
+  {
+   "id": "002812-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20994639016.43元"
+   ]
+  },
+  {
+   "id": "002812-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "18518681497.97元"
+   ]
+  },
+  {
+   "id": "002812-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "13632727136.01元",
+    "13632727136.01元",
+    "2728626155.64元",
+    "13632727136.01元"
+   ]
+  },
+  {
+   "id": "002812-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10163655793.70元"
+   ]
+  },
+  {
+   "id": "002812-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "11073555705.48元",
+    "11073555705.48元",
+    "11073555705.48元",
+    "11073555705.48元"
+   ]
+  },
+  {
+   "id": "002812-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "8976180560.42元"
+   ],
+   "result_amounts": [
+    "8976180560.42元",
+    "9038746050.98元"
+   ]
+  },
+  {
+   "id": "002812-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "142548339.91元",
+    "142548339.91元",
+    "142548339.91元",
+    "142548339.91元"
+   ]
+  },
+  {
+   "id": "002812-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-556317501.09元"
+   ]
+  },
+  {
+   "id": "002812-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1143637807.97元",
+    "1143637807.97元",
+    "1143637807.97元",
+    "1143637807.97元",
+    "1143637807.97元"
+   ]
+  },
+  {
+   "id": "002812-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1158249055.10元",
+    "1158249055.10元"
+   ]
+  },
+  {
+   "id": "002812-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "48747236745.37元"
+   ]
+  },
+  {
+   "id": "002812-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "47199637500.22元"
+   ]
+  },
+  {
+   "id": "002812-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "21531313031.36元"
+   ]
+  },
+  {
+   "id": "002812-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20994639016.43元"
+   ]
+  },
+  {
+   "id": "002460-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "32839165936.48元"
+   ],
+   "result_amounts": [
+    "32971680169.96元",
+    "329.72亿元",
+    "32971680169.96元",
+    "32971680169.96元",
+    "32839165936.48元",
+    "132514233.48元",
+    "32971680169.96元",
+    "32971680169.96元",
+    "32971680169.96元",
+    "32971680169.96元"
+   ]
+  },
+  {
+   "id": "002460-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "41822508877.50元"
+   ]
+  },
+  {
+   "id": "002460-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "28238831888.13元"
+   ],
+   "result_amounts": [
+    "28396866986.37元",
+    "28238831888.13元",
+    "28396866986.37元"
+   ]
+  },
+  {
+   "id": "002460-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "21120457861.70元"
+   ]
+  },
+  {
+   "id": "002460-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4946809503.79元",
+    "4946809503.79元",
+    "4946809503.79元"
+   ]
+  },
+  {
+   "id": "002460-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20503567858.85元"
+   ]
+  },
+  {
+   "id": "002460-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "146480693.21元"
+   ]
+  },
+  {
+   "id": "002460-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "124.9063328643亿元"
+   ]
+  },
+  {
+   "id": "002460-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "91697900969.28元",
+    "91697900969.28元",
+    "91697900969.28元",
+    "916.9790096928亿元"
+   ]
+  },
+  {
+   "id": "002460-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "79159910068.14元"
+   ]
+  },
+  {
+   "id": "002460-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "39382038192.52元"
+   ]
+  },
+  {
+   "id": "002460-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30293601966.45元"
+   ]
+  },
+  {
+   "id": "002460-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "18906402940.11元",
+    "189.06亿元",
+    "18906402940.11元",
+    "18906402940.11元",
+    "18906402940.11元",
+    "18906402940.11元"
+   ]
+  },
+  {
+   "id": "002460-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "32971680169.96元"
+   ]
+  },
+  {
+   "id": "002460-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "16861275587.73元"
+   ]
+  },
+  {
+   "id": "002460-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "28462706780.29元",
+    "28462706780.29元"
+   ]
+  },
+  {
+   "id": "002460-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-2074013392.07元",
+    "-2074013392.07元"
+   ]
+  },
+  {
+   "id": "002460-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4946809503.79元"
+   ]
+  },
+  {
+   "id": "002460-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "5161271999.89元",
+    "17967859315.11元",
+    "5161271999.89元"
+   ]
+  },
+  {
+   "id": "002460-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "146480693.21元"
+   ]
+  },
+  {
+   "id": "002460-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "100832297997.29元"
+   ]
+  },
+  {
+   "id": "002460-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "91697900969.28元"
+   ]
+  },
+  {
+   "id": "002460-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "53244401050.02元"
+   ]
+  },
+  {
+   "id": "002460-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "39382038192.52元",
+    "39382038192.52元",
+    "39382038192.52元"
+   ]
+  },
+  {
+   "id": "002460-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "23081732746.32元",
+    "23081732746.32元",
+    "23081732746.32元"
+   ]
+  },
+  {
+   "id": "002460-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "18906402940.11元"
+   ]
+  },
+  {
+   "id": "002460-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "19452888162.31元"
+   ]
+  },
+  {
+   "id": "002460-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "16861275587.73元",
+    "16861275587.73元",
+    "16861275587.73元"
+   ]
+  },
+  {
+   "id": "002460-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "1612980993.34元",
+    "1612980993.34元",
+    "1612980993.34元"
+   ]
+  },
+  {
+   "id": "002460-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "-2074013392.07元",
+    "-2074013392.07元"
+   ]
+  },
+  {
+   "id": "002460-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "-1571355929.64元"
+   ],
+   "result_amounts": [
+    "2944844627.19元",
+    "2944844627.19元",
+    "-1571355929.64元",
+    "2944844627.19元"
+   ]
+  },
+  {
+   "id": "002460-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "5161271999.89元"
+   ]
+  },
+  {
+   "id": "002460-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "113258091671.48元",
+    "1132.5809167148亿元"
+   ]
+  },
+  {
+   "id": "002460-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "100832297997.29元"
+   ]
+  },
+  {
+   "id": "002460-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "61420515699.89元"
+   ]
+  },
+  {
+   "id": "002460-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "53244401050.02元"
+   ]
+  },
+  {
+   "id": "002466-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40503462071.46元",
+    "40503462071.46元",
+    "40503462071.46元",
+    "40503462071.46元",
+    "40503462071.46元"
+   ]
+  },
+  {
+   "id": "002466-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40448883981.77元"
+   ]
+  },
+  {
+   "id": "002466-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "6081511429.56元"
+   ]
+  },
+  {
+   "id": "002466-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "6017225527.14元"
+   ]
+  },
+  {
+   "id": "002466-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7297314973.99元",
+    "72.9731497399亿元",
+    "7297314973.99元",
+    "7297314973.99元",
+    "7297314973.99元",
+    "7297314973.99元"
+   ]
+  },
+  {
+   "id": "002466-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "24124588724.44元"
+   ]
+  },
+  {
+   "id": "002466-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "22688073725.98元"
+   ]
+  },
+  {
+   "id": "002466-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20297583221.14元"
+   ]
+  },
+  {
+   "id": "002466-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "73228464437.61元"
+   ]
+  },
+  {
+   "id": "002466-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "70846492117.36元"
+   ]
+  },
+  {
+   "id": "002466-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "18991821645.97元"
+   ]
+  },
+  {
+   "id": "002466-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "17778729768.28元"
+   ]
+  },
+  {
+   "id": "002466-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "13063477016.39元"
+   ]
+  },
+  {
+   "id": "002466-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "40503462071.46元",
+    "40503462071.46元",
+    "40503462071.46元"
+   ]
+  },
+  {
+   "id": "002466-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7044561174.46元"
+   ]
+  },
+  {
+   "id": "002466-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "6081511429.56元"
+   ]
+  },
+  {
+   "id": "002466-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "7904580295.37元"
+   ],
+   "result_amounts": [
+    "-7904580295.37元",
+    "7904580295.37元",
+    "-7904580295.37元"
+   ]
+  },
+  {
+   "id": "002466-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7297314973.99元"
+   ]
+  },
+  {
+   "id": "002466-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "9733611813.05元"
+   ],
+   "result_amounts": [
+    "5554189376.65元",
+    "15287801189.70元",
+    "9733611813.05元",
+    "15287801189.70元",
+    "5554189376.65元",
+    "5554189376.65元"
+   ]
+  },
+  {
+   "id": "002466-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "22688073725.98元"
+   ]
+  },
+  {
+   "id": "002466-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "68677871984.34元"
+   ]
+  },
+  {
+   "id": "002466-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "73228464437.61元",
+    "73228464437.61元"
+   ]
+  },
+  {
+   "id": "002466-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "19495531711.56元"
+   ]
+  },
+  {
+   "id": "002466-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "18991821645.97元"
+   ]
+  },
+  {
+   "id": "002466-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "10346364563.27元",
+    "10346364563.27元",
+    "10346364563.27元"
+   ]
+  },
+  {
+   "id": "002466-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "13063477016.39元"
+   ]
+  },
+  {
+   "id": "002466-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "6262309199.77元"
+   ]
+  },
+  {
+   "id": "002466-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7044561174.46元"
+   ]
+  },
+  {
+   "id": "002466-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "462625452.36元",
+    "462625452.36元",
+    "462625452.36元",
+    "462625452.36元",
+    "46262.545236万元",
+    "46262.55万元",
+    "462625452.36元",
+    "46262.545236万元"
+   ]
+  },
+  {
+   "id": "002466-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [
+    "7904580295.37元"
+   ],
+   "result_amounts": [
+    "-7904580295.37元",
+    "7904580295.37元",
+    "-7904580295.37元"
+   ]
+  },
+  {
+   "id": "002466-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "2960503399.35元",
+    "11053186081.10元",
+    "2960503399.35元"
+   ]
+  },
+  {
+   "id": "002466-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "5554189376.65元"
+   ]
+  },
+  {
+   "id": "002466-2025-2025-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "72109977728.88元"
+   ]
+  },
+  {
+   "id": "002466-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "68677871984.34元"
+   ]
+  },
+  {
+   "id": "002466-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20217809367.68元",
+    "202.18亿元",
+    "72109977728.88元",
+    "20217809367.68元",
+    "859426593.85元"
+   ]
+  },
+  {
+   "id": "002466-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "wrong",
+   "strict_verdict": "wrong",
+   "conflicting_results": [
+    "11203447996.55元"
+   ],
+   "result_amounts": [
+    "5041272420.75元",
+    "11203447996.55元",
+    "1001724123.52元",
+    "54241097.33元",
+    "621479804.59元",
+    "447986501.01元",
+    "2435613599.72元",
+    "5041272420.75元"
+   ]
+  },
+  {
+   "id": "300124-2023-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30419925397.64元",
+    "30419925397.64元",
+    "30419925397.64元",
+    "4781730120.48元",
+    "30419925397.64元",
+    "30419925397.64元",
+    "30419925397.64元",
+    "304.1992539764亿元"
+   ]
+  },
+  {
+   "id": "300124-2023-2022-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "23008312443.12元",
+    "230.0831244312亿元"
+   ]
+  },
+  {
+   "id": "300124-2023-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20214696609.82元"
+   ]
+  },
+  {
+   "id": "300124-2023-2022-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "14953209039.99元"
+   ]
+  },
+  {
+   "id": "300124-2023-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4741863347.20元",
+    "4741863347.20元",
+    "4741863347.20元",
+    "4741863347.20元",
+    "4741863347.20元"
+   ]
+  },
+  {
+   "id": "300124-2023-2022-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4319762362.29元"
+   ]
+  },
+  {
+   "id": "300124-2023-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3369915897.12元",
+    "3369915897.12元",
+    "3369915897.12元",
+    "3369915897.12元",
+    "3369915897.12元",
+    "3369915897.12元",
+    "3369915897.12元",
+    "3369915897.12元"
+   ]
+  },
+  {
+   "id": "300124-2023-2022-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3200830470.94元",
+    "3200830470.94元",
+    "3200830470.94元"
+   ]
+  },
+  {
+   "id": "300124-2023-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "48957564055.31元"
+   ]
+  },
+  {
+   "id": "300124-2023-2022-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "39211610316.73元"
+   ]
+  },
+  {
+   "id": "300124-2023-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "23956572496.50元"
+   ]
+  },
+  {
+   "id": "300124-2023-2022-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "19100064463.56元",
+    "19100064463.56元"
+   ]
+  },
+  {
+   "id": "300124-2024-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "37040952138.72元",
+    "37040952138.72元",
+    "370.4095213872亿元",
+    "37040952138.72元",
+    "37040952138.72元",
+    "370.4095213872亿元"
+   ]
+  },
+  {
+   "id": "300124-2024-2023-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "30419925397.64元",
+    "304.1992539764亿元",
+    "30419925397.64元"
+   ]
+  },
+  {
+   "id": "300124-2024-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "26409403681.63元",
+    "12616733432.46元",
+    "26409403681.63元"
+   ]
+  },
+  {
+   "id": "300124-2024-2023-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "20583517306.08元"
+   ]
+  },
+  {
+   "id": "300124-2024-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4285493340.70元",
+    "4285493340.70元",
+    "4285493340.70元",
+    "4285493340.70元",
+    "42.85亿元",
+    "4285493340.70元",
+    "42.85亿元"
+   ]
+  },
+  {
+   "id": "300124-2024-2023-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4741863347.20元"
+   ]
+  },
+  {
+   "id": "300124-2024-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7200440164.32元",
+    "7200440164.32元",
+    "7200440164.32元",
+    "7200440164.32元"
+   ]
+  },
+  {
+   "id": "300124-2024-2023-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "3369915897.12元",
+    "3369915897.12元"
+   ]
+  },
+  {
+   "id": "300124-2024-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "57178824244.41元",
+    "571.7882424441亿元"
+   ]
+  },
+  {
+   "id": "300124-2024-2023-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "48957564055.31元"
+   ]
+  },
+  {
+   "id": "300124-2024-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "28749693435.79元",
+    "2874969.34万元"
+   ]
+  },
+  {
+   "id": "300124-2024-2023-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "23956572496.50元"
+   ]
+  },
+  {
+   "id": "300124-2025-2025-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "45104844200.13元",
+    "45104844200.13元",
+    "45104844200.13元",
+    "45104844200.13元"
+   ]
+  },
+  {
+   "id": "300124-2025-2024-OPERATE_INCOME",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "37040952138.72元"
+   ]
+  },
+  {
+   "id": "300124-2025-2025-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "32044938847.24元"
+   ]
+  },
+  {
+   "id": "300124-2025-2024-OPERATE_COST",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "26409403681.63元"
+   ]
+  },
+  {
+   "id": "300124-2025-2025-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "5050002089.89元",
+    "50.50亿元",
+    "5050002089.89元",
+    "50.5亿元",
+    "5050002089.89元",
+    "5050002089.89元"
+   ]
+  },
+  {
+   "id": "300124-2025-2024-PARENT_NETPROFIT",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "4285493340.70元"
+   ]
+  },
+  {
+   "id": "300124-2025-2025-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "6681025417.16元",
+    "6681025417.16元"
+   ]
+  },
+  {
+   "id": "300124-2025-2024-NETCASH_OPERATE",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "7200440164.32元"
+   ]
+  },
+  {
+   "id": "300124-2025-2024-TOTAL_ASSETS",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "57178824244.41元",
+    "57178824244.41元"
+   ]
+  },
+  {
+   "id": "300124-2025-2025-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "34179582786.78元"
+   ]
+  },
+  {
+   "id": "300124-2025-2024-TOTAL_LIABILITIES",
+   "lenient": "correct",
+   "strict_verdict": "strict",
+   "conflicting_results": [],
+   "result_amounts": [
+    "28749693435.79元"
+   ]
+  }
+ ]
+}
