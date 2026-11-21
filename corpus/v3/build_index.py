@@ -7,6 +7,10 @@ Same embedding as the paper (BAAI/bge-base-zh-v1.5, normalised, CPU). Collection
 v3_<code>_<year>; collection metadata pins the corpus identity (registry PDF sha256,
 chunks.jsonl sha256) so the expansion pipeline can verify it before every run.
 Output: build/vector_v3 (copied to the server's data volume at deploy time).
+
+Gate: a report is embedded only after corpus/v3/lint.py finds no violation in its chunks
+(the chunk-text contract). --verify fails when a collection was built from different
+chunks (sha256), not only when counts differ.
 """
 from __future__ import annotations
 
@@ -50,6 +54,18 @@ def main():
     registry = {f"{e['code']}_{e['report_year']}": e for e in
                 json.loads(REGISTRY.read_text(encoding="utf-8"))["reports"]}
     ids = sorted(registry) if args.all else [i for i in args.ids.split(",") if i]
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import lint
+    refused = {}
+    for rid in ids:
+        if (CORPUS / f"{rid}_v3" / "chunks.jsonl").is_file():
+            violations = lint.lint_report(CORPUS / f"{rid}_v3", registry)["violations"]
+            if violations:
+                refused[rid] = violations
+    if refused:
+        print("corpus contract violations; run corpus/v3/lint.py for details. Nothing indexed.")
+        print(json.dumps(refused, ensure_ascii=False, indent=1))
+        sys.exit(2)
     from langchain_huggingface import HuggingFaceEmbeddings
     from langchain_chroma import Chroma
     embeddings = HuggingFaceEmbeddings(model_name=EMBED_MODEL, model_kwargs={"device": "cpu"},
@@ -88,8 +104,10 @@ def main():
                 print(f"{rid}: {len(chunks)} chunks in {time.time() - t0:.0f}s "
                       f"({len(chunks) / max(time.time() - t0, 1e-9):.1f}/s)", flush=True)
         count = store._collection.count()
+        built_from = (store._collection.metadata or {}).get("chunks_sha256")
         audit.append({"id": rid, "collection": name, "chunks": len(chunks), "indexed": count,
-                      "ok": count == len(chunks), "chunks_sha256": chunks_sha})
+                      "ok": count == len(chunks) and built_from == chunks_sha, "chunks_sha256": chunks_sha,
+                      "collection_chunks_sha256": built_from})
     (DB / "index_build.json").write_text(json.dumps({"embedding_model": EMBED_MODEL, "collections": audit},
                                                     ensure_ascii=False, indent=1), encoding="utf-8")
     bad = [a for a in audit if not a["ok"]]

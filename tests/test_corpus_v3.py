@@ -283,7 +283,9 @@ class PdfTests(unittest.TestCase):
         self.assertTrue(context["numeric_answer_allowed"])
         chunk, = [c for c in make_chunks(raw, cleaned, registry()[identifier])
                   if c["metadata"]["table_id"] == table["table_id"]]
-        self.assertIn("财务口径：混合（第2列 合并、第3列 合并、第5列 母公司、第6列 母公司", chunk["text"])
+        self.assertIn("〔系统注：非年报原文〕", chunk["text"])
+        self.assertIn("本表混合合并与母公司口径：第2列 合并、第3列 合并、第5列 母公司、第6列 母公司", chunk["text"])
+        self.assertNotRegex(chunk["text"], r"待核验|unknown|other")
         self.assertTrue(chunk["metadata"]["numeric_answer_allowed"])
 
     def test_restatement_rows_print_scope_in_each_amount_row(self):

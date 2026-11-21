@@ -26,8 +26,8 @@ METRICS = {
 UNITS = {"元": 0, "千元": 3, "万元": 4}
 STATUSES = ("match", "restated_in_next_report", "mismatch", "not_found")
 TOLERANCE = {"元": {"absolute_yuan": 0}, "万元": {"relative": 0.005}, "亿元": {"relative": 0.005}}
-# Reviewed gaps in the parsed metadata. Values still come from the statement rows.
-UNIT_NOTES = {"002594_2023_v3": (153, "除有特别说明外，均以人民币千元为单位表示", "千元")}
+# Statement-wide unit declarations are found by the parser (qc.json "document_unit"),
+# e.g. BYD 2023 p153; used only when a statement table prints no unit of its own.
 CONTINUATIONS = {"002812_2025_v3": (101, "3、合并利润表", 102, "财务费用", 103, "4、母公司利润表")}
 METRIC_LABELS = ("营收", "营业成本", "归母净利润", "经营现金流净额", "资产总计", "负债合计")
 STATUS_LABELS = {"match": "一致", "restated_in_next_report": "下一年报比较期一致",
@@ -112,10 +112,11 @@ def extract_report(directory, year):
             if meta.get("type") == "table":
                 table_rows[meta["page"], meta["table_id"]].update(meta["row_ids"])
     continuation = recover_continuation(directory, segments, table_rows)
-    unit_note = UNIT_NOTES.get(directory.name)
+    declared = read_json(directory / "qc.json").get("document_unit") or {}
+    unit_note = (declared["page"], declared["text"], declared["unit"]) if declared.get("status") == "found" else None
     if unit_note:
         note_page, note_text, _ = unit_note
-        assert note_text in raw_page(directory, note_page)["text"]
+        assert note_text in re.sub(r"\s+", "", raw_page(directory, note_page)["text"])
 
     candidates = defaultdict(list)
     problems = defaultdict(set)

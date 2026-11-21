@@ -1801,7 +1801,104 @@ def box_union(boxes):
             max(b[2] for b in boxes), max(b[3] for b in boxes)]
 
 
-def make_chunks(raw, cleaned, report):
+# --------------------------------------------------------------------------- #
+# Model-visible chunk header. The frozen generation prompt shows every chunk under
+# 【年报原文】, so the header holds only (1) the location line, (2) source lines quoted
+# verbatim with their page, and (3) one system note marked SYSTEM_MARK for what the parser
+# inferred. Unknown values are left out. corpus/v3/lint.py enforces this before indexing.
+SYSTEM_MARK = "〔系统注：非年报原文〕"
+UNIT_RULES = ("printed_unit", "financial_section_unit")
+SCOPE_WORDS = {"合并": "合并", "母公司": "母公司", "合并(章节推定)": "合并"}
+# A statement-wide unit declaration, e.g. BYD 2023 p153 「除有特别说明外，均以人民币千元为单位表示」.
+DOCUMENT_UNIT = re.compile(r"除(?:有)?特别(?:说明|注明|指明)(?:者)?外[，,]?(?:本财务报表|财务报表|本报表)?(?:均|金额均|所有金额均)?"
+                           r"以人民币(?P<unit>千元|万元|元|百万元)(?:为单位)?(?:表示|列示|计)?")
+
+
+# A unit printed inside the table itself (header cell 「营业收入（元）」, 「金额(万元)」, 「单位：元」).
+UNIT_IN_TABLE = re.compile(r"[（(]\s*(?:人民币|单位[:：]?)?\s*(?:亿元|万元|千元|百万元|美元|港元|元)\s*[)）]|单位[:：]|人民币(?:亿元|万元|千元|元)")
+
+
+def quoted(label, page, text):
+    return f"{label}（第{page}页原文）：{' '.join(text.split())}"
+
+
+def anchor_text(anchors, rules=None):
+    for anchor in anchors or []:
+        if isinstance(anchor, dict) and anchor.get("text") and anchor.get("source_page") \
+                and (rules is None or anchor.get("rule") in rules):
+            return anchor
+    return None
+
+
+def render_table_header(base, page, ctx, rows, opening, has_amounts, document_unit=None, headers=()):
+    lines = [f"【{base['company']} {base['report_year']}年年报｜PDF物理页{page}】"]
+    notes = []
+    if title := ctx.get("table_title"):
+        lines.append(quoted("表题", title["source_page"], title["text"]))
+    if ctx["statement_type"] in STATEMENTS:
+        notes.append(f"报表类型：{ctx['statement_type']}")
+
+    scope = ctx["scope"]
+    if scope == "混合":
+        columns = ctx.get("scope_by_column", {})
+        row_scopes = ctx.get("scope_by_row", {})
+        bindings = [f"第{col + 1}列 {s}" for col, s in sorted(columns.items())]
+        bindings.extend(f"本片第{i}行 {row_scopes[row['row_id']]}" for i, row in enumerate(rows, 1)
+                        if row["row_id"] in row_scopes)
+        notes.append(f"本表混合合并与母公司口径：{'、'.join(bindings)}；仅已绑定的行或列可用于数值回答" if bindings
+                     else "本表混合合并与母公司口径，本片金额无法绑定口径，不能用于数值回答")
+    elif scope in SCOPE_WORDS:
+        evidence = anchor_text(ctx.get("scope_evidence"))
+        if evidence and (not title or (evidence["source_page"], evidence["text"]) != (title["source_page"], title["text"])):
+            lines.append(quoted("口径依据", evidence["source_page"], evidence["text"]))
+        how = "系统按所在章节判断" if scope == "合并(章节推定)" else "依据原文表题或章节"
+        notes.append(f"财务口径：{SCOPE_WORDS[scope]}（{how}）")
+    elif scope == "被投资主体":
+        notes.append("本表为被投资主体的数据，不是本公司合并或母公司数据")
+
+    if ctx["unit"]:
+        unit = anchor_text(ctx.get("anchors"), UNIT_RULES)
+        if unit:
+            lines.append(quoted("单位", unit["source_page"], unit["text"]))
+        else:
+            notes.append(f"单位：{ctx['unit']}（沿用前页表头）")
+    elif document_unit:
+        lines.append(quoted("单位", document_unit["page"], document_unit["text"]))
+    elif has_amounts and not any(UNIT_IN_TABLE.search(cell or "") for row in [*headers, *rows] for cell in row["cells"]):
+        notes.append("本表附近未找到单位说明，请勿自行推断单位")
+
+    if entity := ctx.get("entity"):
+        notes.append(f"被投资主体：{entity}")
+    if bindings := ctx.get("entity_by_row"):
+        notes.append("被投资主体按本片行序：" + "、".join(f"第{i}行 {bindings[row['row_id']]}"
+                                                for i, row in enumerate(rows, 1) if row["row_id"] in bindings))
+    if bindings := ctx.get("entity_by_column"):
+        notes.append("被投资主体按列：" + "、".join(f"第{col + 1}列 {name}" for col, name in bindings.items()))
+    if opening:
+        notes.append("期初列：" + "、".join(f"第{p['column'] + 1}列 {p['label']}" for p in opening))
+    if notes:
+        lines.append(SYSTEM_MARK + "；".join(notes))
+    return "\n".join(lines) + "\n"
+
+
+def find_document_unit(out, report, limit=None):
+    """Statement-wide unit declaration from the cached raw pages (it is often printed after
+    the statements it governs, so the streaming pass cannot see it in time)."""
+    folder = out / "raw"
+    numbers = range(1, (limit or report["pages"]) + 1)
+    if not all((folder / f"page_{n:04d}.json").is_file() for n in numbers):
+        return None, "raw_cache_incomplete"
+    found = []
+    for n in numbers:
+        text = json.loads((folder / f"page_{n:04d}.json").read_text(encoding="utf-8"))["text"]
+        for match in DOCUMENT_UNIT.finditer(re.sub(r"\s+", "", text)):
+            found.append({"page": n, "text": match[0], "unit": match["unit"]})
+    if len({f["unit"] for f in found}) > 1:
+        return None, "conflicting_declarations"
+    return (found[0], "found") if found else (None, "none")
+
+
+def make_chunks(raw, cleaned, report, document_unit=None, financial_start=None):
     page = raw["page"]
     base = {"code": report["code"], "company": report["company"], "report_year": report["report_year"],
             "corpus_id": f"{report_id(report)}_v3", "source_id": raw["source_id"], "page": page,
@@ -1836,42 +1933,24 @@ def make_chunks(raw, cleaned, report):
                       "row_ids": [row["row_id"] for row in rows],
                       "header_row_ids": [row["row_id"] for row in headers],
                       "source_line_ids": [line for row in rows for line in row.get("source_line_ids", [])]}
-            scope_text = ctx["scope"]
             numeric_allowed = ctx["numeric_answer_allowed"]
             if ctx["scope"] == "混合":
                 columns = ctx.get("scope_by_column", {})
                 row_scopes = ctx.get("scope_by_row", {})
-                bindings = [f"第{col + 1}列 {scope}" for col, scope in sorted(columns.items())]
-                bindings.extend(f"本片第{i}行 {row_scopes[row['row_id']]}" for i, row in enumerate(rows, 1)
-                                if row["row_id"] in row_scopes)
-                if bindings:
-                    scope_text += f"（{'、'.join(bindings)}；仅已绑定的行或列可用于数值回答）"
-                else:
-                    scope_text += "（本片金额无可用口径绑定，禁止用于数值回答）"
                 numeric_allowed = any(is_amount(cell) and (col in columns or row["row_id"] in row_scopes)
                                       for row in rows if row["row_id"] in data_row_ids
                                       for col, cell in enumerate(row["cells"]))
-            text = (f"【{base['company']} {base['report_year']}年年报｜PDF物理页{page}】\n"
-                    f"报表类型：{ctx['statement_type']}；财务口径：{scope_text}；单位：{ctx['unit'] or '待核验'}\n")
-            if title := ctx.get("table_title"):
-                text += f"引用表题（PDF物理页{title['source_page']}）：{title['text']}\n"
-            if entity := ctx.get("entity"):
-                text += f"被投资主体：{entity}\n"
-            if bindings := ctx.get("entity_by_row"):
-                text += "被投资主体按本片行序对应："
-                text += "、".join(f"第{i}行 {bindings[row['row_id']]}" for i, row in enumerate(rows, 1)
-                                  if row["row_id"] in bindings) + "\n"
-            if bindings := ctx.get("entity_by_column"):
-                text += "被投资主体按列对应：" + "、".join(f"第{col + 1}列 {name}" for col, name in bindings.items()) + "\n"
-            if opening:
-                text += "期初列：" + "、".join(f"第{p['column'] + 1}列 {p['label']}" for p in opening) + "\n"
+            has_amounts = any(is_amount(cell) for row in rows for cell in row["cells"])
+            unit_quote = None if ctx["unit"] else document_unit if page >= (financial_start or 10**9) else None
+            text = render_table_header(base, page, ctx, rows, opening, has_amounts, unit_quote, headers)
+            unit_meta = {"document_unit": unit_quote["unit"], "document_unit_page": unit_quote["page"]} if unit_quote else {}
             if headers:
                 text += "表头（重复供定位）：\n" + table_render(headers) + "\n"
             text += "本片原始行序：\n" + table_render(rows)
             metadata = {**ctx, **origin, "anchors": anchors,
                         "bbox": table["bbox"], "data_years": table["data_years"],
                         "period_columns": table["period_columns"], "extraction_method": table["method"],
-                        "numeric_answer_allowed": numeric_allowed, "context": ctx}
+                        "numeric_answer_allowed": numeric_allowed, "context": ctx, **unit_meta}
             yield record("table", text, metadata, origin)
     for start, end, text in text_spans(cleaned["text"]):
         lines = [line for line in cleaned["text_lines"] if line["start"] < end and line["end"] > start]
@@ -1907,6 +1986,7 @@ def parse_report(report, output, pages=None, baseline=None, *, cached_only=False
     chunks = Counter()
     summaries = []
     segments = []
+    document_unit, document_unit_status = find_document_unit(out, report, pages)
     # Hash/page validation runs at the first iteration, before derived writes.
     raw_stream = raw_pages(report, out, pages, cached_only=cached_only)
     with ExitStack() as stack:
@@ -1922,7 +2002,8 @@ def parse_report(report, output, pages=None, baseline=None, *, cached_only=False
                 streams[name].write(json.dumps(value, ensure_ascii=False, allow_nan=False) + "\n")
 
             cleaned["raw_sha256"] = digest(out / cleaned["raw_ref"])
-            page_chunks = list(make_chunks(raw, cleaned, report))
+            financial_start = min((seg["start_page"] for seg in segments), default=None)
+            page_chunks = list(make_chunks(raw, cleaned, report, document_unit, financial_start))
             allowed_counts = Counter(c["metadata"]["table_id"] for c in page_chunks
                                      if c["metadata"]["type"] == "table" and c["metadata"]["numeric_answer_allowed"])
             for table in cleaned["tables"]:
@@ -1950,6 +2031,7 @@ def parse_report(report, output, pages=None, baseline=None, *, cached_only=False
     duration = time.perf_counter() - start
     write_json(out / "segments.json", segments)
     result = report_qc(report, summaries, segments, chunks, duration)
+    result["document_unit"] = {"status": document_unit_status, **(document_unit or {})}
     if baseline is not None:
         result["round1_baseline"] = baseline
     if round2_baseline is not None:
