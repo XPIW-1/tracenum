@@ -156,15 +156,25 @@ def session(request: Request):
 PRIVATE_DIR = DATA_DIR / "private"
 
 
-@app.get("/private/resume.pdf")
-def private_resume(request: Request):
+def _private_pdf(request: Request, name: str, download_as: str):
     if not current_access(request):
         raise HTTPException(403)
-    path = PRIVATE_DIR / "resume.pdf"
+    path = PRIVATE_DIR / name
     if not path.is_file():
         raise HTTPException(404)
     return FileResponse(path, media_type="application/pdf", headers={"Cache-Control": "no-store"},
-                        filename="resume.pdf")
+                        filename=download_as)
+
+
+@app.get("/private/resume.pdf")
+def private_resume(request: Request):
+    return _private_pdf(request, "resume.pdf", "resume.pdf")
+
+
+# Full Tencent research report (36 pages); the public site only shows the one-minute version.
+@app.get("/private/report.pdf")
+def private_report(request: Request):
+    return _private_pdf(request, "report.pdf", "tencent-games-research.pdf")
 
 
 @app.get("/api/private/contact")

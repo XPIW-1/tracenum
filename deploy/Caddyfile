@@ -11,9 +11,11 @@
 
 {$DOMAIN}, www.{$DOMAIN} {
 	import security
+	encode zstd gzip
 	@www host www.{$DOMAIN}
 	redir @www https://{$DOMAIN}{uri} permanent
-	# Private résumé page and file are served by the API after the access cookie is checked.
+	# Private files (résumé, full research report) are served by the API after the access
+	# cookie is checked.
 	handle /private/* {
 		reverse_proxy api:8765
 	}

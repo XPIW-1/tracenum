@@ -58,6 +58,7 @@ class ApiLiveTest(unittest.TestCase):
             self.assertEqual(c.get(path).status_code, 404, path)
         self.assertEqual(c.post("/api/recordings/x/feature").status_code, 404)
         self.assertEqual(c.get("/private/resume.pdf").status_code, 403)
+        self.assertEqual(c.get("/private/report.pdf").status_code, 403)
 
     def test_bad_code_rejected(self):
         self.assertEqual(self.client().post("/api/access/session", json={"code": "wrong-code-xyz"}).status_code, 403)
