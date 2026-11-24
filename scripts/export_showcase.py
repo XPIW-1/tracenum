@@ -23,7 +23,7 @@ EVENT_FIELDS = {
     "node": (
         "strategy node round latency total_tokens model_calls budget budget_stop "
         "query candidate_count selected_pages new_evidence evidence_pages answer "
-        "generated_rounds feedback missing metric_audit stop_reason"
+        "generated_rounds feedback missing metric_audit stop_reason flag_states verification_status"
     ),
     "final": "strategy boundary result",
     "done": "",
@@ -64,6 +64,10 @@ def public_recording(question_id, recording_id):
             raise ValueError(f"Featured recording contains an error event: {recording_id}")
         if kind not in EVENT_FIELDS:
             raise ValueError(f"Unrecognized event type {kind!r} in {recording_id}")
+        if kind == "node" and event.get("node") == "check" and "flag_states" not in event:
+            # Without it the page would show a validator gap as a red failure.
+            raise ValueError(f"{recording_id}: check event without flag_states; "
+                             "run scripts/backfill_flag_states.py first")
         allowed = {"type", *EVENT_FIELDS[kind].split()}
         events.append({"t": item["t"], "event": without_trace({k: v for k, v in event.items() if k in allowed})})
 

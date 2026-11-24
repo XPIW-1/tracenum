@@ -16,6 +16,7 @@ jobs:
           python-version: "3.12"
       - run: pip install numpy==2.5.4
       - run: python -m unittest tests.test_live_guard -v
+      - run: python -m unittest tests.test_check_flags -v
 
   web-build:
     runs-on: ubuntu-latest

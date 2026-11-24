@@ -54,7 +54,7 @@ export function RoundTrace({ run, compact = false }) {
             return (
               <div className={`trace-step ${running ? 'running' : ''}`} key={node}>
                 <span className="label">{NODE_LABEL[node]}</span>
-                <span className="detail">{e ? describe(node, e, compact) : running ? runningText(node, active) : ''}</span>
+                <span className="detail">{e ? describe(node, e, compact, row) : running ? runningText(node, active) : ''}</span>
                 <span className="time">{e ? `${e.latency.toFixed(1)}s` : ''}</span>
               </div>
             )
@@ -76,17 +76,42 @@ function runningText(node, active) {
 }
 
 const FLAG_NAME = { retrieval_complete: '证据', calculation_ok: '计算', time_match: '年度', metric_match: '口径' }
-function describe(node, e, compact) {
+// flag_states (pipeline.py / check_flags.py) separates a rule failure from a check the frozen
+// validator could not run. Older events without it fall back to the raw boolean.
+const FLAG_TEXT = { ok: '通过', bad: '未通过', unverified: '未能自动核验' }
+const UNVERIFIED_HINT = '规则核验器暂不支持这类题型，或没能在原文表格里自动定位这个数，不代表答案有误；答案中的数字可逐个点开对照原文。'
+function flagState(e, k) {
+  const s = e.flag_states?.[k]
+  if (s in FLAG_TEXT) return s
+  return (e.feedback || {})[k] ? 'ok' : 'bad'
+}
+// 'bad' if any rule failed, 'unverified' if the only gaps are checks the validator could not run,
+// 'ok' if all four passed (S2 still runs its fixed second round).
+function checkOutcome(e) {
+  const states = Object.keys(FLAG_NAME).map((k) => flagState(e, k))
+  if (states.includes('bad')) return 'bad'
+  return states.includes('unverified') ? 'unverified' : 'ok'
+}
+function describe(node, e, compact, row = {}) {
   if (node === 'retrieve') {
     const pages = [...new Set(e.selected_pages || [])]
     return <>从 {e.candidate_count} 个候选片段中选出第 {pages.join('、')} 页{e.new_evidence != null && <>，新增 {e.new_evidence} 条证据</>}</>
   }
   if (node === 'generate') return <>累计消耗 <span className="num">{(e.total_tokens || 0).toLocaleString()}</span> tokens</>
   if (node === 'check') {
-    const f = e.feedback || {}
-    return <>{Object.entries(FLAG_NAME).map(([k, label]) => <span key={k} className={`flag ${f[k] ? 'ok' : 'bad'}`}>{label}{f[k] ? '通过' : '未通过'}</span>)}</>
+    return <>{Object.entries(FLAG_NAME).map(([k, label]) => {
+      const s = flagState(e, k)
+      return <span key={k} className={`flag ${s}`} title={s === 'unverified' ? UNVERIFIED_HINT : undefined}>{label}{FLAG_TEXT[s]}</span>
+    })}</>
   }
-  if (node === 'decide') return <>{e.stop_reason === '继续检索' ? '核验未全部通过，继续检索' : `停止：${e.stop_reason}`}</>
+  if (node === 'decide') {
+    const outcome = row.check ? checkOutcome(row.check) : 'bad'
+    if (e.stop_reason === '继续检索') {
+      return <>{{ ok: '核验全部通过，按策略继续检索', unverified: '部分项未能自动核验，继续检索', bad: '核验未全部通过，继续检索' }[outcome]}</>
+    }
+    if (e.stop_reason === '达到轮次上限' && outcome === 'unverified') return <>停止：达到轮次上限（剩余项无法自动核验）</>
+    return <>停止：{e.stop_reason}</>
+  }
   if (node === 'requery') return compact ? <>改写检索词</> : <>改写为「{e.query}」</>
   return null
 }

@@ -185,6 +185,7 @@ button { cursor: pointer; }
 .flag { display: inline-block; margin-right: 6px; font-size: 12px; padding: 0 6px; border-radius: 3px; }
 .flag.ok { background: var(--tick-bg); color: var(--tick); }
 .flag.bad { background: var(--red-bg); color: var(--red); }
+.flag.unverified { background: var(--rule-soft); color: var(--ink-2); cursor: help; }
 .page-link {
   border: 0; background: none; padding: 0 2px; color: var(--focus); font-variant-numeric: tabular-nums;
   text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px;
