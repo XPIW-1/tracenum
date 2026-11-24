@@ -250,6 +250,12 @@
           "retrieval_complete": true,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "ok",
+          "metric_match": "ok",
+          "retrieval_complete": "ok",
+          "time_match": "bad"
+        },
         "latency": 0.0,
         "metric_audit": {},
         "missing": [
@@ -260,7 +266,8 @@
         "round": 1,
         "strategy": "S2",
         "total_tokens": 2550,
-        "type": "node"
+        "type": "node",
+        "verification_status": null
       },
       "t": 3.047
     },
@@ -398,6 +405,12 @@
           "retrieval_complete": true,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "ok",
+          "metric_match": "ok",
+          "retrieval_complete": "ok",
+          "time_match": "bad"
+        },
         "latency": 0.0,
         "metric_audit": {},
         "missing": [
@@ -408,7 +421,8 @@
         "round": 1,
         "strategy": "S3",
         "total_tokens": 2577,
-        "type": "node"
+        "type": "node",
+        "verification_status": null
       },
       "t": 3.781
     },
@@ -546,6 +560,12 @@
           "retrieval_complete": true,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "ok",
+          "metric_match": "ok",
+          "retrieval_complete": "ok",
+          "time_match": "bad"
+        },
         "latency": 0.0,
         "metric_audit": {},
         "missing": [
@@ -556,7 +576,8 @@
         "round": 1,
         "strategy": "S1",
         "total_tokens": 2729,
-        "type": "node"
+        "type": "node",
+        "verification_status": null
       },
       "t": 4.922
     },

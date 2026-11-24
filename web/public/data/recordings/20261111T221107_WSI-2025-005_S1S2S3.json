@@ -256,6 +256,12 @@
           "retrieval_complete": false,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "bad",
+          "metric_match": "bad",
+          "retrieval_complete": "bad",
+          "time_match": "unverified"
+        },
         "latency": 0.02,
         "metric_audit": {
           "applicable": true,
@@ -295,7 +301,8 @@
         "round": 1,
         "strategy": "S1",
         "total_tokens": 2217,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 4.984
     },
@@ -440,6 +447,12 @@
           "retrieval_complete": false,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "bad",
+          "metric_match": "bad",
+          "retrieval_complete": "bad",
+          "time_match": "unverified"
+        },
         "latency": 0.01,
         "metric_audit": {
           "applicable": true,
@@ -479,7 +492,8 @@
         "round": 1,
         "strategy": "S3",
         "total_tokens": 2542,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 5.984
     },
@@ -557,6 +571,12 @@
           "retrieval_complete": false,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "bad",
+          "metric_match": "bad",
+          "retrieval_complete": "bad",
+          "time_match": "unverified"
+        },
         "latency": 0.01,
         "metric_audit": {
           "applicable": true,
@@ -596,7 +616,8 @@
         "round": 1,
         "strategy": "S2",
         "total_tokens": 2498,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 6.437
     },
@@ -1203,6 +1224,12 @@
           "retrieval_complete": false,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "bad",
+          "metric_match": "bad",
+          "retrieval_complete": "bad",
+          "time_match": "unverified"
+        },
         "latency": 0.01,
         "metric_audit": {
           "applicable": true,
@@ -1243,7 +1270,8 @@
         "round": 2,
         "strategy": "S2",
         "total_tokens": 7450,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 91.172
     },
@@ -1437,6 +1465,12 @@
           "retrieval_complete": false,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "unverified",
+          "metric_match": "ok",
+          "retrieval_complete": "unverified",
+          "time_match": "unverified"
+        },
         "latency": 0.02,
         "metric_audit": {
           "applicable": true,
@@ -1494,7 +1528,8 @@
         "round": 2,
         "strategy": "S3",
         "total_tokens": 8525,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 96.718
     },
@@ -1838,6 +1873,12 @@
           "retrieval_complete": false,
           "time_match": false
         },
+        "flag_states": {
+          "calculation_ok": "unverified",
+          "metric_match": "ok",
+          "retrieval_complete": "unverified",
+          "time_match": "unverified"
+        },
         "latency": 0.01,
         "metric_audit": {
           "applicable": true,
@@ -1895,7 +1936,8 @@
         "round": 3,
         "strategy": "S3",
         "total_tokens": 15503,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 149.0
     },

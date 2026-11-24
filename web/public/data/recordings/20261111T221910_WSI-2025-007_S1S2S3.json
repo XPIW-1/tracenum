@@ -253,6 +253,12 @@
           "retrieval_complete": true,
           "time_match": true
         },
+        "flag_states": {
+          "calculation_ok": "unverified",
+          "metric_match": "ok",
+          "retrieval_complete": "ok",
+          "time_match": "ok"
+        },
         "latency": 0.0,
         "metric_audit": {
           "applicable": false,
@@ -266,7 +272,8 @@
         "round": 1,
         "strategy": "S3",
         "total_tokens": 2750,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 4.5
     },
@@ -450,6 +457,12 @@
           "retrieval_complete": true,
           "time_match": true
         },
+        "flag_states": {
+          "calculation_ok": "unverified",
+          "metric_match": "ok",
+          "retrieval_complete": "ok",
+          "time_match": "ok"
+        },
         "latency": 0.0,
         "metric_audit": {
           "applicable": false,
@@ -463,7 +476,8 @@
         "round": 1,
         "strategy": "S2",
         "total_tokens": 2739,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 4.656
     },
@@ -565,6 +579,12 @@
           "retrieval_complete": true,
           "time_match": true
         },
+        "flag_states": {
+          "calculation_ok": "unverified",
+          "metric_match": "ok",
+          "retrieval_complete": "ok",
+          "time_match": "ok"
+        },
         "latency": 0.01,
         "metric_audit": {
           "applicable": false,
@@ -578,7 +598,8 @@
         "round": 1,
         "strategy": "S1",
         "total_tokens": 3279,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 7.578
     },
@@ -997,6 +1018,12 @@
           "retrieval_complete": true,
           "time_match": true
         },
+        "flag_states": {
+          "calculation_ok": "unverified",
+          "metric_match": "ok",
+          "retrieval_complete": "ok",
+          "time_match": "ok"
+        },
         "latency": 0.0,
         "metric_audit": {
           "applicable": false,
@@ -1010,7 +1037,8 @@
         "round": 2,
         "strategy": "S2",
         "total_tokens": 7640,
-        "type": "node"
+        "type": "node",
+        "verification_status": "UNSUPPORTED"
       },
       "t": 53.875
     },

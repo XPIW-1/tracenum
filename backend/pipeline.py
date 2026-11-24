@@ -18,6 +18,8 @@ import time
 from pathlib import Path
 from typing import Callable
 
+import check_flags
+
 # The frozen runner prints answers; on a GBK Windows console a "−" would raise
 # UnicodeEncodeError and kill the run. Never let logging break an answer.
 for _stream in (sys.stdout, sys.stderr):
@@ -201,7 +203,7 @@ def _node_payload(node, state, latency):
         payload.update(answer=state.get("draft_answer"), generated_rounds=state.get("generated_rounds"))
     elif node == "check":
         payload.update(feedback=state.get("feedback"), missing=state.get("missing_items"),
-                       metric_audit=state.get("metric_audit"))
+                       metric_audit=state.get("metric_audit"), **check_flags.payload(state))
     elif node == "decide":
         payload.update(stop_reason=state.get("stop_reason"), feedback=state.get("feedback"))
     elif node == "requery":
@@ -277,6 +279,7 @@ class Pipeline:
             namespace = {"TypedDict": __import__("typing").TypedDict, "Literal": __import__("typing").Literal}
             exec(compile(state_cell, "notebook:RAGState", "exec"), namespace)
             exec(compile(node_cell, "notebook:nodes", "exec"), namespace)
+            namespace["apply_feedback"] = check_flags.snapshot_rule_feedback(namespace["apply_feedback"])
 
             embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-base-zh-v1.5", model_kwargs={"device": "cpu"},
                                                encode_kwargs={"normalize_embeddings": True})
