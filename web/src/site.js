@@ -1,7 +1,8 @@
 // Site-wide facts shown to visitors. Keep every statement here measured and dated.
 
-// Filing number of the generative model service, copied from the official public list.
-export const FILING_NUMBER = ''
+// Filing number of the generative model service (DeepSeek Chat). Source: Alibaba Cloud Model Studio,
+// "大模型备案号公示" page, row "Deepseek Chat" (checked 2026-11-25). Re-check against the CAC list before relying on it.
+export const FILING_NUMBER = 'Beijing-DeepseekChat-202404280016'
 
 // Notes on featured questions whose live behaviour has changed since they were recorded.
 export const FEATURED_NOTES = {

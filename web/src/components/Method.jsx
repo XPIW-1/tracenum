@@ -101,7 +101,7 @@ export default function Method({ mode, questions, goLab }) {
       <section className="lab-note">
         <h2>线上服务与论文实验的差异</h2>
         <ul>{LIVE_DIFFERENCES.map((d) => <li key={d}>{d}</li>)}</ul>
-        <p>生成模型：DeepSeek（deepseek-flash）· 备案号：{FILING_NUMBER || '待核实'}</p>
+        <p>生成模型：DeepSeek（deepseek-flash）· 模型备案号：{FILING_NUMBER || '待核实'}</p>
       </section>
 
       <section className="design-map">
